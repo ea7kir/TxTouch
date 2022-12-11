@@ -20,16 +20,15 @@ PTT
 
 # The callback functions
 
-def tune():
-    frequency, rate_list = bp.fequency_and_rate_list()
-    lm.start_longmynd(frequency, rate_list)
+def ptt():
+    pm.start_ptt(bp.frequency, bp.symbol_rate)
 
 # Lookup dictionary that maps button to function to call
 dispatch_dictionary = { 
     '-BD-':bp.dec_band, '-BU-':bp.inc_band, 
     '-FD-':bp.dec_frequency, '-FU-':bp.inc_frequency, 
     '-SD-':bp.dec_symbol_rate, '-SU-':bp.inc_symbol_rate,
-    '-TUNE-':tune,
+    '-PTT-':ptt,
 }
 
 # ------------------------------------------------
@@ -81,7 +80,7 @@ layout = [
     [sg.Frame('Transmiter Controls',
         control_layout, title_color='green', size=(340,340), pad=(15,15) ),
         
-        sg.Frame('Received Status',
+        sg.Frame('More Controls',
         more_layout, title_color='green', size=(340,340), pad=(15,15) ),
     ],
     [sg.Push(), sg.Button('Shutdown', key='-SHUTDOWN-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS)],
@@ -107,7 +106,7 @@ while True:
         update_control()
         bp.changed = False
     else:
-        update_status()
+        update_more()
 
 ############ for long operations, see: https://www.pysimplegui.org/en/latest/cookbook/#threaded-long-operation
 #    if lm.status_available:
