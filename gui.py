@@ -6,15 +6,15 @@ from pluto_manager import pluto_manager as pm
 
 """
 Frequency
-
+-
 encoder settings
-
+-
 Symbol Rate
 Mode
 Constellation
 FEC
 Drive
-
+-
 PTT
 """
 
