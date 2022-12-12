@@ -71,7 +71,9 @@ more_layout = [
 # ------------------------------------------------
 
 def update_control():
-    pass
+    window['-BV-'].update(bp.band)
+    window['-FV-'].update(bp.frequency)
+    window['-SV-'].update(bp.symbol_rate)
 
 def update_more():
     pass
@@ -96,7 +98,7 @@ while True:
         if sg.popup_ok_cancel('Shutdown Now?', font=(None,15), background_color='red',
                     #no_titlebar=True, keep_on_top=True) == 'OK':
                     keep_on_top=True) == 'OK':
-            lm.stop_longmynd()
+            pm.stop_ptt()
             break
 
     if event in dispatch_dictionary:

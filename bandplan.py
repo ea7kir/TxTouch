@@ -1,4 +1,4 @@
-# bandplan.y
+# bandplan.py
 
 BAND_LIST = [
     'Wide',
