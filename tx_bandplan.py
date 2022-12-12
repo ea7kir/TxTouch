@@ -1,4 +1,4 @@
-# bandplan.py
+# tx_bandplan.py
 
 BAND_LIST = [
     'Wide',
@@ -99,7 +99,7 @@ WIDE_BAND_LIST_INDEX = 0
 NARROW_BAND_LIST_INDEX = 1
 V_NARROW_BAND_LIST_INDEX = 2
 
-class BandPlan():
+class TxBandPlan():
     def __init__(self):
         self._b_index = 0
         self._f_index = 0
@@ -186,5 +186,5 @@ class BandPlan():
 
 
 
-band_plan = BandPlan()
+tx_bandplan = TxBandPlan()
 

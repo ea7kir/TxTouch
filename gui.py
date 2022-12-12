@@ -1,7 +1,7 @@
 # gui.py
 
 import PySimpleGUI as sg
-from bandplan import band_plan as bp
+from tx_bandplan import tx_bandplan as bp
 from pluto_manager import pluto_manager as pm
 
 """
@@ -19,7 +19,6 @@ PTT
 """
 
 # The callback functions
-
 def toggle_ptt():
     if pm.ptt_is_on:
         pm.stop_ptt()
@@ -68,12 +67,15 @@ control_layout = [
     [sg.Push(), sg.Button('PTT', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBTCOLORS, disabled=False), sg.Push()],
 ]
 
-more_layout = [
-    [sg.Text('more...')]
+encoding_layout = [
+    [sg.Text('areea for bit-rate, etc...')]
 ]
 
 # ------------------------------------------------
 
+def update_more():
+     pass
+ 
 def update_control():
     window['-BV-'].update(bp.band)
     window['-FV-'].update(bp.frequency)
@@ -85,15 +87,14 @@ def update_control():
         window['-PTT-'].update(button_color=MYBUTCOLORS)
         print('OFF')
 
-def update_more():
-     pass
 
 layout = [
-    [sg.Frame('Transmitter Controls',
-        control_layout, title_color='green', size=(340,340), pad=(15,15) ),
+    [
+        sg.Frame('Encoding Controls',
+        encoding_layout, title_color='green', size=(340,340), pad=(15,15) ),
         
-        sg.Frame('More Controls',
-        more_layout, title_color='green', size=(340,340), pad=(15,15) ),
+        sg.Frame('Transmitter Controls',
+        control_layout, title_color='green', size=(340,340), pad=(15,15) ),
     ],
     [sg.Push(), sg.Button('Shutdown', key='-SHUTDOWN-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS)],
     [sg.Text('', key='-STATUS_BAR-', text_color='green')],
@@ -110,7 +111,6 @@ while True:
                     keep_on_top=True) == 'OK':
             pm.stop_ptt()
             break
-
     if event in dispatch_dictionary:
         func_to_call = dispatch_dictionary[event]
         func_to_call()
@@ -122,15 +122,14 @@ while True:
         update_control()
         pm.status_changed = False
         
+window.close()
+del window
 
 ############ for long operations, see: https://www.pysimplegui.org/en/latest/cookbook/#threaded-long-operation
 #    if lm.status_available:
 #    window.perform_long_operation(lm.read_status(), '-FUNCTION COMPLETED-')
 #    
 #    if event == '-FUNCTION COMPLETED-':)
-
-window.close()
-del window
 
 print('about to shutdown')
 #import subprocess
