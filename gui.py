@@ -79,7 +79,7 @@ def update_more():
     pass
 
 layout = [
-    [sg.Frame('Transmiter Controls',
+    [sg.Frame('Transmitter Controls',
         control_layout, title_color='green', size=(340,340), pad=(15,15) ),
         
         sg.Frame('More Controls',
