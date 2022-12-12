@@ -1,39 +1,14 @@
 # gui.py
 
+"""TxTouch"""
+
 import PySimpleGUI as sg
 from tx_bandplan import tx_bandplan as bp
 from pluto_manager import pluto_manager as pm
 
-"""
-Frequency
--
-encoder settings
--
-Symbol Rate
-Mode
-Constellation
-FEC
-Drive
--
-PTT
-"""
+# LAYOUT ----------------------------------------
 
-# The callback functions
-def toggle_ptt():
-    if pm.ptt_is_on:
-        pm.stop_ptt()
-    else:
-        pm.start_ptt(bp.frequency, bp.symbol_rate)
-
-# Lookup dictionary that maps button to function to call
-dispatch_dictionary = { 
-    '-BD-':bp.dec_band, '-BU-':bp.inc_band, 
-    '-FD-':bp.dec_frequency, '-FU-':bp.inc_frequency, 
-    '-SD-':bp.dec_symbol_rate, '-SU-':bp.inc_symbol_rate,
-    '-PTT-':toggle_ptt,
-}
-
-# ------------------------------------------------
+sg.theme('Black')
 
 MYBUTCOLORS = ('#FFFFFF','#222222')
 PPTONBUTTON = ('#ffffff','#FF0000')
@@ -48,14 +23,6 @@ def incdec_but(name, key):
 def button_selector(key_down, value, key_up):
     return [ incdec_but('<', key_down), sg.Push(), sg.Text('', key=value, text_color='orange', font=(None,13)), sg.Push(), incdec_but('>', key_up) ]
 
-# ------------------------------------------------
-
-sg.theme('Black')
-
-# layouts
-
-# ------------------------------------------------
-
 control_layout = [
     [sg.Push(), sg.Text('Band', text_color='green'), sg.Push()],
     button_selector('-BD-', '-BV-', '-BU-'),
@@ -68,13 +35,46 @@ control_layout = [
 ]
 
 encoding_layout = [
-    [sg.Text('areea for bit-rate, etc...')]
+    [sg.Text('Codecs [H264 ACC | H265 ACC]')],
+    [sg.Text('Bit Rate [integer]')],
+    [sg.Text('Symbol Rate []')],
+    [sg.Text('Constellation []')],
+    [sg.Text('FEC []')],
+    [sg.Text('Provider []')],
+    [sg.Text('Servicee []')],
 ]
 
-# ------------------------------------------------
+layout = [
+    [sg.Frame(' Encoding Controls ',
+        encoding_layout, title_color='green', size=(340,340), pad=(15,15) ),  
+        sg.Frame(' Transmitter Controls ',
+        control_layout, title_color='green', size=(340,340), pad=(15,15) ),
+    ],
+    [sg.Push(), sg.Button('Shutdown', key='-SHUTDOWN-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS)],
+    [sg.Text('', key='-STATUS_BAR-', text_color='green')],
+]
 
-def update_more():
-     pass
+# CALLBACK DISPATCH -----------------------------
+
+def toggle_ptt():
+    # call out to Pluto
+    if pm.ptt_is_on:
+        pm.stop_ptt()
+    else:
+        pm.start_ptt(bp.frequency, bp.symbol_rate)
+
+dispatch_dictionary = { 
+    # Lookup dictionary that maps button to function to call
+    '-BD-':bp.dec_band, '-BU-':bp.inc_band, 
+    '-FD-':bp.dec_frequency, '-FU-':bp.inc_frequency, 
+    '-SD-':bp.dec_symbol_rate, '-SU-':bp.inc_symbol_rate,
+    '-PTT-':toggle_ptt,
+}
+
+# UPDATE FUNCTIONS ------------------------------
+
+#def update_more():
+#    pass
  
 def update_control():
     window['-BV-'].update(bp.band)
@@ -86,19 +86,8 @@ def update_control():
     else:
         window['-PTT-'].update(button_color=MYBUTCOLORS)
         print('OFF')
-
-
-layout = [
-    [
-        sg.Frame('Encoding Controls',
-        encoding_layout, title_color='green', size=(340,340), pad=(15,15) ),
         
-        sg.Frame('Transmitter Controls',
-        control_layout, title_color='green', size=(340,340), pad=(15,15) ),
-    ],
-    [sg.Push(), sg.Button('Shutdown', key='-SHUTDOWN-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS)],
-    [sg.Text('', key='-STATUS_BAR-', text_color='green')],
-]
+# MAIN ------------------------------------------
 
 window = sg.Window('', layout, size=(800, 480), font=(None,11), use_default_focus=False, finalize=True)
 window.set_cursor('none')
@@ -106,9 +95,7 @@ window.set_cursor('none')
 while True:
     event, values = window.read(timeout=10)
     if event == '-SHUTDOWN-':
-        if sg.popup_ok_cancel('Shutdown Now?', font=(None,15), background_color='red',
-                    #no_titlebar=True, keep_on_top=True) == 'OK':
-                    keep_on_top=True) == 'OK':
+        if sg.popup_yes_no('Shutdown Now?', font=(None,11), background_color='red', keep_on_top=True) == 'Yes':
             pm.stop_ptt()
             break
     if event in dispatch_dictionary:
@@ -131,7 +118,7 @@ del window
 #    
 #    if event == '-FUNCTION COMPLETED-':)
 
-print('about to shutdown')
+print('Shutting down...')
 #import subprocess
 #subprocess.check_call(['sudo', 'poweroff'])
     
