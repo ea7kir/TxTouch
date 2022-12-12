@@ -20,22 +20,26 @@ PTT
 
 # The callback functions
 
-def ptt():
-    pm.start_ptt(bp.frequency, bp.symbol_rate)
+def toggle_ptt():
+    if pm.ptt_is_on:
+        pm.stop_ptt()
+    else:
+        pm.start_ptt(bp.frequency, bp.symbol_rate)
 
 # Lookup dictionary that maps button to function to call
 dispatch_dictionary = { 
     '-BD-':bp.dec_band, '-BU-':bp.inc_band, 
     '-FD-':bp.dec_frequency, '-FU-':bp.inc_frequency, 
     '-SD-':bp.dec_symbol_rate, '-SU-':bp.inc_symbol_rate,
-    '-PTT-':ptt,
+    '-PTT-':toggle_ptt,
 }
 
 # ------------------------------------------------
 
 MYBUTCOLORS = ('#FFFFFF','#222222')
+PPTONBUTTON = ('#ffffff','#FF0000')
 MYDISABLEDBTCOLORS = ('#444444',None)
-
+    
 def text_data(name, key):
     return [ sg.Text(' '), sg.Text(name, size=(15,1)), sg.Text('', key=key, text_color='orange', font=(None,11)) ]
 
@@ -74,9 +78,15 @@ def update_control():
     window['-BV-'].update(bp.band)
     window['-FV-'].update(bp.frequency)
     window['-SV-'].update(bp.symbol_rate)
+    if pm.ptt_is_on: 
+        window['-PTT-'].update(button_color=PPTONBUTTON)
+        print('ON')
+    else:
+        window['-PTT-'].update(button_color=MYBUTCOLORS)
+        print('OFF')
 
 def update_more():
-    pass
+     pass
 
 layout = [
     [sg.Frame('Transmitter Controls',
@@ -107,8 +117,11 @@ while True:
     elif bp.changed:
         update_control()
         bp.changed = False
-    else:
-        update_more()
+    elif pm.status_changed:
+        window['-STATUS_BAR-'].update(pm.status_msg)
+        update_control()
+        pm.status_changed = False
+        
 
 ############ for long operations, see: https://www.pysimplegui.org/en/latest/cookbook/#threaded-long-operation
 #    if lm.status_available:
