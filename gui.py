@@ -24,6 +24,8 @@ def button_selector(key_down, value, key_up):
     return [ incdec_but('<', key_down), sg.Push(), sg.Text('', key=value, text_color='orange', font=(None,13)), sg.Push(), incdec_but('>', key_up) ]
 
 encoding_layout = [
+    [sg.Push(), sg.Text('Mode', text_color='green'), sg.Push()],
+    button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-'),
     [sg.Push(), sg.Text('Codecs', text_color='green'), sg.Push()],
     button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-'),
     [sg.Push(), sg.Text('Constellation', text_color='green'), sg.Push()],
@@ -31,8 +33,7 @@ encoding_layout = [
     [sg.Push(), sg.Text('FEC', text_color='green'), sg.Push()],
     button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-'),
     [sg.Text('Bit Rate [integer]')],
-    [sg.Text('Provider [text]')],
-    [sg.Text('Servicee [text]')],
+    [sg.Text('Provider [text]'), sg.Text('Servicee [text]')],
 ]
 
 control_layout = [
@@ -70,6 +71,7 @@ dispatch_dictionary = {
     '-BD-':bp.dec_band, '-BU-':bp.inc_band, 
     '-FD-':bp.dec_frequency, '-FU-':bp.inc_frequency, 
     '-SD-':bp.dec_symbol_rate, '-SU-':bp.inc_symbol_rate,
+    '-MODE_D-':bp.dec_mode, '-MODE_U-':bp.inc_mode,
     '-CODECS_D-':bp.dec_codecs, '-CODECS_U-':bp.inc_codecs,
     '-CONSTELLATION_D-':bp.dec_constellation, '-CONSTELLATION_U-':bp.inc_constellation,
     '-FEC_D-':bp.dec_fec, '-FEC_U-':bp.inc_fec,
@@ -85,6 +87,7 @@ def update_control():
     window['-BV-'].update(bp.band)
     window['-FV-'].update(bp.frequency)
     window['-SV-'].update(bp.symbol_rate)
+    window['-MODE_V-'].update(bp.mode)
     window['-CODECS_V-'].update(bp.codecs)
     window['-CONSTELLATION_V-'].update(bp.constellation)
     window['-FEC_V-'].update(bp.fec)

@@ -70,6 +70,20 @@ V_NARROW_SYMBOL_RATE_LIST = [
     '33',
     '66',
 ]
+MODE_LIST = [
+    'DVB-S',
+    'DVB-S2',
+]
+CODEC_LIST = [
+    'H264 ACC',
+    'H265 ACC',
+]
+CONSTELLATION_LIST = [
+    'QPSK',
+    '8PSK',
+    '16PSK',
+    '32PSK',
+]
 FEC_LIST = [
     '1/2',
     '2/3',
@@ -79,20 +93,6 @@ FEC_LIST = [
     '6/7',
     '7/8',
     '8/9',
-]
-MODE_SEL_LIST = {
-    'DVB-S',
-    'DVB-S2',
-}
-CODECS_LIST = [
-    'H264 ACC',
-    'H265 ACC',
-]
-CONSTELLATION_LIST = [
-    'QPSK',
-    '8PSK',
-    '16PSK',
-    '32PSK',
 ]
 
 WIDE_BAND_LIST_INDEX = 0
@@ -104,6 +104,7 @@ class TxBandPlan():
         self._b_index = 0
         self._f_index = 0
         self._s_index = 0
+        self._mode_index = 0
         self._codecs_index = 0
         self._constellation_index = 0
         self._fec_index = 0
@@ -122,7 +123,8 @@ class TxBandPlan():
         self.band = BAND_LIST[self._b_index]
         self.frequency = self._curr_frequency_list[self._f_index]
         self.symbol_rate = self._curr_symbol_rate_list[self._s_index]
-        self.codecs = CODECS_LIST[self._codecs_index]
+        self.mode = MODE_LIST[self._mode_index]
+        self.codecs = CODEC_LIST[self._codecs_index]
         self.constellation = CONSTELLATION_LIST[self._constellation_index]
         self.fec = FEC_LIST[self._fec_index]
         self.changed = True
@@ -144,6 +146,18 @@ class TxBandPlan():
             self._curr_symbol_rate_list = V_NARROW_SYMBOL_RATE_LIST
             self._s_index = self._prev_v_narrow_s_index
             
+    def dec_mode(self):
+        #self._prev_codecs_index = self._codecs_index
+        if self._mode_index > 0:
+            self._mode_index -= 1
+            self._update_variables()
+            
+    def inc_mode(self):
+        if self._mode_index < len(MODE_LIST) - 1:
+            self._mode_index += 1
+            #self._change_band()
+            self._update_variables()
+            
     def dec_codecs(self):
         #self._prev_codecs_index = self._codecs_index
         if self._codecs_index > 0:
@@ -151,7 +165,7 @@ class TxBandPlan():
             self._update_variables()
             
     def inc_codecs(self):
-        if self._codecs_index < len(CODECS_LIST) - 1:
+        if self._codecs_index < len(CODEC_LIST) - 1:
             self._codecs_index += 1
             #self._change_band()
             self._update_variables()
