@@ -227,14 +227,14 @@ class TxBandPlan():
             self._s_index += 1
             self._update_variables()
 
-    def fequency_and_rate_list(self):
-        rate_list:str = []
-        if self.symbol_rate == 'AUTO':
-            for i in range(1, len(self._curr_symbol_rate_list)):
-                rate_list.append(self._curr_symbol_rate_list[i])
-        else:
-            rate_list = [self.symbol_rate]
-        return self.frequency[:8], rate_list
+    def frequency_and_rate(self):
+        #rate_list:str = []
+        #if self.symbol_rate == 'AUTO':
+        #    for i in range(1, len(self._curr_symbol_rate_list)):
+        #        rate_list.append(self._curr_symbol_rate_list[i])
+        #else:
+        #    rate_list = [self.symbol_rate]
+        return self.frequency[:7], self.symbol_rate
 
 
 

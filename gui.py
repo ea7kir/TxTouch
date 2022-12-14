@@ -3,6 +3,7 @@
 """TxTouch"""
 
 import PySimpleGUI as sg
+from config_manager import config
 from tx_bandplan import tx_bandplan as bp
 from pluto_manager import pluto_manager as pm
 
@@ -64,7 +65,20 @@ def toggle_ptt():
     if pm.ptt_is_on:
         pm.stop_ptt()
     else:
-        pm.start_ptt(bp.frequency, bp.symbol_rate)
+        frequency, rate = bp.frequency_and_rate()
+        pm.start_ptt(
+            frequency,
+            bp.mode,
+            bp.constellation,
+            rate,
+            bp.fec,
+            config.gain,
+            config.calibration_mode,
+            config.pcr_pts_delay,
+            config.audio_bit_rate,
+            config.provider,
+            config.service
+            )
 
 dispatch_dictionary = { 
     # Lookup dictionary that maps button to function to call
@@ -83,7 +97,7 @@ dispatch_dictionary = {
 #def update_more():
 #    pass
  
-def update_control():
+def update_controls():
     window['-BV-'].update(bp.band)
     window['-FV-'].update(bp.frequency)
     window['-SV-'].update(bp.symbol_rate)
@@ -93,10 +107,9 @@ def update_control():
     window['-FEC_V-'].update(bp.fec)
     if pm.ptt_is_on: 
         window['-PTT-'].update(button_color=PPTONBUTTON)
-        print('ON')
     else:
         window['-PTT-'].update(button_color=MYBUTCOLORS)
-        print('OFF')
+    window['-STATUS_BAR-'].update(pm.status_msg)
         
 # MAIN ------------------------------------------
 
@@ -113,11 +126,10 @@ while True:
         func_to_call = dispatch_dictionary[event]
         func_to_call()
     elif bp.changed:
-        update_control()
+        update_controls()
         bp.changed = False
     elif pm.status_changed:
-        window['-STATUS_BAR-'].update(pm.status_msg)
-        update_control()
+        update_controls()
         pm.status_changed = False
         
 window.close()
