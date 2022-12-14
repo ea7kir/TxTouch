@@ -23,6 +23,18 @@ def incdec_but(name, key):
 def button_selector(key_down, value, key_up):
     return [ incdec_but('<', key_down), sg.Push(), sg.Text('', key=value, text_color='orange', font=(None,13)), sg.Push(), incdec_but('>', key_up) ]
 
+encoding_layout = [
+    [sg.Push(), sg.Text('Codecs', text_color='green'), sg.Push()],
+    button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-'),
+    [sg.Push(), sg.Text('Constellation', text_color='green'), sg.Push()],
+    button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-'),
+    [sg.Push(), sg.Text('FEC', text_color='green'), sg.Push()],
+    button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-'),
+    [sg.Text('Bit Rate [integer]')],
+    [sg.Text('Provider [text]')],
+    [sg.Text('Servicee [text]')],
+]
+
 control_layout = [
     [sg.Push(), sg.Text('Band', text_color='green'), sg.Push()],
     button_selector('-BD-', '-BV-', '-BU-'),
@@ -32,16 +44,6 @@ control_layout = [
     button_selector('-SD-', '-SV-', '-SU-'),
     [sg.Text('')],
     [sg.Push(), sg.Button('PTT', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBTCOLORS, disabled=False), sg.Push()],
-]
-
-encoding_layout = [
-    [sg.Text('Codecs [H264 ACC | H265 ACC]')],
-    [sg.Text('Bit Rate [integer]')],
-    [sg.Text('Symbol Rate []')],
-    [sg.Text('Constellation []')],
-    [sg.Text('FEC []')],
-    [sg.Text('Provider []')],
-    [sg.Text('Servicee []')],
 ]
 
 layout = [
@@ -68,6 +70,9 @@ dispatch_dictionary = {
     '-BD-':bp.dec_band, '-BU-':bp.inc_band, 
     '-FD-':bp.dec_frequency, '-FU-':bp.inc_frequency, 
     '-SD-':bp.dec_symbol_rate, '-SU-':bp.inc_symbol_rate,
+    '-CODECS_D-':bp.dec_codecs, '-CODECS_U-':bp.inc_codecs,
+    '-CONSTELLATION_D-':bp.dec_constellation, '-CONSTELLATION_U-':bp.inc_constellation,
+    '-FEC_D-':bp.dec_fec, '-FEC_U-':bp.inc_fec,
     '-PTT-':toggle_ptt,
 }
 
@@ -80,6 +85,9 @@ def update_control():
     window['-BV-'].update(bp.band)
     window['-FV-'].update(bp.frequency)
     window['-SV-'].update(bp.symbol_rate)
+    window['-CODECS_V-'].update(bp.codecs)
+    window['-CONSTELLATION_V-'].update(bp.constellation)
+    window['-FEC_V-'].update(bp.fec)
     if pm.ptt_is_on: 
         window['-PTT-'].update(button_color=PPTONBUTTON)
         print('ON')
