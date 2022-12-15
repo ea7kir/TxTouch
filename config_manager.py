@@ -6,6 +6,7 @@ CONFIG_FILE = 'config.yaml'
 
 FACTORY_encoder_ip = '192.168.1.000'
 FACTORY_encoder_port = '0000'
+FACTORY_encoder_bit_rate = '340'
 FACTORY_pluto_ip = '192.168.2.1'
 FACTORY_pluto_port = '7272' # [ ???? | 7272 ]
 FACTORY_frequency = '2409.75 / 27'
@@ -25,6 +26,7 @@ class ConfigManager():
     def __init__(self):
         self.encoder_ip = FACTORY_encoder_ip
         self.encoder_port = FACTORY_encoder_port
+        self.encoder_bit_rate = FACTORY_encoder_bit_rate
         self.pluto_ip = FACTORY_pluto_ip
         self.pluto_port = FACTORY_pluto_port
         self.frequency = FACTORY_frequency
@@ -46,6 +48,7 @@ class ConfigManager():
                 data = yaml.load(f, Loader = yaml.FullLoader)
                 self.encoder_ip = data['encoder_ip']
                 self.encoder_port = data['encoder_port']
+                self.encoder_bit_rate = data['encoder_bit_rate']
                 self.pluto_ip = data['pluto_ip']
                 self.pluto_port = data['pluto_port']
                 self.frequency = data['frequency']
@@ -66,6 +69,7 @@ class ConfigManager():
         data = {
             'encoder_ip': self.encoder_ip,
             'encoder_port': self.encoder_port,
+            'encoder_bit_rate': self.encoder_bit_rate,
             'pluto_ip': self.pluto_ip,
             'pluto_port': self.pluto_port,
             'frequency': self.frequency,

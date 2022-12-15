@@ -4,7 +4,7 @@
 
 import PySimpleGUI as sg
 from config_manager import config
-from tx_bandplan import tx_bandplan as bp
+from bandplan import bandplan as bp
 from pluto_manager import pluto_manager as pm
 
 # LAYOUT ----------------------------------------
@@ -24,6 +24,13 @@ def incdec_but(name, key):
 def button_selector(key_down, value, key_up):
     return [ incdec_but('<', key_down), sg.Push(), sg.Text('', key=value, text_color='orange', font=(None,13)), sg.Push(), incdec_but('>', key_up) ]
 
+top_layout = [
+    sg.Button('TxTouch', key='-SYSTEM-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS),
+    sg.Text('', key='-STATUS_BAR-', text_color='green'),
+    sg.Push(),
+    sg.Button('Shutdown', key='-SHUTDOWN-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS),    
+]
+
 encoding_layout = [
     [sg.Push(), sg.Text('Mode', text_color='green'), sg.Push()],
     button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-'),
@@ -33,8 +40,9 @@ encoding_layout = [
     button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-'),
     [sg.Push(), sg.Text('FEC', text_color='green'), sg.Push()],
     button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-'),
-    [sg.Text('Bit Rate [integer]')],
-    [sg.Text('Provider [text]'), sg.Text('Servicee [text]')],
+    [sg.Text('Bit Rate'), sg.Input(config.encoder_bit_rate)],
+    [sg.Text('Provider'), sg.Input(config.provider)],
+    [sg.Text('Service'), sg.Input(config.service)],
 ]
 
 control_layout = [
@@ -44,18 +52,19 @@ control_layout = [
     button_selector('-FD-', '-FV-', '-FU-'),
     [sg.Push(), sg.Text('Symbol Rate', text_color='green'), sg.Push()],
     button_selector('-SD-', '-SV-', '-SU-'),
-    [sg.Text('')],
+    [sg.Text('Gain'), sg.Input(config.gain)],
     [sg.Push(), sg.Button('PTT', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBTCOLORS, disabled=False), sg.Push()],
 ]
 
 layout = [
-    [sg.Frame(' Encoding Controls ',
-        encoding_layout, title_color='green', size=(340,340), pad=(15,15) ),  
+    top_layout,
+    [
+        sg.Frame(' Encoding Controls ',
+        encoding_layout, title_color='green', pad=(15,15) ), #size=(340,340), 
+        sg.Push(),
         sg.Frame(' Transmitter Controls ',
-        control_layout, title_color='green', size=(340,340), pad=(15,15) ),
+        control_layout, title_color='green', pad=(15,15) ), #size=(340,340), 
     ],
-    [sg.Push(), sg.Button('Shutdown', key='-SHUTDOWN-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS)],
-    [sg.Text('', key='-STATUS_BAR-', text_color='green')],
 ]
 
 # CALLBACK DISPATCH -----------------------------

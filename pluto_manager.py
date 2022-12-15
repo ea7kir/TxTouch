@@ -41,7 +41,7 @@ class PlutoManager():
             provider)
         self.send_to_pluto(cmd_str)
         self.ptt_is_on = True
-        self.status_msg = 'cmd_str: {}'.format(cmd_str)
+        self.status_msg = '{}'.format(cmd_str)
         self.status_changed = True
     
     def stop_ptt(self):
