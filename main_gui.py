@@ -86,6 +86,7 @@ def start_pluto():
 def stop_pluto():
     if not pluto_data.pluto_running:
         return
+    # ...
     pluto_data.pluto_running = False
 
 ########################################################################### end pluto data
@@ -96,8 +97,8 @@ sg.theme('Black')
 
 MYSCRCOLOR = '#111111'
 MYBUTCOLORS = ('#FFFFFF','#222222')
-MYDISABLEDBTCOLORS = ('#444444',None)
-PPTONBUTTON = ('#ffffff','#FF0000')
+MYDISABLEDBUTCOLORS = ('#444444',None)
+PPTONBUTTON = ('#FFFFFF','#FF0000')
    
 def text_data(name, key):
     return sg.Text(name, size=11), sg.Text(' ', size=9, key=key, text_color='orange')
@@ -119,40 +120,40 @@ spectrum_layout = [
 ]
 
 tune_layout = [
-        sg.Column([
-            button_selector('-BD-', '-BV-', '-BU-', 8),
-        ]),
-        sg.Column([
-            button_selector('-SD-', '-SV-', '-SU-', 5),
-        ]),
-        sg.Column([
-            button_selector('-FD-', '-FV-', '-FU-', 12),
-        ]),
+    sg.Column([
+        button_selector('-BD-', '-BV-', '-BU-', 8),
+    ]),
+    sg.Column([
+        button_selector('-SD-', '-SV-', '-SU-', 5),
+    ]),
+    sg.Column([
+        button_selector('-FD-', '-FV-', '-FU-', 12),
+    ]),
 ]
 
 status_layout = [
     sg.Column([
-        text_data('Mode', '-ONE-'),     # button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-'),
-        text_data('Codecs', '-ONE-'),   # button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-'),
-        text_data('Constellation', '-ONE-'),      # button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-'),
-        text_data('FEC', '-ONE-'),      # button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-'),
+        text_data('Mode', '-MODE_V-'),     # button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-'),
+        text_data('Codecs', '-CODECS_V-'), # button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-'),
+        text_data('Constellation', '-CONSTELLATION_V-'), # button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-'),
+        text_data('FEC', '-FEC_V-'),       # button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-'),
     ]),
     sg.Column([
-        text_data('Bit Rate', '-ONE-'),
-        text_data('Provider', '-ONE-'),
-        text_data('Service', '-ONE-'),
-        text_data('Gain', '-ONE-'),
+        text_data('Bit Rate', '-BITRATE_V-'),
+        text_data('Provider', '-PROVIDER_V-'),
+        text_data('Service', '-SERVICE_V-'),
+        text_data('Gain', '-GAIN_V-'),
     ]),
     sg.Column([
-        text_data('Preamp Temp', '-ONE-'),
-        text_data('PA Current', '-ONE-'),
-        text_data('PA Temp', '-ONE-'),
-        text_data('Fans', '-ONE-'),
+        text_data('Preamp Temp', '-PREAMP_TEMP-'),
+        text_data('PA Current', '-PA_CURRENT-'),
+        text_data('PA Temp', '-PA_TEMP-'),
+        text_data('Fans', '-FANS-'),
     ]),
     sg.Column([
-        [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBTCOLORS, disabled=False)],
+        [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
         [sg.Text(' ')],
-        [sg.Button(' 28v ', key='-28V-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBTCOLORS, disabled=False)],
+        [sg.Button(' 28v ', key='-28V-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
     ]),
 ]
 
@@ -161,46 +162,37 @@ layout = [
     spectrum_layout,
     tune_layout,
     status_layout,
-#    [
-#        sg.Frame(' Encoding Controls ',
-#        encoding_layout, title_color='green', pad=(15,15) ), #size=(340,340), 
-#        sg.Push(),
-#        sg.Frame(' Transmitter Controls ',
-#        control_layout, title_color='green', pad=(15,15) ), #size=(340,340), 
-#    ],
 ]
 
 # CALLBACK DISPATCH -----------------------------
 
 def toggle_ptt():
-    # call out to Pluto
-    if pm.ptt_is_on:
-        pm.stop_ptt()
+    if pluto_data.pluto_running:
+        stop_pluto()
     else:
-        frequency, rate = bp.frequency_and_rate()
-        pm.start_ptt(
-            frequency,
-            bp.mode,
-            bp.constellation,
-            rate,
-            bp.fec,
-            config.gain,
-            config.calibration_mode,
-            config.pcr_pts_delay,
-            config.audio_bit_rate,
-            config.provider,
-            config.service
-            )
+        start_pluto(
+            #frequency,
+            #bp.mode,
+            #bp.constellation,
+            #rate,
+            #bp.fec,
+            #config.gain,
+            #config.calibration_mode,
+            #config.pcr_pts_delay,
+            #config.audio_bit_rate,
+            #config.provider,
+            #config.service
+        )
 
 dispatch_dictionary = { 
     # Lookup dictionary that maps button to function to call
     '-BD-':bp.dec_band, '-BU-':bp.inc_band, 
     '-FD-':bp.dec_frequency, '-FU-':bp.inc_frequency, 
     '-SD-':bp.dec_symbol_rate, '-SU-':bp.inc_symbol_rate,
-    '-MODE_D-':bp.dec_mode, '-MODE_U-':bp.inc_mode,
-    '-CODECS_D-':bp.dec_codecs, '-CODECS_U-':bp.inc_codecs,
-    '-CONSTELLATION_D-':bp.dec_constellation, '-CONSTELLATION_U-':bp.inc_constellation,
-    '-FEC_D-':bp.dec_fec, '-FEC_U-':bp.inc_fec,
+    #'-MODE_D-':bp.dec_mode, '-MODE_U-':bp.inc_mode,
+    #'-CODECS_D-':bp.dec_codecs, '-CODECS_U-':bp.inc_codecs,
+    #'-CONSTELLATION_D-':bp.dec_constellation, '-CONSTELLATION_U-':bp.inc_constellation,
+    #'-FEC_D-':bp.dec_fec, '-FEC_U-':bp.inc_fec,
     '-PTT-':toggle_ptt,
 }
 
@@ -212,16 +204,15 @@ def update_control(window):
     window['-SV-'].update(bp.symbol_rate)
 
 def update_pluto_status(window):
-    pass
-#    window['-MODE_V-'].update(bp.mode)
-#    window['-CODECS_V-'].update(bp.codecs)
-#    window['-CONSTELLATION_V-'].update(bp.constellation)
-#    window['-FEC_V-'].update(bp.fec)
-#    if pm.ptt_is_on: 
-#        window['-PTT-'].update(button_color=PPTONBUTTON)
-#    else:
-#        window['-PTT-'].update(button_color=MYBUTCOLORS)
-#    window['-STATUS_BAR-'].update(pm.status_msg)
+    window['-MODE_V-'].update(bp.mode)
+    window['-CODECS_V-'].update(bp.codecs)
+    window['-CONSTELLATION_V-'].update(bp.constellation)
+    window['-FEC_V-'].update(bp.fec)
+    if pluto_data.pluto_running: 
+        window['-PTT-'].update(button_color=PPTONBUTTON)
+    else:
+        window['-PTT-'].update(button_color=MYBUTCOLORS)
+    #window['-STATUS_BAR-'].update(pm.status_msg)
         
 def update_graph(spectrum_graph):
     # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
@@ -264,8 +255,8 @@ async def main_ui():
     while running:
         event, values = window.read(timeout=1)
         if event == '-SHUTDOWN-':
-            if sg.popup_yes_no('Shutdown Now?', font=(None,11), background_color='red', keep_on_top=True) == 'Yes':
-                running = False
+            #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
+            running = False
         if event in dispatch_dictionary:
             func_to_call = dispatch_dictionary[event]
             func_to_call()
@@ -282,7 +273,7 @@ async def main_ui():
     window.close()
     del window
 
-async def main(): # TODO: could we call 
+async def main(): 
     await asyncio.gather(
         main_ui(),
         read_spectrum_data(),

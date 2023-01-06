@@ -5,7 +5,7 @@ TUNED_MARKER = [
     # last Int16 represents 10499.475 MHz
     # spectrum with = 10499.475 - 10490.500 = 8.975 Mhz
     # width between channels = 0.25 MHz
-    103, # '10491.50 / 00'
+    #103, # '10491.50 / 00'
     230, # '10492.75 / 01'
     256, # '10493.00 / 02'
     281, # '10493.25 / 03'
@@ -34,7 +34,6 @@ TUNED_MARKER = [
     869, # '10499.00 / 26'
     894, # '10499.25 / 27'
 ]
-
 BAND_LIST = [
     'Wide',
     'Narrow',
@@ -190,7 +189,6 @@ class BandPlan():
     def inc_mode(self):
         if self._mode_index < len(MODE_LIST) - 1:
             self._mode_index += 1
-            #self._change_band()
             self._update_variables()
             
     def dec_codecs(self):
@@ -202,7 +200,6 @@ class BandPlan():
     def inc_codecs(self):
         if self._codecs_index < len(CODEC_LIST) - 1:
             self._codecs_index += 1
-            #self._change_band()
             self._update_variables()
             
     def dec_constellation(self):
@@ -213,7 +210,6 @@ class BandPlan():
     def inc_constellation(self):
         if self._constellation_index < len(CONSTELLATION_LIST) - 1:
             self._constellation_index += 1
-            #self._change_band()
             self._update_variables()
             
     def dec_fec(self):
@@ -224,7 +220,6 @@ class BandPlan():
     def inc_fec(self):
         if self._fec_index < len(FEC_LIST) - 1:
             self._fec_index += 1
-            #self._change_band()
             self._update_variables()
 
     # ----------------------------------
@@ -272,7 +267,7 @@ class BandPlan():
         return self.frequency[:7], self.symbol_rate
 
     def selected_frequency_marker(self):
-        i = int(self.frequency[10:])
+        i = int(self.frequency[9:])
         return TUNED_MARKER[i]
 
 bandplan = BandPlan()
