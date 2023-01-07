@@ -2,7 +2,6 @@
 
 import PySimpleGUI as sg
 import asyncio
-from config_manager import config
 from tx_bandplan import bandplan as bp
 
 running = True
@@ -28,7 +27,7 @@ from dataclasses import dataclass
 class SpectrumData:
     points = [(int(0),int(0))] * 920 # to ensure the last point is (0,0)
     beacon_level:int = 0
-    changed: bool = False
+    changed:bool = False
 
 spectrum_data = SpectrumData()
 
@@ -58,13 +57,61 @@ async def read_spectrum_data():
 
 ########################################################################### end spectrum data
 
+########################################################################### begin encoder data
+
+#from dataclasses import dataclass
+
+@dataclass
+class EncoderData:
+    ip:str = '000.000.000.000'
+    port:int = 0
+    encoding:str = 'H.265'
+    bit_rate:str = '430'
+    changed: bool = False
+    
+encoder_data = EncoderData()
+
+########################################################################### end encoder data
+
+########################################################################### begin roof data
+
+#from dataclasses import dataclass
+
+@dataclass
+class RoofData:
+    ip:str = '000.000.000.000'
+    port:int = 0
+    preamp_temp:str = '24.0 °C'
+    pa_temp:str = '30.0 °C'
+    pa_current:str = '7.1 Amps'
+    fans:str = 'running'
+    v28supply:bool = False
+    changed: bool = False
+
+roof_data = RoofData()
+
+########################################################################### end roof data
+
 ########################################################################### begin pluto data
 
 #from dataclasses import dataclass
 
 @dataclass
 class PlutoData:
-    # ...
+    # TODO: note these are just example values
+    ip:str = '000.000.000.000',
+    port:int = 8282,
+    frequency:str = '2409.75',
+    mode:str = 'DBS2',
+    constellation:str = 'QPSK',
+    rate:str = '333',
+    fec:str = '23',
+    gain:str = '-10',
+    calibration_mode:str = 'nocalib',
+    pcr_pts_delay:str = '800',
+    audio_bit_rate:str = '32',
+    provider:str = 'EA7KIR',
+    service:str = 'Malaga',
     pluto_running: bool = False
     changed: bool = False
 
@@ -80,7 +127,22 @@ async def read_pluto_data():
 
 def start_pluto():
     stop_pluto()
-    # ...
+    # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
+    cmd_str = 'rtmp://{}:{}/,{},{},{},{},{},{},{},{},{},/,{}'.format(
+        pluto_data.ip,
+        pluto_data.port,
+        pluto_data.frequency,
+        pluto_data.mode,
+        pluto_data.constellation,
+        pluto_data.symbol_rate,
+        pluto_data.fec,
+        pluto_data.gain,
+        pluto_data.calibration_mode,
+        pluto_data.pcr_pts_delay,
+        pluto_data.audio_bit_rate,
+        pluto_data.provider)
+    # TODO: send to pluto
+    print(cmd_str)
     pluto_data.pluto_running = True
 
 def stop_pluto():
@@ -170,19 +232,7 @@ def toggle_ptt():
     if pluto_data.pluto_running:
         stop_pluto()
     else:
-        start_pluto(
-            #frequency,
-            #bp.mode,
-            #bp.constellation,
-            #rate,
-            #bp.fec,
-            #config.gain,
-            #config.calibration_mode,
-            #config.pcr_pts_delay,
-            #config.audio_bit_rate,
-            #config.provider,
-            #config.service
-        )
+        start_pluto()
 
 dispatch_dictionary = { 
     # Lookup dictionary that maps button to function to call
