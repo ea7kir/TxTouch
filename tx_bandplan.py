@@ -5,7 +5,7 @@ TUNED_MARKER = [
     # last Int16 represents 10499.475 MHz
     # spectrum with = 10499.475 - 10490.500 = 8.975 Mhz
     # width between channels = 0.25 MHz
-    #103, # '10491.50 / 00'
+    103, # '10491.50 / 00' beacon
     230, # '10492.75 / 01'
     256, # '10493.00 / 02'
     281, # '10493.25 / 03'
@@ -104,6 +104,7 @@ V_NARROW_SYMBOL_RATE_LIST = [
     '33',
     '66',
 ]
+
 MODE_LIST = [
     'DVB-S',
     'DVB-S2',
@@ -133,35 +134,34 @@ WIDE_BAND_LIST_INDEX = 0
 NARROW_BAND_LIST_INDEX = 1
 V_NARROW_BAND_LIST_INDEX = 2
 
+INITIAL_B           = 1 # narrow
+INITIAL_WIDE_S      = 0 # 500
+INITIAL_WIDE_F      = 2 # chan 15
+INITIAL_NARROW_S    = 2 # 333
+INITIAL_NARROW_F    = 13 # chan 27
+INITIAL_V_NARROW_S  = 2 # 66
+INITIAL_V_NARROW_F  = 0 # chan 01
+
 class BandPlan():
     def __init__(self):
-        self._b_index = 0
+        self._b_index = INITIAL_B
         self._f_index = 0
         self._s_index = 0
+
         self._mode_index = 0
         self._codecs_index = 0
         self._constellation_index = 0
         self._fec_index = 0
-        self._prev_band = 0
-        self._prev_wide_f_index = 0
-        self._prev_wide_s_index = 0
-        self._prev_narrow_f_index = 0
-        self._prev_narrow_s_index = 0
-        self._prev_v_narrow_f_index = 0
-        self._prev_v_narrow_s_index = 0
-        #self._prev_codecs
+
+        self._prev_band = INITIAL_B
+        self._prev_wide_f_index = INITIAL_WIDE_F
+        self._prev_wide_s_index = INITIAL_WIDE_S
+        self._prev_narrow_f_index = INITIAL_NARROW_F
+        self._prev_narrow_s_index = INITIAL_NARROW_S
+        self._prev_v_narrow_f_index = INITIAL_V_NARROW_F
+        self._prev_v_narrow_s_index = INITIAL_V_NARROW_S
         self._change_band()
         self._update_variables()
-
-    def _update_variables(self):
-        self.band = BAND_LIST[self._b_index]
-        self.frequency = self._curr_frequency_list[self._f_index]
-        self.symbol_rate = self._curr_symbol_rate_list[self._s_index]
-        self.mode = MODE_LIST[self._mode_index]
-        self.codecs = CODEC_LIST[self._codecs_index]
-        self.constellation = CONSTELLATION_LIST[self._constellation_index]
-        self.fec = FEC_LIST[self._fec_index]
-        self.changed = True
 
     def _change_band(self):
         if self._b_index == WIDE_BAND_LIST_INDEX:
@@ -179,6 +179,61 @@ class BandPlan():
             self._f_index = self._prev_v_narrow_f_index
             self._curr_symbol_rate_list = V_NARROW_SYMBOL_RATE_LIST
             self._s_index = self._prev_v_narrow_s_index
+
+    def _update_variables(self):
+        self.band = BAND_LIST[self._b_index]
+        self.frequency = self._curr_frequency_list[self._f_index]
+        self.symbol_rate = self._curr_symbol_rate_list[self._s_index]
+
+        self.mode = MODE_LIST[self._mode_index]
+        self.codecs = CODEC_LIST[self._codecs_index]
+        self.constellation = CONSTELLATION_LIST[self._constellation_index]
+        self.fec = FEC_LIST[self._fec_index]
+
+        self.changed = True
+
+    def dec_band(self):
+        # TODO: there should be a check to see if the band is changed
+        self._prev_b_index = self._b_index
+        if self._b_index > 0:
+            self._b_index -= 1
+            self._change_band()
+            self._update_variables()
+
+    def inc_band(self):
+        if self._b_index < len(BAND_LIST) - 1:
+            self._b_index += 1
+            self._change_band()
+            self._update_variables()
+
+    def dec_frequency(self):
+        if self._f_index > 0:
+            self._f_index -= 1
+            self._update_variables()
+
+    def inc_frequency(self):
+        if self._f_index < len(self._curr_frequency_list) - 1:
+            self._f_index += 1
+            self._update_variables()
+
+    def dec_symbol_rate(self):
+        if self._s_index > 0:
+            self._s_index -= 1
+            self._update_variables()
+
+    def inc_symbol_rate(self):
+        if self._s_index < len(self._curr_symbol_rate_list) - 1:
+            self._s_index += 1
+            self._update_variables()
+
+    def frequency_and_rate(self):
+        return self.frequency[:7], self.symbol_rate
+
+    def selected_frequency_marker(self):
+        i = int(self.frequency[9:])
+        return TUNED_MARKER[i]
+
+# ----------------------------------
             
     def dec_mode(self):
         #self._prev_codecs_index = self._codecs_index
@@ -223,52 +278,6 @@ class BandPlan():
             self._update_variables()
 
     # ----------------------------------
-
-    def dec_band(self):
-        self._prev_b_index = self._b_index
-        if self._b_index > 0:
-            self._b_index -= 1
-            self._change_band()
-            self._update_variables()
-
-    def inc_band(self):
-        if self._b_index < len(BAND_LIST) - 1:
-            self._b_index += 1
-            self._change_band()
-            self._update_variables()
-
-    def dec_frequency(self):
-        if self._f_index > 0:
-            self._f_index -= 1
-            self._update_variables()
-
-    def inc_frequency(self):
-        if self._f_index < len(self._curr_frequency_list) - 1:
-            self._f_index += 1
-            self._update_variables()
-
-    def dec_symbol_rate(self):
-        if self._s_index > 0:
-            self._s_index -= 1
-            self._update_variables()
-
-    def inc_symbol_rate(self):
-        if self._s_index < len(self._curr_symbol_rate_list) - 1:
-            self._s_index += 1
-            self._update_variables()
-
-    def frequency_and_rate(self):
-        #rate_list:str = []
-        #if self.symbol_rate == 'AUTO':
-        #    for i in range(1, len(self._curr_symbol_rate_list)):
-        #        rate_list.append(self._curr_symbol_rate_list[i])
-        #else:
-        #    rate_list = [self.symbol_rate]
-        return self.frequency[:7], self.symbol_rate
-
-    def selected_frequency_marker(self):
-        i = int(self.frequency[9:])
-        return TUNED_MARKER[i]
 
 bandplan = BandPlan()
 
