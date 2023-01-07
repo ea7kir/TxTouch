@@ -2,7 +2,7 @@
 
 import yaml
 
-CONFIG_FILE = 'config.yaml'
+CONFIG_FILE = 'eg_config.yaml'
 
 FACTORY_encoder_ip = '192.168.1.000'
 FACTORY_encoder_port = '0000'
