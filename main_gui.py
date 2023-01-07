@@ -12,15 +12,6 @@ TEST_GRAPH = False
 
 import websockets
 
-# Each scan sends a block of 1844 bytes
-# This is 922 16-bit samples in low-high format
-# The last two 16-bit samples are zero
-# Sample zero is at 10490.500MHz
-# Each sample represents 10000 / 1024 = 9.765625kHz
-# Sample 919 is at 10499.475MHz
-# The noise floor value is around 10000
-# The peak of the beacon is around 40000
-
 from dataclasses import dataclass
 
 @dataclass
@@ -30,6 +21,15 @@ class SpectrumData:
     changed:bool = False
 
 spectrum_data = SpectrumData()
+
+# Each scan sends a block of 1844 bytes
+# This is 922 16-bit samples in low-high format
+# The last two 16-bit samples are zero
+# Sample zero is at 10490.500MHz
+# Each sample represents 10000 / 1024 = 9.765625kHz
+# Sample 919 is at 10499.475MHz
+# The noise floor value is around 10000
+# The peak of the beacon is around 40000
 
 async def read_spectrum_data():
     global running
@@ -86,7 +86,7 @@ class RoofData:
     pa_current:str = '7.1 Amps'
     fans:str = 'running'
     v28supply:bool = False
-    changed: bool = False
+    changed:bool = False
 
 roof_data = RoofData()
 
@@ -113,7 +113,7 @@ class PlutoData:
     provider:str = 'EA7KIR',
     service:str = 'Malaga',
     pluto_running: bool = False
-    changed: bool = False
+    changed:bool = False
 
 pluto_data = PlutoData()
 
@@ -195,26 +195,31 @@ tune_layout = [
 
 status_layout = [
     sg.Column([
+        # control data
         text_data('Mode', '-MODE_V-'),     # button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-'),
         text_data('Codecs', '-CODECS_V-'), # button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-'),
         text_data('Constellation', '-CONSTELLATION_V-'), # button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-'),
         text_data('FEC', '-FEC_V-'),       # button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-'),
     ]),
     sg.Column([
-        text_data('Bit Rate', '-BITRATE_V-'),
-        text_data('Provider', '-PROVIDER_V-'),
-        text_data('Service', '-SERVICE_V-'),
-        text_data('Gain', '-GAIN_V-'),
+        # control data
+        text_data('Bit Rate', '-BITRATE_V-'),   # button_selector('-BITRATE_D-', '-BITRATE_V-', '-BITRATE_U-'),
+        text_data('Provider', '-PROVIDER_V-'),  # button_selector('-PROVIDER_D-', '-PROVIDER_V-', '-PROVIDER_U-'),
+        text_data('Service', '-SERVICE_V-'),    # button_selector('-SERVICE_D-', '-SERVICE_V-', '-SERVICE_U-'),
+        text_data('Gain', '-GAIN_V-'),          # button_selector('-GAINE_D-', '-GAIN_V-', '-GAIN_U-'),
     ]),
     sg.Column([
+        # roof data
         text_data('Preamp Temp', '-PREAMP_TEMP-'),
         text_data('PA Current', '-PA_CURRENT-'),
         text_data('PA Temp', '-PA_TEMP-'),
         text_data('Fans', '-FANS-'),
     ]),
     sg.Column([
+        # control data
         [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
         [sg.Text(' ')],
+        # roof data
         [sg.Button(' 28v ', key='-28V-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
     ]),
 ]
