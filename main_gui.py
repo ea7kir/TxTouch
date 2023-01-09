@@ -4,6 +4,10 @@ import PySimpleGUI as sg
 import asyncio
 from tx_bandplan import bandplan as bp
 
+from time import sleep
+from multiprocessing import Process
+from multiprocessing import Pipe
+
 running = True
 
 TEST_GRAPH = False
@@ -20,7 +24,7 @@ class SpectrumData:
     beacon_level:int = 0
     changed:bool = False
 
-spectrum_data = SpectrumData()
+#spectrum_data = SpectrumData()
 
 # Each scan sends a block of 1844 bytes
 # This is 922 16-bit samples in low-high format
@@ -31,29 +35,57 @@ spectrum_data = SpectrumData()
 # The noise floor value is around 10000
 # The peak of the beacon is around 40000
 
-async def read_spectrum_data():
-    global running
+#async def ORIGINAL_read_spectrum_data():
+#    global running
+#    BATC_SPECTRUM_URI = 'wss://eshail.batc.org.uk/wb/fft/fft_ea7kirsatcontroller'
+#    websocket = await websockets.connect(BATC_SPECTRUM_URI)
+#    while running:
+#        recvd_data = await websocket.recv()
+#        if len(recvd_data) != 1844:
+#            print('rcvd_data != 1844')
+#            continue
+#        j = 1
+#        for i in range(0, 1836, 2):
+#            uint_16: int = int(recvd_data[i]) + (int(recvd_data[i+1] << 8))
+#            spectrum_data.points[j] = (j, uint_16)
+#            j += 1
+#        spectrum_data.points[919] = (919, 0)
+#        # calculate the average beacon peak level where beacon center is 103
+#        spectrum_data.beacon_level = 0
+#        for i in range(93, 113): # should be range(73, 133), but this works better
+#            spectrum_data.beacon_level += spectrum_data.points[i][1]
+#        spectrum_data.beacon_level //= 20.0
+#        spectrum_data.changed = True
+#        #await asyncio.sleep(0)
+#    await websocket.close()
+
+def read_spectrum_data(connection):
+    spectrum_data = SpectrumData()
     BATC_SPECTRUM_URI = 'wss://eshail.batc.org.uk/wb/fft/fft_ea7kirsatcontroller'
-    websocket = await websockets.connect(BATC_SPECTRUM_URI)
-    while running:
-        recvd_data = await websocket.recv()
-        if len(recvd_data) != 1844:
-            print('rcvd_data != 1844')
-            continue
-        j = 1
-        for i in range(0, 1836, 2):
-            uint_16: int = int(recvd_data[i]) + (int(recvd_data[i+1] << 8))
-            spectrum_data.points[j] = (j, uint_16)
-            j += 1
-        spectrum_data.points[919] = (919, 0)
-        # calculate the average beacon peak level where beacon center is 103
-        spectrum_data.beacon_level = 0
-        for i in range(93, 113): # should be range(73, 133), but this works better
-            spectrum_data.beacon_level += spectrum_data.points[i][1]
-        spectrum_data.beacon_level //= 20.0
-        spectrum_data.changed = True
-        #await asyncio.sleep(0)
-    await websocket.close()
+    async def handle(uri):
+        async with websockets.connect(uri) as websocket:
+            while True:
+                recvd_data = await websocket.recv()
+                if len(recvd_data) != 1844:
+                    print('rcvd_data != 1844')
+                    continue
+                j = 1
+                for i in range(0, 1836, 2):
+                    uint_16: int = int(recvd_data[i]) + (int(recvd_data[i+1] << 8))
+                    spectrum_data.points[j] = (j, uint_16)
+                    j += 1
+                spectrum_data.points[919] = (919, 0)
+                # calculate the average beacon peak level where beacon center is 103
+                spectrum_data.beacon_level = 0
+                for i in range(93, 113): # should be range(73, 133), but this works better
+                    spectrum_data.beacon_level += spectrum_data.points[i][1]
+                spectrum_data.beacon_level //= 20.0
+                spectrum_data.changed = True
+                #await asyncio.sleep(0)
+                connection.send(spectrum_data)
+
+    asyncio.get_event_loop().run_until_complete(handle(BATC_SPECTRUM_URI))
+
 
 ########################################################################### end spectrum data
 
@@ -269,7 +301,7 @@ def update_pluto_status(window):
         window['-PTT-'].update(button_color=MYBUTCOLORS)
     #window['-STATUS_BAR-'].update(pm.status_msg)
         
-def update_graph(spectrum_graph):
+def update_graph(spectrum_graph, spectrum_data):
     # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
     spectrum_graph.erase()
     # draw graticule
@@ -302,7 +334,7 @@ def update_graph(spectrum_graph):
 
 # MAIN ------------------------------------------
 
-async def main_ui():
+def main_ui(connection1, connection2):
     global running
     window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=MYSCRCOLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
@@ -315,16 +347,19 @@ async def main_ui():
         if event in dispatch_dictionary:
             func_to_call = dispatch_dictionary[event]
             func_to_call()
-        if spectrum_data.changed:
-            update_graph(graph)
-            spectrum_data.changed = False
-        if bp.changed:
-            update_control(window)
-            bp.changed = False
-        if pluto_data.changed:
-            update_pluto_status(window)
-            pluto_data.changed = False
-        await asyncio.sleep(0.2)
+        spectrum_item = connection1.recv()
+        print(spectrum_item.beacon_level, spectrum_item.points)
+        update_graph(graph, spectrum_item)
+        #if spectrum_data.changed:
+        #    update_graph(graph)
+        #    spectrum_data.changed = False
+        #if bp.changed:
+        #    update_control(window)
+        #    bp.changed = False
+        #if pluto_data.changed:
+        #    update_pluto_status(window)
+        #    pluto_data.changed = False
+        #await asyncio.sleep(0.2)
     window.close()
     del window
 
@@ -336,7 +371,18 @@ async def main():
     )
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    conn1a, conn1b = Pipe()
+    conn2a, conn2b = Pipe()
+
+    process_read_spectrum_data = Process(target=read_spectrum_data, args=(conn1b,))
+
+    process_read_spectrum_data.start()
+
+    main_ui(conn1a, conn2a)
+
+    process_read_spectrum_data.kill()
+
+    #asyncio.run(main())
     print('about to shut down')
     #import subprocess
     #subprocess.check_call(['sudo', 'poweroff'])
