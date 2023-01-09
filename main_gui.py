@@ -75,16 +75,22 @@ class EncoderData:
 
 class RoofData:
     def __init__(self):
-        self.ip:str = '000.000.000.000'
-        self.port:int = 0
-        self.preamp_temp:str = '24.0 °C'
-        self.pa_temp:str = '30.0 °C'
-        self.pa_current:str = '7.1 Amps'
-        self.fans:str = 'running'
-        self.v28supply:bool = False
-        self.changed:bool = False
+        self.preamp_temp:str = ''
+        self.pa_temp:str = ''
+        self.pa_current:str = ''
+        self.fans:str = ''
 
-#roof_data = RoofData()
+def process_read_roof_data(send_roof_data):
+    roof_data = RoofData()
+    IP = '000.000.000.000'
+    PORT = 0
+    while True:
+        sleep(1.0)
+        roof_data.preamp_temp = '24.0 °C'
+        roof_data.pa_temp:str = '30.0 °C'
+        roof_data.pa_current:str = '7.1 Amps'
+        roof_data.fans:str = 'OK'
+        send_roof_data.send(roof_data)
 
 ########################################################################### end roof data
 
@@ -109,13 +115,6 @@ class PlutoData:
         self.pluto_running: bool = False
 
 #pluto_data = PlutoData()
-
-def process_read_pluto_data(send_pluto_data):
-    while True:
-        sleep(1.0)
-        # ...
-
-    stop_pluto()
 
 def start_pluto():
     stop_pluto()
@@ -260,6 +259,12 @@ def update_pluto_status(window, bp):
     else:
         window['-PTT-'].update(button_color=MYBUTCOLORS)
     #window['-STATUS_BAR-'].update(pm.status_msg)
+
+def update_roof_data(window, roof_data):
+    window['-PREAMP_TEMP-'].update(roof_data.preamp_temp)
+    window['-PA_CURRENT-'].update(roof_data.pa_current)
+    window['-PA_TEMP-'].update(roof_data.pa_temp)
+    window['-FANS-'].update(roof_data.fans)
         
 def update_graph(graph, spectrum_data):
     # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
@@ -294,7 +299,7 @@ def update_graph(graph, spectrum_data):
 
 # MAIN ------------------------------------------
 
-def main_gui(recv_spectrum_data, recv_pluto_data):
+def main_gui(recv_spectrum_data, recv_roof_data):
     global running
     window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=MYSCRCOLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
@@ -313,26 +318,26 @@ def main_gui(recv_spectrum_data, recv_pluto_data):
         while recv_spectrum_data.poll():
             spectrum_data = recv_spectrum_data.recv()
             update_graph(graph, spectrum_data)
-        while recv_pluto_data.poll():
-            pluto_data = recv_pluto_data.recv()
-            update_plup_data(window, pluto_data)
+        while recv_roof_data.poll():
+            roof_data = recv_roof_data.recv()
+            update_roof_data(window, roof_data)
     window.close()
     del window
 
 if __name__ == '__main__':
     recv_spectrum_data, send_spectrum_data = Pipe()
-    recv_pluto_data, send_pluto_data = Pipe()
+    recv_roof_data, send_roof_data = Pipe()
     # create the process
     p_read_spectrum_data = Process(target=process_read_spectrum_data, args=(send_spectrum_data,))
-    p_read_pluto_data = Process(target=process_read_pluto_data, args=(send_pluto_data,))
+    p_read_roof_data = Process(target=process_read_roof_data, args=(send_roof_data,))
     # start the process
     p_read_spectrum_data.start()
-    p_read_pluto_data.start()
+    p_read_roof_data.start()
     # main ui
-    main_gui(recv_spectrum_data, recv_pluto_data)
+    main_gui(recv_spectrum_data, recv_roof_data)
     # kill 
     p_read_spectrum_data.kill()
-    p_read_pluto_data.kill()
+    p_read_roof_data.kill()
     # shutdown
     print('about to shut down')
     #import subprocess
