@@ -1,7 +1,6 @@
 """TxTouch"""
 
 import PySimpleGUI as sg
-import asyncio
 from tx_bandplan import bandplan as bp
 
 from time import sleep
@@ -14,17 +13,13 @@ TEST_GRAPH = False
 
 ########################################################################### begin spectrum data
 
+import asyncio
 import websockets
 
-from dataclasses import dataclass
-
-@dataclass
 class SpectrumData:
-    points = [(int(0),int(0))] * 920 # to ensure the last point is (0,0)
-    beacon_level:int = 0
-    changed:bool = False
-
-#spectrum_data = SpectrumData()
+    def __init__(self):
+        self.points = [(int(0),int(0))] * 920 # to ensure the last point is (0,0)
+        self.beacon_level:int = 0
 
 # Each scan sends a block of 1844 bytes
 # This is 922 16-bit samples in low-high format
@@ -35,35 +30,11 @@ class SpectrumData:
 # The noise floor value is around 10000
 # The peak of the beacon is around 40000
 
-#async def ORIGINAL_read_spectrum_data():
-#    global running
-#    BATC_SPECTRUM_URI = 'wss://eshail.batc.org.uk/wb/fft/fft_ea7kirsatcontroller'
-#    websocket = await websockets.connect(BATC_SPECTRUM_URI)
-#    while running:
-#        recvd_data = await websocket.recv()
-#        if len(recvd_data) != 1844:
-#            print('rcvd_data != 1844')
-#            continue
-#        j = 1
-#        for i in range(0, 1836, 2):
-#            uint_16: int = int(recvd_data[i]) + (int(recvd_data[i+1] << 8))
-#            spectrum_data.points[j] = (j, uint_16)
-#            j += 1
-#        spectrum_data.points[919] = (919, 0)
-#        # calculate the average beacon peak level where beacon center is 103
-#        spectrum_data.beacon_level = 0
-#        for i in range(93, 113): # should be range(73, 133), but this works better
-#            spectrum_data.beacon_level += spectrum_data.points[i][1]
-#        spectrum_data.beacon_level //= 20.0
-#        spectrum_data.changed = True
-#        #await asyncio.sleep(0)
-#    await websocket.close()
-
-def read_spectrum_data(connection):
-    spectrum_data = SpectrumData()
-    BATC_SPECTRUM_URI = 'wss://eshail.batc.org.uk/wb/fft/fft_ea7kirsatcontroller'
-    async def handle(uri):
-        async with websockets.connect(uri) as websocket:
+def process_read_spectrum_data(send_spectrum_data):
+    async def handle():
+        url = 'wss://eshail.batc.org.uk/wb/fft/fft_ea7kirsatcontroller'
+        async with websockets.connect(url) as websocket:
+            spectrum_data = SpectrumData()
             while True:
                 recvd_data = await websocket.recv()
                 if len(recvd_data) != 1844:
@@ -79,82 +50,71 @@ def read_spectrum_data(connection):
                 spectrum_data.beacon_level = 0
                 for i in range(93, 113): # should be range(73, 133), but this works better
                     spectrum_data.beacon_level += spectrum_data.points[i][1]
-                spectrum_data.beacon_level //= 20.0
-                spectrum_data.changed = True
-                #await asyncio.sleep(0)
-                connection.send(spectrum_data)
+                spectrum_data.beacon_level //= 20
+                send_spectrum_data.send(spectrum_data)
 
-    asyncio.get_event_loop().run_until_complete(handle(BATC_SPECTRUM_URI))
-
+    asyncio.get_event_loop().run_until_complete(handle())
 
 ########################################################################### end spectrum data
 
 ########################################################################### begin encoder data
 
-#from dataclasses import dataclass
-
-@dataclass
 class EncoderData:
-    ip:str = '000.000.000.000'
-    port:int = 0
-    encoding:str = 'H.265'
-    bit_rate:str = '430'
-    changed: bool = False
+    def __init__(self):
+        self.ip:str = '000.000.000.000'
+        self.port:int = 0
+        self.encoding:str = 'H.265'
+        self.bit_rate:str = '430'
+        self.changed: bool = False
     
-encoder_data = EncoderData()
+#encoder_data = EncoderData()
 
 ########################################################################### end encoder data
 
 ########################################################################### begin roof data
 
-#from dataclasses import dataclass
-
-@dataclass
 class RoofData:
-    ip:str = '000.000.000.000'
-    port:int = 0
-    preamp_temp:str = '24.0 °C'
-    pa_temp:str = '30.0 °C'
-    pa_current:str = '7.1 Amps'
-    fans:str = 'running'
-    v28supply:bool = False
-    changed:bool = False
+    def __init__(self):
+        self.ip:str = '000.000.000.000'
+        self.port:int = 0
+        self.preamp_temp:str = '24.0 °C'
+        self.pa_temp:str = '30.0 °C'
+        self.pa_current:str = '7.1 Amps'
+        self.fans:str = 'running'
+        self.v28supply:bool = False
+        self.changed:bool = False
 
-roof_data = RoofData()
+#roof_data = RoofData()
 
 ########################################################################### end roof data
 
 ########################################################################### begin pluto data
 
-#from dataclasses import dataclass
-
-@dataclass
 class PlutoData:
-    # TODO: note these are just example values
-    ip:str = '000.000.000.000',
-    port:int = 8282,
-    frequency:str = '2409.75',
-    mode:str = 'DBS2',
-    constellation:str = 'QPSK',
-    rate:str = '333',
-    fec:str = '23',
-    gain:str = '-10',
-    calibration_mode:str = 'nocalib',
-    pcr_pts_delay:str = '800',
-    audio_bit_rate:str = '32',
-    provider:str = 'EA7KIR',
-    service:str = 'Malaga',
-    pluto_running: bool = False
-    changed:bool = False
+    def __init__(self):
+        # TODO: note these are just example values
+        self.ip:str = '000.000.000.000',
+        self.port:int = 8282,
+        self.frequency:str = '2409.75',
+        self.mode:str = 'DBS2',
+        self.constellation:str = 'QPSK',
+        self.rate:str = '333',
+        self.fec:str = '23',
+        self.gain:str = '-10',
+        self.calibration_mode:str = 'nocalib',
+        self.pcr_pts_delay:str = '800',
+        self.audio_bit_rate:str = '32',
+        self.provider:str = 'EA7KIR',
+        self.service:str = 'Malaga',
+        self.pluto_running: bool = False
 
-pluto_data = PlutoData()
+#pluto_data = PlutoData()
 
-async def read_pluto_data():
-    global running
-    while running:
-        await asyncio.sleep(1.0)
+def process_read_pluto_data(send_pluto_data):
+    while True:
+        sleep(1.0)
         # ...
-        pluto_data.changed = True
+
     stop_pluto()
 
 def start_pluto():
@@ -285,12 +245,12 @@ dispatch_dictionary = {
 
 # UPDATE FUNCTIONS ------------------------------
 
-def update_control(window):
+def update_control(window, bp):
     window['-BV-'].update(bp.band)
     window['-FV-'].update(bp.frequency)
     window['-SV-'].update(bp.symbol_rate)
 
-def update_pluto_status(window):
+def update_pluto_status(window, bp):
     window['-MODE_V-'].update(bp.mode)
     window['-CODECS_V-'].update(bp.codecs)
     window['-CONSTELLATION_V-'].update(bp.constellation)
@@ -301,40 +261,40 @@ def update_pluto_status(window):
         window['-PTT-'].update(button_color=MYBUTCOLORS)
     #window['-STATUS_BAR-'].update(pm.status_msg)
         
-def update_graph(spectrum_graph, spectrum_data):
+def update_graph(graph, spectrum_data):
     # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
-    spectrum_graph.erase()
+    graph.erase()
     # draw graticule
     c = 0
     for y in range(0x2697, 0xFFFF, 0xD2D): # 0x196A, 0xFFFF, 0xD2D
         if c == 5:
-            spectrum_graph.draw_text('5dB', (13,y), color='#444444')
-            spectrum_graph.draw_line((40, y), (918, y), color='#444444')
+            graph.draw_text('5dB', (13,y), color='#444444')
+            graph.draw_line((40, y), (918, y), color='#444444')
         elif c == 10:
-            spectrum_graph.draw_text('10dB', (17,y), color='#444444')
-            spectrum_graph.draw_line((40, y), (918, y), color='#444444')
+            graph.draw_text('10dB', (17,y), color='#444444')
+            graph.draw_line((40, y), (918, y), color='#444444')
         elif c == 15:
-            spectrum_graph.draw_text('15dB', (17,y), color='#444444')
-            spectrum_graph.draw_line((40, y), (918, y), color='#444444')
+            graph.draw_text('15dB', (17,y), color='#444444')
+            graph.draw_line((40, y), (918, y), color='#444444')
         else:
-            spectrum_graph.draw_line((0, y), (918, y), color='#222222')
+            graph.draw_line((0, y), (918, y), color='#222222')
         c += 1
     # draw tuned marker
     x = bp.selected_frequency_marker()
-    spectrum_graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
+    graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
 
     if TEST_GRAPH:
-        spectrum_graph.draw_line((0, 0), (459, 0xFFFF), color='red', width=1)
-        spectrum_graph.draw_line((459, 0xFFFF), (918, 0), color='red', width=1)
+        graph.draw_line((0, 0), (459, 0xFFFF), color='red', width=1)
+        graph.draw_line((459, 0xFFFF), (918, 0), color='red', width=1)
     else:
         # draw beacon level
-        spectrum_graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
+        graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
         # draw spectrum
-        spectrum_graph.draw_polygon(spectrum_data.points, fill_color='green')
+        graph.draw_polygon(spectrum_data.points, fill_color='green')
 
 # MAIN ------------------------------------------
 
-def main_ui(connection1, connection2):
+def main_gui(recv_spectrum_data, recv_pluto_data):
     global running
     window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=MYSCRCOLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
@@ -347,42 +307,33 @@ def main_ui(connection1, connection2):
         if event in dispatch_dictionary:
             func_to_call = dispatch_dictionary[event]
             func_to_call()
-        spectrum_item = connection1.recv()
-        print(spectrum_item.beacon_level, spectrum_item.points)
-        update_graph(graph, spectrum_item)
-        #if spectrum_data.changed:
-        #    update_graph(graph)
-        #    spectrum_data.changed = False
-        #if bp.changed:
-        #    update_control(window)
-        #    bp.changed = False
-        #if pluto_data.changed:
-        #    update_pluto_status(window)
-        #    pluto_data.changed = False
-        #await asyncio.sleep(0.2)
+        if bp.changed:
+            update_control(window, bp)
+            bp.changed = False
+        while recv_spectrum_data.poll():
+            spectrum_data = recv_spectrum_data.recv()
+            update_graph(graph, spectrum_data)
+        while recv_pluto_data.poll():
+            pluto_data = recv_pluto_data.recv()
+            update_plup_data(window, pluto_data)
     window.close()
     del window
 
-async def main(): 
-    await asyncio.gather(
-        main_ui(),
-        read_spectrum_data(),
-        read_pluto_data(),
-    )
-
 if __name__ == '__main__':
-    conn1a, conn1b = Pipe()
-    conn2a, conn2b = Pipe()
-
-    process_read_spectrum_data = Process(target=read_spectrum_data, args=(conn1b,))
-
-    process_read_spectrum_data.start()
-
-    main_ui(conn1a, conn2a)
-
-    process_read_spectrum_data.kill()
-
-    #asyncio.run(main())
+    recv_spectrum_data, send_spectrum_data = Pipe()
+    recv_pluto_data, send_pluto_data = Pipe()
+    # create the process
+    p_read_spectrum_data = Process(target=process_read_spectrum_data, args=(send_spectrum_data,))
+    p_read_pluto_data = Process(target=process_read_pluto_data, args=(send_pluto_data,))
+    # start the process
+    p_read_spectrum_data.start()
+    p_read_pluto_data.start()
+    # main ui
+    main_gui(recv_spectrum_data, recv_pluto_data)
+    # kill 
+    p_read_spectrum_data.kill()
+    p_read_pluto_data.kill()
+    # shutdown
     print('about to shut down')
     #import subprocess
     #subprocess.check_call(['sudo', 'poweroff'])
