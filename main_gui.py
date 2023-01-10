@@ -46,7 +46,7 @@ class PlutoData:
         self.service:str = 'Malaga',
         self.pluto_running: bool = False
 
-#pluto_data = PlutoData()
+pluto_data = PlutoData()
 
 def start_pluto():
     stop_pluto()
@@ -101,35 +101,39 @@ top_layout = [
 ]
 
 spectrum_layout = [
-    sg.Graph(canvas_size=(770, 250), graph_bottom_left=(0, 0x2000), graph_top_right=(918, 0xFFFF), background_color='black', float_values=False, key='graph'),
+    # was 720,250
+    sg.Graph(canvas_size=(720, 240), graph_bottom_left=(0, 0x2000), graph_top_right=(918, 0xFFFF), background_color='black', float_values=False, key='graph'),
 ]
 
 tune_layout = [
     sg.Column([
-        button_selector('-BD-', '-BV-', '-BU-', 8),
+        # control data
+        button_selector('-BD-', '-BV-', '-BU-', 8),  
     ]),
     sg.Column([
+        # control data
         button_selector('-SD-', '-SV-', '-SU-', 5),
     ]),
     sg.Column([
+        # control data
         button_selector('-FD-', '-FV-', '-FU-', 12),
     ]),
 ]
 
 status_layout = [
     sg.Column([
-        # control data
-        text_data('Mode', '-MODE_V-'),     # button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-'),
-        text_data('Codecs', '-CODECS_V-'), # button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-'),
-        text_data('Constellation', '-CONSTELLATION_V-'), # button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-'),
-        text_data('FEC', '-FEC_V-'),       # button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-'),
+        # control data   
+        button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-', 8),
+        button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-', 8),
+        button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-', 8),
+        button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-', 8),
     ]),
     sg.Column([
         # control data
-        text_data('Bit Rate', '-BITRATE_V-'),   # button_selector('-BITRATE_D-', '-BITRATE_V-', '-BITRATE_U-'),
-        text_data('Provider', '-PROVIDER_V-'),  # button_selector('-PROVIDER_D-', '-PROVIDER_V-', '-PROVIDER_U-'),
-        text_data('Service', '-SERVICE_V-'),    # button_selector('-SERVICE_D-', '-SERVICE_V-', '-SERVICE_U-'),
-        text_data('Gain', '-GAIN_V-'),          # button_selector('-GAINE_D-', '-GAIN_V-', '-GAIN_U-'),
+        button_selector('-BITRATE_D-', '-BITRATE_V-', '-BITRATE_U-', 8),
+        button_selector('-PROVIDER_D-', '-PROVIDER_V-', '-PROVIDER_U-', 8),
+        button_selector('-SERVICE_D-', '-SERVICE_V-', '-SERVICE_U-', 8),
+        button_selector('-GAINE_D-', '-GAIN_V-', '-GAIN_U-', 8),
     ]),
     sg.Column([
         # roof data
@@ -140,10 +144,10 @@ status_layout = [
     ]),
     sg.Column([
         # control data
-        [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
+        [sg.Button(' Tune ', key='-TUNE-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
         [sg.Text(' ')],
         # roof data
-        [sg.Button(' 28v ', key='-28V-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
+        [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
     ]),
 ]
 
@@ -167,11 +171,15 @@ dispatch_dictionary = {
     '-BD-':bp.dec_band, '-BU-':bp.inc_band, 
     '-FD-':bp.dec_frequency, '-FU-':bp.inc_frequency, 
     '-SD-':bp.dec_symbol_rate, '-SU-':bp.inc_symbol_rate,
-    #'-MODE_D-':bp.dec_mode, '-MODE_U-':bp.inc_mode,
-    #'-CODECS_D-':bp.dec_codecs, '-CODECS_U-':bp.inc_codecs,
-    #'-CONSTELLATION_D-':bp.dec_constellation, '-CONSTELLATION_U-':bp.inc_constellation,
-    #'-FEC_D-':bp.dec_fec, '-FEC_U-':bp.inc_fec,
-    '-PTT-':toggle_ptt,
+    '-MODE_D-':bp.dec_mode, '-MODE_U-':bp.inc_mode,
+    '-CODECS_D-':bp.dec_codecs, '-CODECS_U-':bp.inc_codecs,
+    '-CONSTELLATION_D-':bp.dec_constellation, '-CONSTELLATION_U-':bp.inc_constellation,
+    '-FEC_D-':bp.dec_fec, '-FEC_U-':bp.inc_fec,
+    '-BITRATE_D-':bp.dec_bitrate, '-BITRATE_U-':bp.inc_bitrate,
+    '-PROVIDER_D-':bp.dec_provider, '-PROVIDER_U-':bp.inc_provider,
+    '-SERVICE_D-':bp.dec_service, '-SERVICE_U-':bp.inc_service,
+    '-GAIN_D-':bp.dec_gain, '-GAIN_U-':bp.inc_gain,
+    #'-PTT-':toggle_ptt,
 }
 
 # UPDATE FUNCTIONS ------------------------------
@@ -180,12 +188,15 @@ def update_control(window, bp):
     window['-BV-'].update(bp.band)
     window['-FV-'].update(bp.frequency)
     window['-SV-'].update(bp.symbol_rate)
-
-def update_pluto_status(window, bp):
     window['-MODE_V-'].update(bp.mode)
     window['-CODECS_V-'].update(bp.codecs)
     window['-CONSTELLATION_V-'].update(bp.constellation)
     window['-FEC_V-'].update(bp.fec)
+    window['-BITRATE_V-'].update(bp.bitrate)
+    window['-PROVIDER_V-'].update(bp.provider)
+    window['-SERVICE_V-'].update(bp.service)
+    window['-GAIN_V-'].update(bp.gain)
+    #
     if pluto_data.pluto_running: 
         window['-PTT-'].update(button_color=PPTONBUTTON)
     else:
