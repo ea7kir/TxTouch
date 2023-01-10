@@ -1,4 +1,5 @@
-from time import sleep
+import random # ONLY NEEDED TO SIMULATE DATA VALUES DURING DEVELOPMENT
+from time import sleep # ONLY NEEDED TO SIMULATE FETCH TIMES DURING DEVELOPMENT
 
 class RoofData:
     def __init__(self):
@@ -13,9 +14,9 @@ def process_read_roof_data(send_roof_data):
     PORT = 0
     while True:
         sleep(1.0)
-        roof_data.preamp_temp = '24.0 °C'
-        roof_data.pa_temp:str = '30.0 °C'
-        roof_data.pa_current:str = '7.1 Amps'
+        roof_data.preamp_temp = f'{random.randint(30, 39)} °C'
+        roof_data.pa_temp:str = f'{random.randint(30, 39)} °C'
+        roof_data.pa_current:str = f'{random.randint(6, 7)} Amps'
         roof_data.fans:str = 'OK'
         send_roof_data.send(roof_data)
 
