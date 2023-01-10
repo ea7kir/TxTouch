@@ -129,6 +129,18 @@ FEC_LIST = [
     '7/8',
     '8/9',
 ]
+BITRATE_LIST = [
+    '400','410','430',
+]
+PROVIDER_LIST = [
+    'EA7KIR','G8WAA',
+]
+SERVICE_LIST = [
+    'Malaga','Yorkshire'
+]
+GAIN_LIST = [
+    '-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
+]
 
 WIDE_BAND_LIST_INDEX = 0
 NARROW_BAND_LIST_INDEX = 1
@@ -152,6 +164,10 @@ class BandPlan():
         self._codecs_index = 0
         self._constellation_index = 0
         self._fec_index = 0
+        self._bitrate_index = 0
+        self._provider_index = 0
+        self._service_index = 0
+        self._gain_index = 0
 
         self._prev_band = 0
         self._prev_wide_f_index = 0
@@ -189,6 +205,10 @@ class BandPlan():
         self.codecs = CODEC_LIST[self._codecs_index]
         self.constellation = CONSTELLATION_LIST[self._constellation_index]
         self.fec = FEC_LIST[self._fec_index]
+        self.bitrate = BITRATE_LIST[self._bitrate_index]
+        self.provider = PROVIDER_LIST[self._provider_index]
+        self.service = SERVICE_LIST[self._service_index]
+        self.gain = GAIN_LIST[self._gain_index]
 
         self.changed = True
 
@@ -226,15 +246,6 @@ class BandPlan():
             self._s_index += 1
             self._update_variables()
 
-    def frequency_and_rate(self):
-        return self.frequency[:7], self.symbol_rate
-
-    def selected_frequency_marker(self):
-        i = int(self.frequency[9:])
-        return TUNED_MARKER[i]
-
-# ----------------------------------
-            
     def dec_mode(self):
         #self._prev_codecs_index = self._codecs_index
         if self._mode_index > 0:
@@ -277,7 +288,54 @@ class BandPlan():
             self._fec_index += 1
             self._update_variables()
 
+    def dec_bitrate(self):
+        if self._bitrate_index > 0:
+            self._bitrate_index -= 1
+            self._update_variables()
+            
+    def inc_bitrate(self):
+        if self._bitrate_index < len(BITRATE_LIST) - 1:
+            self._bitrate_index += 1
+            self._update_variables()
+
+    def dec_provider(self):
+        if self._rovider_index > 0:
+            self._rovider_index -= 1
+            self._update_variables()
+            
+    def inc_provider(self):
+        if self._provider_index < len(PROVIDER_LIST) - 1:
+            self._provider_index += 1
+            self._update_variables()
+
+    def dec_service(self):
+        if self._service_index > 0:
+            self._service_index -= 1
+            self._update_variables()
+            
+    def inc_service(self):
+        if self._service_index < len(SERVICE_LIST) - 1:
+            self._service_index += 1
+            self._update_variables()
+
+    def dec_gain(self):
+        if self._gain_index > 0:
+            self._gain_index -= 1
+            self._update_variables()
+            
+    def inc_gain(self):
+        if self._gain_index < len(GAIN_LIST) - 1:
+            self._gain_index += 1
+            self._update_variables()
+
     # ----------------------------------
+
+    def frequency_and_rate(self):
+        return self.frequency[:7], self.symbol_rate
+
+    def selected_frequency_marker(self):
+        i = int(self.frequency[9:])
+        return TUNED_MARKER[i]
 
 bandplan = BandPlan()
 
