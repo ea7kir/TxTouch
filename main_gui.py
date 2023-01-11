@@ -1,16 +1,13 @@
 """TxTouch"""
 
-import PySimpleGUI as sg
-from tx_bandplan import bandplan as bp
-from process_spectrum import process_read_spectrum_data, SpectrumData
-from process_roof import process_read_roof_data, RoofData
-
 from multiprocessing import Process
 from multiprocessing import Pipe
 
-running = True
+import PySimpleGUI as sg
+from tx_bandplan import bandplan as bp
 
-TEST_GRAPH = False
+from process_spectrum import process_read_spectrum_data, SpectrumData
+from process_roof import process_read_roof_data, RoofData
 
 ########################################################################### begin encoder data
 
@@ -83,6 +80,7 @@ sg.theme('Black')
 MYSCRCOLOR = '#111111'
 MYBUTCOLORS = ('#FFFFFF','#222222')
 MYDISABLEDBUTCOLORS = ('#444444',None)
+TUNEONBUTTON = ('#FFFFFF','#FF0000')
 PPTONBUTTON = ('#FFFFFF','#FF0000')
    
 def text_data(name, key):
@@ -144,10 +142,12 @@ status_layout = [
     ]),
     sg.Column([
         # control data
-        [sg.Button(' Tune ', key='-TUNE-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
+        #[sg.Button(' TUNE ', key='-TUNE-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
+        [sg.Button(' TUNE ', key='-TUNE-', button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS)],
         [sg.Text(' ')],
         # roof data
-        [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
+        #[sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS, disabled_button_color=MYDISABLEDBUTCOLORS, disabled=False)],
+        [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=MYBUTCOLORS, mouseover_colors=MYBUTCOLORS)],
     ]),
 ]
 
@@ -160,11 +160,18 @@ layout = [
 
 # CALLBACK DISPATCH -----------------------------
 
-def toggle_ptt():
-    if pluto_data.pluto_running:
-        stop_pluto()
-    else:
-        start_pluto()
+# TODO: whye not gather all the vale s from the winddow[] ?
+tune_active = False
+def tune():
+    global tune_active
+    print('TUNE was pressed')
+    tune_active = not tune_active
+
+ptt_active = False
+def ptt():
+    global ptt_active
+    print('PTT was pressed')
+    ptt_active = not ptt_active
 
 dispatch_dictionary = { 
     # Lookup dictionary that maps button to function to call
@@ -179,7 +186,8 @@ dispatch_dictionary = {
     '-PROVIDER_D-':bp.dec_provider, '-PROVIDER_U-':bp.inc_provider,
     '-SERVICE_D-':bp.dec_service, '-SERVICE_U-':bp.inc_service,
     '-GAIN_D-':bp.dec_gain, '-GAIN_U-':bp.inc_gain,
-    #'-PTT-':toggle_ptt,
+    '-TUNE-':tune,
+    '-PTT-':ptt,
 }
 
 # UPDATE FUNCTIONS ------------------------------
@@ -196,11 +204,12 @@ def update_control(window, bp):
     window['-PROVIDER_V-'].update(bp.provider)
     window['-SERVICE_V-'].update(bp.service)
     window['-GAIN_V-'].update(bp.gain)
-    #
-    if pluto_data.pluto_running: 
-        window['-PTT-'].update(button_color=PPTONBUTTON)
+
+    global tune_active
+    if tune_active:
+        window['-TUNE-'].update(button_color=TUNEONBUTTON)
     else:
-        window['-PTT-'].update(button_color=MYBUTCOLORS)
+        window['-TUNE-'].update(button_color=MYBUTCOLORS)
     #window['-STATUS_BAR-'].update(pm.status_msg)
 
 def update_roof_data(window, roof_data):
@@ -208,6 +217,13 @@ def update_roof_data(window, roof_data):
     window['-PA_CURRENT-'].update(roof_data.pa_current)
     window['-PA_TEMP-'].update(roof_data.pa_temp)
     window['-FANS-'].update(roof_data.fans)
+
+    global ptt_active
+    if ptt_active: 
+        window['-PTT-'].update(button_color=PPTONBUTTON)
+    else:
+        window['-PTT-'].update(button_color=MYBUTCOLORS)
+    #window['-STATUS_BAR-'].update(pm.status_msg)
         
 def update_graph(graph, spectrum_data):
     # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
@@ -230,28 +246,22 @@ def update_graph(graph, spectrum_data):
     # draw tuned marker
     x = bp.selected_frequency_marker()
     graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
-
-    if TEST_GRAPH:
-        graph.draw_line((0, 0), (459, 0xFFFF), color='red', width=1)
-        graph.draw_line((459, 0xFFFF), (918, 0), color='red', width=1)
-    else:
-        # draw beacon level
-        graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
-        # draw spectrum
-        graph.draw_polygon(spectrum_data.points, fill_color='green')
+    # draw beacon level
+    graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
+    # draw spectrum
+    graph.draw_polygon(spectrum_data.points, fill_color='green')
 
 # MAIN ------------------------------------------
 
 def main_gui(recv_spectrum_data, recv_roof_data):
-    global running
     window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=MYSCRCOLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
     graph = window['graph']
-    while running:
+    while True:
         event, values = window.read(timeout=1)
         if event == '-SHUTDOWN-':
             #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
-            running = False
+            break
         if event in dispatch_dictionary:
             func_to_call = dispatch_dictionary[event]
             func_to_call()

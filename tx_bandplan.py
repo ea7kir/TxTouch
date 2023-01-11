@@ -5,7 +5,7 @@ TUNED_MARKER = [
     # last Int16 represents 10499.475 MHz
     # spectrum with = 10499.475 - 10490.500 = 8.975 Mhz
     # width between channels = 0.25 MHz
-    #103, # '10491.50 / 00' beacon
+    103, # '10491.50 / 00' beacon
     230, # '10492.75 / 01'
     256, # '10493.00 / 02'
     281, # '10493.25 / 03'
@@ -104,7 +104,6 @@ V_NARROW_SYMBOL_RATE_LIST = [
     '33',
     '66',
 ]
-
 MODE_LIST = [
     'DVB-S',
     'DVB-S2',
@@ -156,7 +155,7 @@ INITIAL_V_NARROW_F  = 0 # chan 01
 
 class BandPlan():
     def __init__(self):
-        self._b_index = 0
+        self._b_index = INITIAL_B
         self._f_index = 0
         self._s_index = 0
 
@@ -169,10 +168,10 @@ class BandPlan():
         self._service_index = 0
         self._gain_index = 0
 
-        self._prev_band = 0
+        self._prev_band = NARROW_BAND_LIST_INDEX
         self._prev_wide_f_index = 0
         self._prev_wide_s_index = 0
-        self._prev_narrow_f_index = 0
+        self._prev_narrow_f_index = INITIAL_NARROW_F
         self._prev_narrow_s_index = 0
         self._prev_v_narrow_f_index = 0
         self._prev_v_narrow_s_index = 0
