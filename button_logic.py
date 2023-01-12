@@ -1,4 +1,4 @@
-# tx_bandplan.py
+#import
 
 TUNED_MARKER = [
     # first Int16 represents 10490.500 MHz
@@ -153,12 +153,14 @@ INITIAL_NARROW_F    = 13 # chan 27
 INITIAL_V_NARROW_S  = 2 # 66
 INITIAL_V_NARROW_F  = 0 # chan 01
 
-class BandPlan():
+class ButtonState:
+    pass
+
+class ButtonLogic:
     def __init__(self):
         self._b_index = INITIAL_B
         self._f_index = 0
         self._s_index = 0
-
         self._mode_index = 0
         self._codecs_index = 0
         self._constellation_index = 0
@@ -167,7 +169,6 @@ class BandPlan():
         self._provider_index = 0
         self._service_index = 0
         self._gain_index = 0
-
         self._prev_band = NARROW_BAND_LIST_INDEX
         self._prev_wide_f_index = 0
         self._prev_wide_s_index = 0
@@ -199,7 +200,6 @@ class BandPlan():
         self.band = BAND_LIST[self._b_index]
         self.frequency = self._curr_frequency_list[self._f_index]
         self.symbol_rate = self._curr_symbol_rate_list[self._s_index]
-
         self.mode = MODE_LIST[self._mode_index]
         self.codecs = CODEC_LIST[self._codecs_index]
         self.constellation = CONSTELLATION_LIST[self._constellation_index]
@@ -208,15 +208,14 @@ class BandPlan():
         self.provider = PROVIDER_LIST[self._provider_index]
         self.service = SERVICE_LIST[self._service_index]
         self.gain = GAIN_LIST[self._gain_index]
-
         self.changed = True
 
-    def dec_band(self):
+    def dec_band(seld):
         # TODO: there should be a check to see if the band is changed
         self._prev_b_index = self._b_index
-        if self._b_index > 0:
-            self._b_index -= 1
-            self._change_band()
+        if _b_index > 0:
+            _b_index -= 1
+            self_change_band()
             self._update_variables()
 
     def inc_band(self):
@@ -298,8 +297,8 @@ class BandPlan():
             self._update_variables()
 
     def dec_provider(self):
-        if self._rovider_index > 0:
-            self._rovider_index -= 1
+        if self._provider_index > 0:
+            self._provider_index -= 1
             self._update_variables()
             
     def inc_provider(self):
@@ -327,14 +326,9 @@ class BandPlan():
             self._gain_index += 1
             self._update_variables()
 
-    # ----------------------------------
-
-    def frequency_and_rate(self):
-        return self.frequency[:7], self.symbol_rate
-
     def selected_frequency_marker(self):
         i = int(self.frequency[9:])
         return TUNED_MARKER[i]
 
-bandplan = BandPlan()
+button_logic = ButtonLogic()
 
