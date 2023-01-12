@@ -210,12 +210,11 @@ class ButtonLogic:
         self.gain = GAIN_LIST[self._gain_index]
         self.changed = True
 
-    def dec_band(seld):
+    def dec_band(self):
         # TODO: there should be a check to see if the band is changed
-        self._prev_b_index = self._b_index
-        if _b_index > 0:
-            _b_index -= 1
-            self_change_band()
+        if self._b_index > 0:
+            self._b_index -= 1
+            self._change_band()
             self._update_variables()
 
     def inc_band(self):
@@ -245,7 +244,6 @@ class ButtonLogic:
             self._update_variables()
 
     def dec_mode(self):
-        #self._prev_codecs_index = self._codecs_index
         if self._mode_index > 0:
             self._mode_index -= 1
             self._update_variables()
@@ -256,7 +254,6 @@ class ButtonLogic:
             self._update_variables()
             
     def dec_codecs(self):
-        #self._prev_codecs_index = self._codecs_index
         if self._codecs_index > 0:
             self._codecs_index -= 1
             self._update_variables()
