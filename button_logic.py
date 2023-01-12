@@ -166,7 +166,7 @@ class Value:
     service:str = '-'
     gain:str = '-'
     def __init__(self, name):
-        band = name
+        self.band = name
 
 class Index:
     band = 0
@@ -181,7 +181,7 @@ class Index:
     service = 0
     gain = 0
     def __init__(self, number):
-        band = number
+        self.band = number
 
 value = [ Value(BAND_LIST[0]), Value(BAND_LIST[1]), Value(BAND_LIST[2]) ]
 index = [ Index(0), Index(1), Index(2) ]
@@ -203,19 +203,20 @@ def inc_band():
         curr_index = index[curr_band]
 
 def dec_band():
-    global curr_band
+    global curr_band, curr_value, curr_index
     if curr_band > 0:
         curr_band -= 1
         curr_value = value[curr_band]
         curr_index = index[curr_band]
     
 def inc_frequency():
-    global curr_band
+    global curr_band, curr_value, curr_index
     if curr_index.frequency < max_frequency_index[curr_band]:
         curr_index.frequency += 1
         curr_value.frequency = frequency_list[curr_band][curr_index.frequency]
 
 def dec_frequency():
+    global curr_band, curr_value, curr_index
     if curr_index.frequency > 0:
         curr_index.frequency -= 1
         curr_value.frequency = frequency_list[curr_band][curr_index.frequency]
