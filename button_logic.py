@@ -153,9 +153,173 @@ INITIAL_NARROW_F    = 13 # chan 27
 INITIAL_V_NARROW_S  = 2 # 66
 INITIAL_V_NARROW_F  = 0 # chan 01
 
-class ButtonState:
-    pass
+class Value:
+    band:str = '-'
+    frequency:str = '-'
+    symbol_rate:str = '-'
+    mode:str = '-'
+    codecs:str = '-'
+    constellation:str = '-'
+    fec:str = '-'
+    bitrate:str = '-'
+    provider:str = '-'
+    service:str = '-'
+    gain:str = '-'
+    def __init__(self, name):
+        band = name
 
+class Index:
+    band = 0
+    frequency = 0
+    symbol_rate = 0
+    mode = 0
+    codecs = 0
+    constellation = 0
+    fec = 0
+    bitrate = 0
+    provider = 0
+    service = 0
+    gain = 0
+    def __init__(self, number):
+        band = number
+
+value = [ Value(BAND_LIST[0]), Value(BAND_LIST[1]), Value(BAND_LIST[2]) ]
+index = [ Index(0), Index(1), Index(2) ]
+
+curr_band = 0
+curr_value = value[curr_band]
+curr_index = index[curr_band]
+
+frequency_list = [ WIDE_FREQUENCY_LIST, NARROW_FREQUENCY_LIST, V_NARROW_FREQUENCY_LIST ]
+synbol_rate_list = [ WIDE_SYMBOL_RATE_LIST, NARROW_SYMBOL_RATE_LIST, V_NARROW_SYMBOL_RATE_LIST ]
+max_frequency_index = [ len(WIDE_FREQUENCY_LIST) - 1, len(NARROW_FREQUENCY_LIST) - 1, len(V_NARROW_FREQUENCY_LIST) - 1 ]
+max_symbol_rate_index = [ len(WIDE_SYMBOL_RATE_LIST) - 1, len(NARROW_SYMBOL_RATE_LIST) - 1, len(V_NARROW_SYMBOL_RATE_LIST) - 1 ]
+
+def inc_band():
+    global curr_band, curr_value, curr_index
+    if curr_band < len(BAND_LIST) - 1:
+        curr_band += 1
+        curr_value = value[curr_band]
+        curr_index = index[curr_band]
+
+def dec_band():
+    global curr_band
+    if curr_band > 0:
+        curr_band -= 1
+        curr_value = value[curr_band]
+        curr_index = index[curr_band]
+    
+def inc_frequency():
+    global curr_band
+    if curr_index.frequency < max_frequency_index[curr_band]:
+        curr_index.frequency += 1
+        curr_value.frequency = frequency_list[curr_band][curr_index.frequency]
+
+def dec_frequency():
+    if curr_index.frequency > 0:
+        curr_index.frequency -= 1
+        curr_value.frequency = frequency_list[curr_band][curr_index.frequency]
+    
+def inc_symbol_rate():
+    global curr_band
+    if curr_index.symbol_rate < max_symbol_rate_index[curr_band]:
+        curr_index.symbol_rate += 1
+        curr_value.symbol_rate = synbol_rate_list[curr_band][curr_index.symbol_rate]
+
+def dec_symbol_rate():
+    global curr_band
+    if curr_index.symbol_rate > 0:
+        curr_index.symbol_rate -= 1
+        curr_value.symbol_rate = synbol_rate_list[curr_band][curr_index.symbol_rate]
+    
+def inc_mode():
+    if curr_index.mode < len(MODE_LIST) - 1:
+        curr_index.mode += 1
+        curr_value.mode = MODE_LIST[curr_index.mode]
+
+def dec_mode():
+    if curr_index.mode > 0:
+        curr_index.mode -= 1
+        curr_value.mode = MODE_LIST[curr_index.mode]
+    
+def inc_codecs():
+    if curr_index.codecs < len(CODEC_LIST) - 1:
+        curr_index.codecs += 1
+        curr_value.codecs = CODEC_LIST[curr_index.codecs]
+
+def dec_codecs():
+    if curr_index.codecs > 0:
+        curr_index.codecs -= 1
+        curr_value.codecs = CODEC_LIST[curr_index.codecs]
+    
+def inc_constellation():
+    if curr_index.constellation < len(CONSTELLATION_LIST) - 1:
+        curr_index.constellation += 1
+        curr_value.constellation = CONSTELLATION_LIST[curr_index.constellation]
+
+def dec_constellation():
+    if curr_index.constellation > 0:
+        curr_index.constellation -= 1
+        curr_value.constellation = CONSTELLATION_LIST[curr_index.constellation]
+    
+def inc_fec():
+    if curr_index.fec < len(FEC_LIST) - 1:
+        curr_index.fec += 1
+        curr_value.fec = FEC_LIST[curr_index.fec]
+
+def dec_fec():
+    if curr_index.fec > 0:
+        curr_index.fec -= 1
+        curr_value.fec = FEC_LIST[curr_index.fec]
+    
+def inc_bitrate():
+    if curr_index.bitrate < len(BITRATE_LIST) - 1:
+        curr_index.bitrate += 1
+        curr_value.bitrate = BITRATE_LIST[curr_index.bitrate]
+
+def dec_bitrate():
+    if curr_index.bitrate > 0:
+        curr_index.bitrate -= 1
+        curr_value.bitrate = BITRATE_LIST[curr_index.mode]
+    
+def inc_provider():
+    if curr_index.provider < len(PROVIDER_LIST) - 1:
+        curr_index.provider += 1
+        curr_value.provider = PROVIDER_LIST[curr_index.provider]
+
+def dec_provider():
+     if curr_index.provider > 0:
+        curr_index.provider -= 1
+        curr_value.provider = PROVIDER_LIST[curr_index.provider]
+   
+def inc_service():
+    if curr_index.service < len(SERVICE_LIST) - 1:
+        curr_index.service += 1
+        curr_value.service = SERVICE_LIST[curr_index.service]
+
+def dec_service():
+    if curr_index.service > 0:
+        curr_index.service -= 1
+        curr_value.service = SERVICE_LIST[curr_index.service]
+    
+def inc_gain():
+    if curr_index.gain < len(GAIN_LIST) - 1:
+        curr_index.gain += 1
+        curr_value.gain = GAIN_LIST[curr_index.gain]
+
+def dec_gain():
+     if curr_index.gain > 0:
+        curr_index.gain -= 1
+        curr_value.gain = GAIN_LIST[curr_index.gain]
+
+def selected_frequency_marker():
+    #print(curr_value.frequency, curr_value.frequency[9:])
+    i = 1 # int(curr_value.frequency[9:])
+    return TUNED_MARKER[i]
+
+
+########### OLD #############################################
+"""
 class ButtonLogic:
     def __init__(self):
         self._b_index = INITIAL_B
@@ -328,4 +492,4 @@ class ButtonLogic:
         return TUNED_MARKER[i]
 
 button_logic = ButtonLogic()
-
+"""

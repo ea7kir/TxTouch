@@ -4,74 +4,75 @@ from multiprocessing import Process
 from multiprocessing import Pipe
 
 import PySimpleGUI as sg
-from button_logic import button_logic
+#from button_logic import button_logic
+import button_logic
 
 from process_spectrum import process_read_spectrum_data, SpectrumData
 from process_roof import process_read_roof_data, RoofData
 
 ########################################################################### begin encoder data
 
-class EncoderData:
-    def __init__(self):
-        self.ip:str = '000.000.000.000'
-        self.port:int = 0
-        self.encoding:str = 'H.265'
-        self.bit_rate:str = '430'
-        self.changed: bool = False
+#class EncoderData:
+#    def __init__(self):
+#        self.ip:str = '000.000.000.000'
+#        self.port:int = 0
+#        self.encoding:str = 'H.265'
+#        self.bit_rate:str = '430'
+#        self.changed: bool = False
     
 #encoder_data = EncoderData()
 
 ########################################################################### end encoder data
 
-########################################################################### begin pluto data
+############################################################################ begin pluto data#
 
-class PlutoData:
-    def __init__(self):
-        # TODO: note these are just example values
-        self.ip:str = '000.000.000.000',
-        self.port:int = 8282,
-        self.frequency:str = '2409.75',
-        self.mode:str = 'DBS2',
-        self.constellation:str = 'QPSK',
-        self.rate:str = '333',
-        self.fec:str = '23',
-        self.gain:str = '-10',
-        self.calibration_mode:str = 'nocalib',
-        self.pcr_pts_delay:str = '800',
-        self.audio_bit_rate:str = '32',
-        self.provider:str = 'EA7KIR',
-        self.service:str = 'Malaga',
-        self.pluto_running: bool = False
+#class PlutoData:
+#    def __init__(self):
+#        # TODO: note these are just example values
+#        self.ip:str = '000.000.000.000',
+#        self.port:int = 8282,
+#        self.frequency:str = '2409.75',
+#        self.mode:str = 'DBS2',
+#        self.constellation:str = 'QPSK',
+#        self.rate:str = '333',
+#        self.fec:str = '23',
+#        self.gain:str = '-10',
+#        self.calibration_mode:str = 'nocalib',
+#        self.pcr_pts_delay:str = '800',
+#        self.audio_bit_rate:str = '32',
+#        self.provider:str = 'EA7KIR',
+#        self.service:str = 'Malaga',
+#        self.pluto_running: bool = False#
 
-pluto_data = PlutoData()
+#pluto_data = PlutoData()#
 
-def start_pluto():
-    stop_pluto()
-    # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
-    cmd_str = 'rtmp://{}:{}/,{},{},{},{},{},{},{},{},{},/,{}'.format(
-        pluto_data.ip,
-        pluto_data.port,
-        pluto_data.frequency,
-        pluto_data.mode,
-        pluto_data.constellation,
-        pluto_data.symbol_rate,
-        pluto_data.fec,
-        pluto_data.gain,
-        pluto_data.calibration_mode,
-        pluto_data.pcr_pts_delay,
-        pluto_data.audio_bit_rate,
-        pluto_data.provider)
-    # TODO: send to pluto
-    print(cmd_str)
-    pluto_data.pluto_running = True
+#def start_pluto():
+#    stop_pluto()
+#    # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
+#    cmd_str = 'rtmp://{}:{}/,{},{},{},{},{},{},{},{},{},/,{}'.format(
+#        pluto_data.ip,
+#        pluto_data.port,
+#        pluto_data.frequency,
+#        pluto_data.mode,
+#        pluto_data.constellation,
+#        pluto_data.symbol_rate,
+#        pluto_data.fec,
+#        pluto_data.gain,
+#        pluto_data.calibration_mode,
+#        pluto_data.pcr_pts_delay,
+#        pluto_data.audio_bit_rate,
+#        pluto_data.provider)
+#    # TODO: send to pluto
+#    print(cmd_str)
+#    pluto_data.pluto_running = True#
 
-def stop_pluto():
-    if not pluto_data.pluto_running:
-        return
-    # ...
-    pluto_data.pluto_running = False
+#def stop_pluto():
+#    if not pluto_data.pluto_running:
+#        return
+#    # ...
+#    pluto_data.pluto_running = False#
 
-########################################################################### end pluto data
+############################################################################ end pluto data
 
 # LAYOUT ----------------------------------------
 
@@ -202,17 +203,17 @@ def update_graph(graph, spectrum_data):
     graph.draw_polygon(spectrum_data.points, fill_color='green')
 
 def update_control(window, button_logic):
-    window['-BV-'].update(button_logic.band)
-    window['-FV-'].update(button_logic.frequency)
-    window['-SV-'].update(button_logic.symbol_rate)
-    window['-MODE_V-'].update(button_logic.mode)
-    window['-CODECS_V-'].update(button_logic.codecs)
-    window['-CONSTELLATION_V-'].update(button_logic.constellation)
-    window['-FEC_V-'].update(button_logic.fec)
-    window['-BITRATE_V-'].update(button_logic.bitrate)
-    window['-PROVIDER_V-'].update(button_logic.provider)
-    window['-SERVICE_V-'].update(button_logic.service)
-    window['-GAIN_V-'].update(button_logic.gain)
+    window['-BV-'].update(button_logic.curr_value.band)
+    window['-FV-'].update(button_logic.curr_value.frequency)
+    window['-SV-'].update(button_logic.curr_value.symbol_rate)
+    window['-MODE_V-'].update(button_logic.curr_value.mode)
+    window['-CODECS_V-'].update(button_logic.curr_value.codecs)
+    window['-CONSTELLATION_V-'].update(button_logic.curr_value.constellation)
+    window['-FEC_V-'].update(button_logic.curr_value.fec)
+    window['-BITRATE_V-'].update(button_logic.curr_value.bitrate)
+    window['-PROVIDER_V-'].update(button_logic.curr_value.provider)
+    window['-SERVICE_V-'].update(button_logic.curr_value.service)
+    window['-GAIN_V-'].update(button_logic.curr_value.gain)
     #window['-STATUS_BAR-'].update(pm.status_msg)
 
 def update_roof_data(window, roof_data):
@@ -250,9 +251,9 @@ def main_gui(recv_spectrum_data, recv_roof_data):
         elif event in dispatch_dictionary:
             func_to_call = dispatch_dictionary[event]
             func_to_call()
-        elif button_logic.changed:
-            update_control(window, button_logic)
-            button_logic.changed = False
+        #elif button_logic.changed:
+        update_control(window, button_logic)
+        #    button_logic.changed = False
         while recv_spectrum_data.poll():
             spectrum_data = recv_spectrum_data.recv()
             update_graph(graph, spectrum_data)
