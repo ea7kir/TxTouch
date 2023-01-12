@@ -131,7 +131,7 @@ status_layout = [
         button_selector('-BITRATE_D-', '-BITRATE_V-', '-BITRATE_U-', 8),
         button_selector('-PROVIDER_D-', '-PROVIDER_V-', '-PROVIDER_U-', 8),
         button_selector('-SERVICE_D-', '-SERVICE_V-', '-SERVICE_U-', 8),
-        button_selector('-GAINE_D-', '-GAIN_V-', '-GAIN_U-', 8),
+        button_selector('-GAIN_D-', '-GAIN_V-', '-GAIN_U-', 8),
     ]),
     sg.Column([
         # roof data
