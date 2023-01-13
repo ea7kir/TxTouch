@@ -163,6 +163,10 @@ graph = window['graph']
 
 # CALLBACK DISPATCH -----------------------------
 
+def display_initial_values():
+    # fix to display initial controll values
+    pass
+
 dispatch_dictionary = { 
     # Lookup dictionary that maps button to function to call
     '-BD-':button_logic.dec_band, '-BU-':button_logic.inc_band, 
@@ -176,6 +180,7 @@ dispatch_dictionary = {
     '-PROVIDER_D-':button_logic.dec_provider, '-PROVIDER_U-':button_logic.inc_provider,
     '-SERVICE_D-':button_logic.dec_service, '-SERVICE_U-':button_logic.inc_service,
     '-GAIN_D-':button_logic.dec_gain, '-GAIN_U-':button_logic.inc_gain,
+    '-DISPLAY_INITIAL_VALUES-':display_initial_values
 }
 
 # MAIN ------------------------------------------
@@ -184,7 +189,8 @@ def main_gui(recv_spectrum_data, recv_roof_data):
     global window
     tune_active = False
     ptt_active = False
-    # TODO: send evet='-INIT-'
+    # fix to display initial controll values
+    window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
     while True:
         event, values = window.read(timeout=100)
         if event == '-SHUTDOWN-':
@@ -203,6 +209,7 @@ def main_gui(recv_spectrum_data, recv_roof_data):
             else:
                 window['-PTT-'].update(button_color=NORMAL_BUTTON_COLOR)
         if event in dispatch_dictionary:
+            # NOTE: initial control values are displayed by  window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
             func_to_call = dispatch_dictionary[event]
             func_to_call()
             window['-BV-'].update(button_logic.curr_value.band)

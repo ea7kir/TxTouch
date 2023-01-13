@@ -35,9 +35,7 @@ TUNED_MARKER = [
     894, # '10499.25 / 27'
 ]
 BAND_LIST = [
-    'Wide',
-    'Narrow',
-    'V.Narrow',
+    'Wide','Narrow','V.Narrow',
 ]
 WIDE_FREQUENCY_LIST = [
     '2403.75 / 03',
@@ -60,7 +58,7 @@ NARROW_FREQUENCY_LIST = [
     '2409.25 / 25',
     '2409.75 / 27', # _f_index 13
 ]
-V_NARROW_FREQUENCY_LIST = [
+VERY_NARROW_FREQUENCY_LIST = [
     '2403.25 / 01',
     '2403.50 / 02',
     '2403.75 / 03',
@@ -90,91 +88,49 @@ V_NARROW_FREQUENCY_LIST = [
     '2409.75 / 27',
 ]
 WIDE_SYMBOL_RATE_LIST = [
-    '500',
-    '1000',
-    '1500',
+    '500','1000','1500',
 ]
 NARROW_SYMBOL_RATE_LIST = [
-    '125',
-    '250',
-    '333',
+    '125','250','333',
 ]
-V_NARROW_SYMBOL_RATE_LIST = [
-    '25',
-    '33',
-    '66',
+VERY_NARROW_SYMBOL_RATE_LIST = [
+    '25','33','66',
 ]
 WIDE_MODE_LIST = [
-    'DVB-S',
-    'DVB-S2',
+    'DVB-S','DVB-S2',
 ]
 NARROW_MODE_LIST = [
-    'DVB-S',
-    'DVB-S2',
+    'DVB-S','DVB-S2',
 ]
-V_NARROW_MODE_LIST = [
-    'DVB-S',
-    'DVB-S2',
+VERY_NARROW_MODE_LIST = [
+    'DVB-S','DVB-S2',
 ]
 WIDE_CODECS_LIST = [
-    'H264 ACC',
-    'H265 ACC',
+    'H264 ACC','H265 ACC',
 ]
 NARROW_CODECS_LIST = [
-    'H264 ACC',
-    'H265 ACC',
+    'H264 ACC','H265 ACC',
 ]
-V_NARROW_CODECS_LIST = [
-    'H264 ACC',
-    'H265 ACC',
+VERY_NARROW_CODECS_LIST = [
+    'H264 ACC','H265 ACC',
 ]
 WIDE_CONSTELLATION_LIST = [
-    'QPSK',
-    '8PSK',
-    '16PSK',
-    '32PSK',
+    'QPSK','8PSK','16PSK','32PSK',
 ]
 NARROW_CONSTELLATION_LIST = [
-    'QPSK',
-    '8PSK',
-    '16PSK',
-    '32PSK',
+    'QPSK','8PSK','16PSK','32PSK',
 ]
-V_NARROW_CONSTELLATION_LIST = [
-    'QPSK',
-    '8PSK',
-    '16PSK',
-    '32PSK',
+VERY_NARROW_CONSTELLATION_LIST = [
+    'QPSK','8PSK','16PSK','32PSK',
 ]
 WIDE_FEC_LIST = [
-    '1/2',
-    '2/3',
-    '3/4',
-    '4/5',
-    '5/6',
-    '6/7',
-    '7/8',
-    '8/9',
+    '1/2','2/3','3/4','4/5','5/6','6/7','7/8','8/9',
 ]
 NARROW_FEC_LIST = [
-    '1/2',
-    '2/3',
-    '3/4',
-    '4/5',
-    '5/6',
-    '6/7',
-    '7/8',
-    '8/9',
+    '1/2','2/3','3/4','4/5','5/6','6/7','7/8','8/9',
 ]
-V_NARROW_FEC_LIST = [
-    '1/2',
-    '2/3',
-    '3/4',
-    '4/5',
-    '5/6',
-    '6/7',
-    '7/8',
-    '8/9',
+VERY_NARROW_FEC_LIST = [
+    '1/2','2/3','3/4','4/5','5/6','6/7','7/8','8/9',
 ]
 WIDE_BITRATE_LIST = [
     '400','410','430',
@@ -182,7 +138,7 @@ WIDE_BITRATE_LIST = [
 NARROW_BITRATE_LIST = [
     '400','410','430',
 ]
-V_NARROW_BITRATE_LIST = [
+VERY_NARROW_BITRATE_LIST = [
     '400','410','430',
 ]
 WIDE_PROVIDER_LIST = [
@@ -191,7 +147,7 @@ WIDE_PROVIDER_LIST = [
 NARROW_PROVIDER_LIST = [
     'EA7KIR','G8WAA',
 ]
-V_NARROW_PROVIDER_LIST = [
+VERY_NARROW_PROVIDER_LIST = [
     'EA7KIR','G8WAA',
 ]
 WIDE_SERVICE_LIST = [
@@ -200,7 +156,7 @@ WIDE_SERVICE_LIST = [
 NARROW_SERVICE_LIST = [
     'Malaga','Yorkshire'
 ]
-V_NARROW_SERVICE_LIST = [
+VERY_NARROW_SERVICE_LIST = [
     'Malaga','Yorkshire'
 ]
 WIDE_GAIN_LIST = [
@@ -209,55 +165,53 @@ WIDE_GAIN_LIST = [
 NARROW_GAIN_LIST = [
     '-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
 ]
-V_NARROW_GAIN_LIST = [
+VERY_NARROW_GAIN_LIST = [
     '-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
 ]
 
 WIDE_BAND_LIST_INDEX = 0
 NARROW_BAND_LIST_INDEX = 1
-V_NARROW_BAND_LIST_INDEX = 2
+VERY_NARROW_BAND_LIST_INDEX = 2
 
-INITIAL_BAND                    = 1 # narrow
+INITIAL_BAND                        = 1 # narrow
 
-INITIAL_WIDE_S                  = 0 # 500
-INITIAL_WIDE_F                  = 2 # chan 15
-INITIAL_WIDE_MODE               = 1 # DVB-S2
-INITIAL_WIDE_CODEC              = 1 # H265 ACC
-INITIAL_WIDE_CONSTELLATION      = 0 # QPSK
-INITIAL_WIDE_FEC                = 2 # 3/4
-INITIAL_WIDE_BITRATE            = 1 # 410
-INITIAL_WIDE_PROVIDER           = 0 # EA7KIR
-INITIAL_WIDE_SERVICE            = 0 # Malaga
-INITIAL_WIDE_GAIN               = 3 # -7
+INITIAL_WIDE_SYMBOL_RATE            = 0 # 500
+INITIAL_WIDE_FREQUENCY              = 2 # chan 15
+INITIAL_WIDE_MODE                   = 1 # DVB-S2
+INITIAL_WIDE_CODEC                  = 1 # H265 ACC
+INITIAL_WIDE_CONSTELLATION          = 0 # QPSK
+INITIAL_WIDE_FEC                    = 2 # 3/4
+INITIAL_WIDE_BITRATE                = 1 # 410
+INITIAL_WIDE_PROVIDER               = 0 # EA7KIR
+INITIAL_WIDE_SERVICE                = 0 # Malaga
+INITIAL_WIDE_GAIN                   = 3 # -7
 
-INITIAL_NARROW_S                = 2 # 333
-INITIAL_NARROW_F                = 13 # chan 27
-INITIAL_NARROW_MODE             = 1 # DVB-S2
-INITIAL_NARROW_CODEC            = 1 # H265 ACC
-INITIAL_NARROW_CONSTELLATION    = 0 # QPSK
-INITIAL_NARROW_FEC              = 2 # 3/4
-INITIAL_NARROW_BITRATE          = 1 # 410
-INITIAL_NARROW_PROVIDER         = 0 # EA7KIR
-INITIAL_NARROW_SERVICE          = 0 # Malaga
-INITIAL_NARROW_GAIN             = 3 # -7
+INITIAL_NARROW_SYMBOL_RATE          = 2 # 333
+INITIAL_NARROW_FREQUENCY            = 13 # chan 27
+INITIAL_NARROW_MODE                 = 1 # DVB-S2
+INITIAL_NARROW_CODEC                = 1 # H265 ACC
+INITIAL_NARROW_CONSTELLATION        = 0 # QPSK
+INITIAL_NARROW_FEC                  = 2 # 3/4
+INITIAL_NARROW_BITRATE              = 1 # 410
+INITIAL_NARROW_PROVIDER             = 0 # EA7KIR
+INITIAL_NARROW_SERVICE              = 0 # Malaga
+INITIAL_NARROW_GAIN                 = 3 # -7
 
-INITIAL_V_NARROW_S              = 2 # 66
-INITIAL_V_NARROW_F              = 0 # chan 01
-INITIAL_V_NARROW_MODE           = 1 # DVB-S2
-INITIAL_V_NARROW_CODEC          = 1 # H265 ACC
-INITIAL_V_NARROW_CONSTELLATION  = 0 # QPSK
-INITIAL_V_NARROW_FEC            = 2 # 3/4
-INITIAL_V_NARROW_BITRATE        = 1 # 410
-INITIAL_V_NARROW_PROVIDER       = 0 # EA7KIR
-INITIAL_V_NARROW_SERVICE        = 0 # Malaga
-INITIAL_V_NARROW_GAIN            = 3 # -7
-
-curr_band = INITIAL_BAND
+INITIAL_VERY_NARROW_SYMBOL_RATE     = 2 # 66
+INITIAL_VERY_NARROW_FREQUENCY       = 0 # chan 01
+INITIAL_VERY_NARROW_MODE            = 1 # DVB-S2
+INITIAL_VERY_NARROW_CODEC           = 1 # H265 ACC
+INITIAL_VERY_NARROW_CONSTELLATION   = 0 # QPSK
+INITIAL_VERY_NARROW_FEC             = 2 # 3/4
+INITIAL_VERY_NARROW_BITRATE         = 1 # 410
+INITIAL_VERY_NARROW_PROVIDER        = 0 # EA7KIR
+INITIAL_VERY_NARROW_SERVICE         = 0 # Malaga
+INITIAL_VERY_NARROW_GAIN            = 3 # -7
 
 class WideIndex:
     band = WIDE_BAND_LIST_INDEX
-    frequency = INITIAL_WIDE_F
-    symbol_rate = INITIAL_WIDE_S
+    frequency = INITIAL_WIDE_FREQUENCY
+    symbol_rate = INITIAL_WIDE_SYMBOL_RATE
     mode = INITIAL_WIDE_MODE
     codecs = INITIAL_WIDE_CODEC
     constellation = INITIAL_WIDE_CONSTELLATION
@@ -289,8 +243,8 @@ class WideIndex:
 
 class NarrowIndex:
     band = NARROW_BAND_LIST_INDEX
-    frequency = INITIAL_NARROW_F
-    symbol_rate = INITIAL_NARROW_S
+    frequency = INITIAL_NARROW_FREQUENCY
+    symbol_rate = INITIAL_NARROW_SYMBOL_RATE
     mode = INITIAL_NARROW_MODE
     codecs = INITIAL_NARROW_CODEC
     constellation = INITIAL_NARROW_CONSTELLATION
@@ -321,37 +275,37 @@ class NarrowIndex:
     max_gain_list = len(NARROW_GAIN_LIST) - 1
 
 class VeryNarrowIndex:
-    band = V_NARROW_BAND_LIST_INDEX
-    frequency = INITIAL_V_NARROW_F
-    symbol_rate = INITIAL_V_NARROW_S
-    mode = INITIAL_V_NARROW_MODE
-    codecs = INITIAL_V_NARROW_CODEC
-    constellation = INITIAL_V_NARROW_CONSTELLATION
-    fec = INITIAL_V_NARROW_FEC
-    bitrate = INITIAL_V_NARROW_BITRATE
-    provider = INITIAL_V_NARROW_PROVIDER
-    service = INITIAL_V_NARROW_SERVICE
-    gain = INITIAL_V_NARROW_GAIN
+    band = VERY_NARROW_BAND_LIST_INDEX
+    frequency = INITIAL_VERY_NARROW_FREQUENCY
+    symbol_rate = INITIAL_VERY_NARROW_SYMBOL_RATE
+    mode = INITIAL_VERY_NARROW_MODE
+    codecs = INITIAL_VERY_NARROW_CODEC
+    constellation = INITIAL_VERY_NARROW_CONSTELLATION
+    fec = INITIAL_VERY_NARROW_FEC
+    bitrate = INITIAL_VERY_NARROW_BITRATE
+    provider = INITIAL_VERY_NARROW_PROVIDER
+    service = INITIAL_VERY_NARROW_SERVICE
+    gain = INITIAL_VERY_NARROW_GAIN
     frequency_list = NARROW_FREQUENCY_LIST
-    max_frequency_index = len(V_NARROW_FREQUENCY_LIST) - 1
-    symbol_rate_list = V_NARROW_SYMBOL_RATE_LIST
-    max_symbol_rate_list = len(V_NARROW_SYMBOL_RATE_LIST) - 1
-    mode_list = V_NARROW_MODE_LIST
-    max_mode_list = len(V_NARROW_MODE_LIST) - 1
-    codecs_list = V_NARROW_CODECS_LIST
-    max_codecs_list = len(V_NARROW_CODECS_LIST) - 1
-    constellation_list = V_NARROW_CONSTELLATION_LIST
-    max_constellation_list = len(V_NARROW_CONSTELLATION_LIST) - 1
-    fec_list = V_NARROW_FEC_LIST
-    max_fec_list = len(V_NARROW_FEC_LIST) - 1
-    bitrate_list = V_NARROW_BITRATE_LIST
-    max_bitrate_list = len(V_NARROW_BITRATE_LIST) - 1
-    provider_list = V_NARROW_PROVIDER_LIST
-    max_provider_list = len(V_NARROW_PROVIDER_LIST) - 1
-    service_list = V_NARROW_SERVICE_LIST
-    max_service_list = len(V_NARROW_SERVICE_LIST) - 1
-    gain_list = V_NARROW_GAIN_LIST
-    max_gain_list = len(V_NARROW_GAIN_LIST) - 1
+    max_frequency_index = len(VERY_NARROW_FREQUENCY_LIST) - 1
+    symbol_rate_list = VERY_NARROW_SYMBOL_RATE_LIST
+    max_symbol_rate_list = len(VERY_NARROW_SYMBOL_RATE_LIST) - 1
+    mode_list = VERY_NARROW_MODE_LIST
+    max_mode_list = len(VERY_NARROW_MODE_LIST) - 1
+    codecs_list = VERY_NARROW_CODECS_LIST
+    max_codecs_list = len(VERY_NARROW_CODECS_LIST) - 1
+    constellation_list = VERY_NARROW_CONSTELLATION_LIST
+    max_constellation_list = len(VERY_NARROW_CONSTELLATION_LIST) - 1
+    fec_list = VERY_NARROW_FEC_LIST
+    max_fec_list = len(VERY_NARROW_FEC_LIST) - 1
+    bitrate_list = VERY_NARROW_BITRATE_LIST
+    max_bitrate_list = len(VERY_NARROW_BITRATE_LIST) - 1
+    provider_list = VERY_NARROW_PROVIDER_LIST
+    max_provider_list = len(VERY_NARROW_PROVIDER_LIST) - 1
+    service_list = VERY_NARROW_SERVICE_LIST
+    max_service_list = len(VERY_NARROW_SERVICE_LIST) - 1
+    gain_list = VERY_NARROW_GAIN_LIST
+    max_gain_list = len(VERY_NARROW_GAIN_LIST) - 1
 
 
 index = [ WideIndex, NarrowIndex, VeryNarrowIndex ]
@@ -384,30 +338,27 @@ class NarrowValue:
 
 class VeryNarrowValue:
     band = BAND_LIST[VeryNarrowIndex.band]
-    frequency = V_NARROW_FREQUENCY_LIST[VeryNarrowIndex.frequency]
-    symbol_rate = V_NARROW_SYMBOL_RATE_LIST[VeryNarrowIndex.symbol_rate]
-    mode = V_NARROW_MODE_LIST[VeryNarrowIndex.mode]
-    codecs = V_NARROW_CODECS_LIST[VeryNarrowIndex.codecs]
-    constellation = V_NARROW_CONSTELLATION_LIST[VeryNarrowIndex.constellation]
-    fec = V_NARROW_FEC_LIST[VeryNarrowIndex.fec]
-    bitrate = V_NARROW_BITRATE_LIST[VeryNarrowIndex.bitrate]
-    provider = V_NARROW_PROVIDER_LIST[VeryNarrowIndex.provider]
-    service = V_NARROW_SERVICE_LIST[VeryNarrowIndex.service]
-    gain = V_NARROW_GAIN_LIST[VeryNarrowIndex.gain]
+    frequency = VERY_NARROW_FREQUENCY_LIST[VeryNarrowIndex.frequency]
+    symbol_rate = VERY_NARROW_SYMBOL_RATE_LIST[VeryNarrowIndex.symbol_rate]
+    mode = VERY_NARROW_MODE_LIST[VeryNarrowIndex.mode]
+    codecs = VERY_NARROW_CODECS_LIST[VeryNarrowIndex.codecs]
+    constellation = VERY_NARROW_CONSTELLATION_LIST[VeryNarrowIndex.constellation]
+    fec = VERY_NARROW_FEC_LIST[VeryNarrowIndex.fec]
+    bitrate = VERY_NARROW_BITRATE_LIST[VeryNarrowIndex.bitrate]
+    provider = VERY_NARROW_PROVIDER_LIST[VeryNarrowIndex.provider]
+    service = VERY_NARROW_SERVICE_LIST[VeryNarrowIndex.service]
+    gain = VERY_NARROW_GAIN_LIST[VeryNarrowIndex.gain]
 
 value = [ WideValue, NarrowValue, VeryNarrowValue ]
 
+curr_band = INITIAL_BAND
 curr_value = value[curr_band]
 curr_index = index[curr_band]
-
-#frequency_list = [ WIDE_FREQUENCY_LIST, NARROW_FREQUENCY_LIST, V_NARROW_FREQUENCY_LIST ]
-#symbol_rate_list = [ WIDE_SYMBOL_RATE_LIST, NARROW_SYMBOL_RATE_LIST, V_NARROW_SYMBOL_RATE_LIST ]
-#max_frequency_index = [ len(WIDE_FREQUENCY_LIST) - 1, len(NARROW_FREQUENCY_LIST) - 1, len(V_NARROW_FREQUENCY_LIST) - 1 ]
-#max_symbol_rate_index = [ len(WIDE_SYMBOL_RATE_LIST) - 1, len(NARROW_SYMBOL_RATE_LIST) - 1, len(V_NARROW_SYMBOL_RATE_LIST) - 1 ]
+max_band_list = len(BAND_LIST) - 1 # TODO: messy!  try integrating band into the Index classes
 
 def inc_band():
-    global curr_band, curr_value, curr_index
-    if curr_band < len(BAND_LIST) - 1:
+    global curr_band, max_band_list, curr_value, curr_index
+    if curr_band < max_band_list:
         curr_band += 1
         curr_value = value[curr_band]
         curr_index = index[curr_band]
