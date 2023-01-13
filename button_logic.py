@@ -540,6 +540,5 @@ def dec_gain():
         curr_value.gain = curr_index.gain_list[curr_index.gain]
 
 def selected_frequency_marker():
-    #print(curr_value.frequency, curr_value.frequency[9:])
-    i = 0 #int(curr_value.frequency[9:])
+    i = int(curr_value.frequency[9:])
     return TUNED_MARKER[i]
