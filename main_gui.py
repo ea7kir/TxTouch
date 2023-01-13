@@ -4,7 +4,6 @@ from multiprocessing import Process
 from multiprocessing import Pipe
 
 import PySimpleGUI as sg
-#from button_logic import button_logic
 import button_logic
 
 from process_spectrum import process_read_spectrum_data, SpectrumData
@@ -156,10 +155,6 @@ layout = [
     status_layout,
 ]
 
-window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
-window.set_cursor('none')
-graph = window['graph']
-
 # CALLBACK DISPATCH -----------------------------
 
 def display_initial_values():
@@ -179,13 +174,15 @@ dispatch_dictionary = {
     '-PROVIDER_D-':button_logic.dec_provider, '-PROVIDER_U-':button_logic.inc_provider,
     '-SERVICE_D-':button_logic.dec_service, '-SERVICE_U-':button_logic.inc_service,
     '-GAIN_D-':button_logic.dec_gain, '-GAIN_U-':button_logic.inc_gain,
-    '-DISPLAY_INITIAL_VALUES-':display_initial_values
+    '-DISPLAY_INITIAL_VALUES-':display_initial_values,
 }
 
 # MAIN ------------------------------------------
 
 def main_gui(recv_spectrum_data, recv_roof_data):
-    global window
+    window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
+    window.set_cursor('none')
+    graph = window['graph']
     tune_active = False
     ptt_active = False
     # fix to display initial controll values

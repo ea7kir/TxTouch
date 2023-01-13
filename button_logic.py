@@ -286,7 +286,7 @@ class VeryNarrowIndex:
     provider = INITIAL_VERY_NARROW_PROVIDER
     service = INITIAL_VERY_NARROW_SERVICE
     gain = INITIAL_VERY_NARROW_GAIN
-    frequency_list = NARROW_FREQUENCY_LIST
+    frequency_list = VERY_NARROW_FREQUENCY_LIST
     max_frequency_index = len(VERY_NARROW_FREQUENCY_LIST) - 1
     symbol_rate_list = VERY_NARROW_SYMBOL_RATE_LIST
     max_symbol_rate_list = len(VERY_NARROW_SYMBOL_RATE_LIST) - 1
