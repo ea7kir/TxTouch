@@ -157,6 +157,10 @@ layout = [
     status_layout,
 ]
 
+window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
+window.set_cursor('none')
+graph = window['graph']
+
 # CALLBACK DISPATCH -----------------------------
 
 dispatch_dictionary = { 
@@ -176,59 +180,57 @@ dispatch_dictionary = {
 
 # UPDATE FUNCTIONS ------------------------------
 
-def update_graph(graph, spectrum_data):
-    # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
-    graph.erase()
-    # draw graticule
-    c = 0
-    for y in range(0x2697, 0xFFFF, 0xD2D): # 0x196A, 0xFFFF, 0xD2D
-        if c == 5:
-            graph.draw_text('5dB', (13,y), color='#444444')
-            graph.draw_line((40, y), (918, y), color='#444444')
-        elif c == 10:
-            graph.draw_text('10dB', (17,y), color='#444444')
-            graph.draw_line((40, y), (918, y), color='#444444')
-        elif c == 15:
-            graph.draw_text('15dB', (17,y), color='#444444')
-            graph.draw_line((40, y), (918, y), color='#444444')
-        else:
-            graph.draw_line((0, y), (918, y), color='#222222')
-        c += 1
-    # draw tuned marker
-    x = button_logic.selected_frequency_marker()
-    graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
-    # draw beacon level
-    graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
-    # draw spectrum
-    graph.draw_polygon(spectrum_data.points, fill_color='green')
+#def update_graph(spectrum_data):
+#    # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
+#    graph.erase()
+#    # draw graticule
+#    c = 0
+#    for y in range(0x2697, 0xFFFF, 0xD2D): # 0x196A, 0xFFFF, 0xD2D
+#        if c == 5:
+#            graph.draw_text('5dB', (13,y), color='#444444')
+#            graph.draw_line((40, y), (918, y), color='#444444')
+#        elif c == 10:
+#            graph.draw_text('10dB', (17,y), color='#444444')
+#            graph.draw_line((40, y), (918, y), color='#444444')
+#        elif c == 15:
+#            graph.draw_text('15dB', (17,y), color='#444444')
+#            graph.draw_line((40, y), (918, y), color='#444444')
+#        else:
+#            graph.draw_line((0, y), (918, y), color='#222222')
+#        c += 1
+#    # draw tuned marker
+#    x = button_logic.selected_frequency_marker()
+#    graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
+#    # draw beacon level
+#    graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
+#    # draw spectrum
+#    graph.draw_polygon(spectrum_data.points, fill_color='green')
 
-def update_control(window, button_logic):
-    window['-BV-'].update(button_logic.curr_value.band)
-    window['-FV-'].update(button_logic.curr_value.frequency)
-    window['-SV-'].update(button_logic.curr_value.symbol_rate)
-    window['-MODE_V-'].update(button_logic.curr_value.mode)
-    window['-CODECS_V-'].update(button_logic.curr_value.codecs)
-    window['-CONSTELLATION_V-'].update(button_logic.curr_value.constellation)
-    window['-FEC_V-'].update(button_logic.curr_value.fec)
-    window['-BITRATE_V-'].update(button_logic.curr_value.bitrate)
-    window['-PROVIDER_V-'].update(button_logic.curr_value.provider)
-    window['-SERVICE_V-'].update(button_logic.curr_value.service)
-    window['-GAIN_V-'].update(button_logic.curr_value.gain)
-    #window['-STATUS_BAR-'].update(pm.status_msg)
-
-def update_roof_data(window, roof_data):
-    window['-PREAMP_TEMP-'].update(roof_data.preamp_temp)
-    window['-PA_CURRENT-'].update(roof_data.pa_current)
-    window['-PA_TEMP-'].update(roof_data.pa_temp)
-    window['-FANS-'].update(roof_data.fans)
-    #window['-STATUS_BAR-'].update(pm.status_msg)
+#def update_control():
+#    window['-BV-'].update(button_logic.curr_value.band)
+#    window['-FV-'].update(button_logic.curr_value.frequency)
+#    window['-SV-'].update(button_logic.curr_value.symbol_rate)
+#    window['-MODE_V-'].update(button_logic.curr_value.mode)
+#    window['-CODECS_V-'].update(button_logic.curr_value.codecs)
+#    window['-CONSTELLATION_V-'].update(button_logic.curr_value.constellation)
+#    window['-FEC_V-'].update(button_logic.curr_value.fec)
+#    window['-BITRATE_V-'].update(button_logic.curr_value.bitrate)
+#    window['-PROVIDER_V-'].update(button_logic.curr_value.provider)
+#    window['-SERVICE_V-'].update(button_logic.curr_value.service)
+#    window['-GAIN_V-'].update(button_logic.curr_value.gain)
+#    #window['-STATUS_BAR-'].update(pm.status_msg)
+#
+#def update_roof_data(roof_data):
+#    window['-PREAMP_TEMP-'].update(roof_data.preamp_temp)
+#    window['-PA_CURRENT-'].update(roof_data.pa_current)
+#    window['-PA_TEMP-'].update(roof_data.pa_temp)
+#    window['-FANS-'].update(roof_data.fans)
+#    #window['-STATUS_BAR-'].update(pm.status_msg)
         
 # MAIN ------------------------------------------
 
 def main_gui(recv_spectrum_data, recv_roof_data):
-    window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
-    window.set_cursor('none')
-    graph = window['graph']
+    global window
     tune_active = False
     ptt_active = False
     while True:
@@ -236,30 +238,68 @@ def main_gui(recv_spectrum_data, recv_roof_data):
         if event == '-SHUTDOWN-':
             #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
             break
-        elif event == '-TUNE-':
+        if event == '-TUNE-':
             tune_active = not tune_active
             if tune_active:
                 window['-TUNE-'].update(button_color=TUNE_ACTIVE_BUTTON_COLOR)
             else:
                 window['-TUNE-'].update(button_color=NORMAL_BUTTON_COLOR)
-        elif event == '-PTT-':
+        if event == '-PTT-':
             ptt_active = not ptt_active
             if ptt_active:
                 window['-PTT-'].update(button_color=PTT_ACTIVE_BUTTON_COLOR)
             else:
                 window['-PTT-'].update(button_color=NORMAL_BUTTON_COLOR)
-        elif event in dispatch_dictionary:
+        if event in dispatch_dictionary:
             func_to_call = dispatch_dictionary[event]
             func_to_call()
-        #elif button_logic.changed:
-        update_control(window, button_logic)
-        #    button_logic.changed = False
-        while recv_spectrum_data.poll():
+            window['-BV-'].update(button_logic.curr_value.band)
+            window['-FV-'].update(button_logic.curr_value.frequency)
+            window['-SV-'].update(button_logic.curr_value.symbol_rate)
+            window['-MODE_V-'].update(button_logic.curr_value.mode)
+            window['-CODECS_V-'].update(button_logic.curr_value.codecs)
+            window['-CONSTELLATION_V-'].update(button_logic.curr_value.constellation)
+            window['-FEC_V-'].update(button_logic.curr_value.fec)
+            window['-BITRATE_V-'].update(button_logic.curr_value.bitrate)
+            window['-PROVIDER_V-'].update(button_logic.curr_value.provider)
+            window['-SERVICE_V-'].update(button_logic.curr_value.service)
+            window['-GAIN_V-'].update(button_logic.curr_value.gain)
+        if recv_spectrum_data.poll():
             spectrum_data = recv_spectrum_data.recv()
-            update_graph(graph, spectrum_data)
-        while recv_roof_data.poll():
+            while recv_spectrum_data.poll():
+                _ = recv_spectrum_data.recv()
+            # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
+            graph.erase()
+            # draw graticule
+            c = 0
+            for y in range(0x2697, 0xFFFF, 0xD2D): # 0x196A, 0xFFFF, 0xD2D
+                if c == 5:
+                    graph.draw_text('5dB', (13,y), color='#444444')
+                    graph.draw_line((40, y), (918, y), color='#444444')
+                elif c == 10:
+                    graph.draw_text('10dB', (17,y), color='#444444')
+                    graph.draw_line((40, y), (918, y), color='#444444')
+                elif c == 15:
+                    graph.draw_text('15dB', (17,y), color='#444444')
+                    graph.draw_line((40, y), (918, y), color='#444444')
+                else:
+                    graph.draw_line((0, y), (918, y), color='#222222')
+                c += 1
+            # draw tuned marker
+            x = button_logic.selected_frequency_marker()
+            graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
+            # draw beacon level
+            graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
+            # draw spectrum
+            graph.draw_polygon(spectrum_data.points, fill_color='green')
+        if recv_roof_data.poll():
             roof_data = recv_roof_data.recv()
-            update_roof_data(window, roof_data)
+            while recv_roof_data.poll():
+                _ = recv_roof_data.recv()
+            window['-PREAMP_TEMP-'].update(roof_data.preamp_temp)
+            window['-PA_CURRENT-'].update(roof_data.pa_current)
+            window['-PA_TEMP-'].update(roof_data.pa_temp)
+            window['-FANS-'].update(roof_data.fans)
     window.close()
     del window
 
