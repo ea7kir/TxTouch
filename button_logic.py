@@ -493,3 +493,50 @@ def dec_gain():
 def selected_frequency_marker():
     i = int(curr_value.frequency[9:])
     return TUNED_MARKER[i]
+
+class EncoderArgs:
+    codecs = ''
+    bitrate = ''
+
+def encoder_args():
+    global curr_value
+    EncoderArgs.codecs = curr_value.codecs
+    EncoderArgs.bitrate = curr_value.bitrate
+    return EncoderArgs
+
+class TuneArgs:
+    frequency = ''
+    symbol_rate = ''
+    mode = ''
+    constellation = ''
+    fec = ''
+    provider = ''
+    service = ''
+    gain = ''
+
+def tune_args():
+    global curr_value
+    TuneArgs.frequency = curr_value.frequency[:7]
+    TuneArgs.symbol_rate = curr_value.symbol_rate
+    TuneArgs.mode = curr_value.mode
+    TuneArgs.constellation = curr_value.constellation
+    TuneArgs.fec = curr_value.fec
+    TuneArgs.provider = curr_value.provider
+    TuneArgs.service = curr_value.service
+    TuneArgs.gain = curr_value.gain
+    return TuneArgs 
+
+    """
+    # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
+
+    s =  f'rtmp://{IP},{PORT},{frequency},{mode},{constellation},{symbol_rate},{fec},{gain},nocalib,800,32,/,{provider},'
+
+    IP = '192.168.1.40'
+    PORT = '7277' or '8282'
+    frequency = '2409.75'
+    mode = 'DVBS2'
+    constellation = 'QPSK'
+    fec = '23'
+    gain = '-2'
+    provider = 'EA7KIR'
+    """

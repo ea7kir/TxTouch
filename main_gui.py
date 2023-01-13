@@ -196,8 +196,14 @@ def main_gui(recv_spectrum_data, recv_roof_data):
             tune_active = not tune_active
             if tune_active:
                 window['-TUNE-'].update(button_color=TUNE_ACTIVE_BUTTON_COLOR)
+                encoder_args = button_logic.encoder_args()
+                # TODO: send encoder_args to the encoder
+                tune_args = button_logic.tune_args()
+                # TODO: send tune_args to the pluto
+                window['-STATUS_BAR-'].update(f'start: {tune_args.frequency},{tune_args.symbol_rate}')
             else:
                 window['-TUNE-'].update(button_color=NORMAL_BUTTON_COLOR)
+                window['-STATUS_BAR-'].update('stop (or invalid display)')
         if event == '-PTT-':
             ptt_active = not ptt_active
             if ptt_active:
