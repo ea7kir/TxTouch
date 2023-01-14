@@ -4,7 +4,7 @@ from multiprocessing import Process
 from multiprocessing import Pipe
 
 import PySimpleGUI as sg
-import button_logic
+import control_status as cs
 
 from process_spectrum import process_read_spectrum_data, SpectrumData
 from process_roof import process_read_roof_data, RoofData
@@ -163,17 +163,17 @@ def display_initial_values():
 
 dispatch_dictionary = { 
     # Lookup dictionary that maps button to function to call
-    '-BD-':button_logic.dec_band, '-BU-':button_logic.inc_band, 
-    '-FD-':button_logic.dec_frequency, '-FU-':button_logic.inc_frequency, 
-    '-SD-':button_logic.dec_symbol_rate, '-SU-':button_logic.inc_symbol_rate,
-    '-MODE_D-':button_logic.dec_mode, '-MODE_U-':button_logic.inc_mode,
-    '-CODECS_D-':button_logic.dec_codecs, '-CODECS_U-':button_logic.inc_codecs,
-    '-CONSTELLATION_D-':button_logic.dec_constellation, '-CONSTELLATION_U-':button_logic.inc_constellation,
-    '-FEC_D-':button_logic.dec_fec, '-FEC_U-':button_logic.inc_fec,
-    '-BITRATE_D-':button_logic.dec_bitrate, '-BITRATE_U-':button_logic.inc_bitrate,
-    '-PROVIDER_D-':button_logic.dec_provider, '-PROVIDER_U-':button_logic.inc_provider,
-    '-SERVICE_D-':button_logic.dec_service, '-SERVICE_U-':button_logic.inc_service,
-    '-GAIN_D-':button_logic.dec_gain, '-GAIN_U-':button_logic.inc_gain,
+    '-BD-':cs.dec_band, '-BU-':cs.inc_band, 
+    '-FD-':cs.dec_frequency, '-FU-':cs.inc_frequency, 
+    '-SD-':cs.dec_symbol_rate, '-SU-':cs.inc_symbol_rate,
+    '-MODE_D-':cs.dec_mode, '-MODE_U-':cs.inc_mode,
+    '-CODECS_D-':cs.dec_codecs, '-CODECS_U-':cs.inc_codecs,
+    '-CONSTELLATION_D-':cs.dec_constellation, '-CONSTELLATION_U-':cs.inc_constellation,
+    '-FEC_D-':cs.dec_fec, '-FEC_U-':cs.inc_fec,
+    '-BITRATE_D-':cs.dec_bitrate, '-BITRATE_U-':cs.inc_bitrate,
+    '-PROVIDER_D-':cs.dec_provider, '-PROVIDER_U-':cs.inc_provider,
+    '-SERVICE_D-':cs.dec_service, '-SERVICE_U-':cs.inc_service,
+    '-GAIN_D-':cs.dec_gain, '-GAIN_U-':cs.inc_gain,
     '-DISPLAY_INITIAL_VALUES-':display_initial_values,
 }
 
@@ -196,9 +196,9 @@ def main_gui(recv_spectrum_data, recv_roof_data):
             tune_active = not tune_active
             if tune_active:
                 window['-TUNE-'].update(button_color=TUNE_ACTIVE_BUTTON_COLOR)
-                encoder_args = button_logic.encoder_args()
+                encoder_args = cs.encoder_args()
                 # TODO: send encoder_args to the encoder
-                tune_args = button_logic.tune_args()
+                tune_args = cs.tune_args()
                 # TODO: send tune_args to the pluto
                 window['-STATUS_BAR-'].update(f'start: {tune_args.frequency},{tune_args.symbol_rate}')
             else:
@@ -214,17 +214,17 @@ def main_gui(recv_spectrum_data, recv_roof_data):
             # NOTE: initial control values are displayed by  window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
             func_to_call = dispatch_dictionary[event]
             func_to_call()
-            window['-BV-'].update(button_logic.curr_value.band)
-            window['-FV-'].update(button_logic.curr_value.frequency)
-            window['-SV-'].update(button_logic.curr_value.symbol_rate)
-            window['-MODE_V-'].update(button_logic.curr_value.mode)
-            window['-CODECS_V-'].update(button_logic.curr_value.codecs)
-            window['-CONSTELLATION_V-'].update(button_logic.curr_value.constellation)
-            window['-FEC_V-'].update(button_logic.curr_value.fec)
-            window['-BITRATE_V-'].update(button_logic.curr_value.bitrate)
-            window['-PROVIDER_V-'].update(button_logic.curr_value.provider)
-            window['-SERVICE_V-'].update(button_logic.curr_value.service)
-            window['-GAIN_V-'].update(button_logic.curr_value.gain)
+            window['-BV-'].update(cs.curr_value.band)
+            window['-FV-'].update(cs.curr_value.frequency)
+            window['-SV-'].update(cs.curr_value.symbol_rate)
+            window['-MODE_V-'].update(cs.curr_value.mode)
+            window['-CODECS_V-'].update(cs.curr_value.codecs)
+            window['-CONSTELLATION_V-'].update(cs.curr_value.constellation)
+            window['-FEC_V-'].update(cs.curr_value.fec)
+            window['-BITRATE_V-'].update(cs.curr_value.bitrate)
+            window['-PROVIDER_V-'].update(cs.curr_value.provider)
+            window['-SERVICE_V-'].update(cs.curr_value.service)
+            window['-GAIN_V-'].update(cs.curr_value.gain)
         if recv_spectrum_data.poll():
             spectrum_data = recv_spectrum_data.recv()
             while recv_spectrum_data.poll():
@@ -247,7 +247,7 @@ def main_gui(recv_spectrum_data, recv_roof_data):
                     graph.draw_line((0, y), (918, y), color='#222222')
                 c += 1
             # draw tuned marker
-            x = button_logic.selected_frequency_marker()
+            x = cs.selected_frequency_marker()
             graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
             # draw beacon level
             graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
