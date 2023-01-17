@@ -179,7 +179,7 @@ dispatch_dictionary = {
 
 # MAIN ------------------------------------------
 
-def main_gui(recv_spectrum_data, recv_roof_data):
+def main_gui(recv_spectrum_data, roof1):
     window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
     graph = window['graph']
@@ -253,10 +253,10 @@ def main_gui(recv_spectrum_data, recv_roof_data):
             graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
             # draw spectrum
             graph.draw_polygon(spectrum_data.points, fill_color='green')
-        if recv_roof_data.poll():
-            roof_data = recv_roof_data.recv()
-            while recv_roof_data.poll():
-                _ = recv_roof_data.recv()
+        if roof1.poll():
+            roof_data = roof1.recv()
+            while roof1.poll():
+                _ = roof1.recv()
             window['-PREAMP_TEMP-'].update(roof_data.preamp_temp)
             window['-PA_CURRENT-'].update(roof_data.pa_current)
             window['-PA_TEMP-'].update(roof_data.pa_temp)
@@ -266,15 +266,15 @@ def main_gui(recv_spectrum_data, recv_roof_data):
 
 if __name__ == '__main__':
     recv_spectrum_data, send_spectrum_data = Pipe()
-    recv_roof_data, send_roof_data = Pipe()
+    roof1, roof2 = Pipe(duplex=True)
     # create the process
     p_read_spectrum_data = Process(target=process_read_spectrum_data, args=(send_spectrum_data,))
-    p_read_roof_data = Process(target=process_read_roof_data, args=(send_roof_data,))
+    p_read_roof_data = Process(target=process_read_roof_data, args=(roof2,))
     # start the process
     p_read_spectrum_data.start()
     p_read_roof_data.start()
     # main ui
-    main_gui(recv_spectrum_data, recv_roof_data)
+    main_gui(recv_spectrum_data, roof1)
     # kill 
     p_read_spectrum_data.kill()
     p_read_roof_data.kill()
