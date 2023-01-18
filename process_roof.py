@@ -1,6 +1,10 @@
 import random # ONLY NEEDED TO SIMULATE DATA VALUES DURING DEVELOPMENT
 from time import sleep # ONLY NEEDED TO SIMULATE FETCH TIMES DURING DEVELOPMENT
 
+from read_temperature_sensors import read_pa_temperature, read_preamp_temperature
+from read_fan_status import read_fan_status
+from read_current_sensor import read_pa_current
+
 class RoofData:
     preamp_temp:str = ''
     pa_temp: str = ''
@@ -31,10 +35,10 @@ def process_read_roof_data(roof2):
 
         if roof_data.connected:
 
-            roof_data.preamp_temp = f'{random.randint(30, 39)} °C'
-            roof_data.pa_temp:str = f'{random.randint(30, 39)} °C'
-            roof_data.pa_current:str = f'{random.randint(6, 7)} Amps'
-            roof_data.fans:str = 'ON'
+            roof_data.preamp_temp = read_preamp_temperature()
+            roof_data.pa_temp:str = read_pa_temperature()
+            roof_data.pa_current:str = read_pa_current()
+            roof_data.fans = read_fan_status()
             roof2.send(roof_data)
             sleep(0.5)
 

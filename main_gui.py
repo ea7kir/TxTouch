@@ -137,7 +137,7 @@ status_layout = [
         text_data('Preamp Temp', '-PREAMP_TEMP-'),
         text_data('PA Current', '-PA_CURRENT-'),
         text_data('PA Temp', '-PA_TEMP-'),
-        text_data('Fans', '-FANS-'),
+        text_data('Fans Running', '-FANS-'),
     ]),
     sg.Column([
         # control data
