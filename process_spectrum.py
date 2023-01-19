@@ -64,4 +64,3 @@ def process_read_spectrum_data(send_spectrum_data):
                 send_spectrum_data.send(spectrum_data)
 
     asyncio.run(handle())
-
