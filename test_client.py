@@ -32,10 +32,10 @@ def process_read_roof_data(connection):
             # NOT REQUIRED - roof_data = RoofData()
             while True:
                 # if message to send
-                #has_message = False
-                #if has_message:
-                #    message = 'Hi'
-                #    await websocket.send(message)
+                has_message = True
+                if has_message:
+                    message = 'Hi'
+                    await websocket.send(message)
                 
                 roof_data = await websocket.recv()
                 print(roof_data)
