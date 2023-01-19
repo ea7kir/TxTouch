@@ -1,6 +1,6 @@
 import asyncio
 import websockets
-import json
+import pickle
 
 SERVER = 'roof.local'
 PORT = 8765
@@ -11,40 +11,38 @@ URL = f'ws://{SERVER}:{PORT}/'
 class RoofData:
     counter = 0
     connected = False
-    def toJson(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
 
-#roof_data = RoofData()
+def consumer(roof_data):
+    print(roof_data.counter)
 
-d = {"connected": True, "counter": 1}
-print(d, d['counter'], d['connected'])
-#exit(0)
 def process_read_roof_data(connection):
-    #roof_data = RoofData()
     async def handle():
-        roof_data = RoofData()
         url = f'ws://{SERVER}:{PORT}/'
         try:
             async with websockets.connect(url) as websocket:
                 print('connected', flush=True)
-                roof_data.connected = True
-                # NOT REQUIRED - roof_data = RoofData()
+                #connected = True
                 while True:
-                    # if message to send
-                    has_message = True
+                    message = 'PTT'
+                    has_message = False
                     if has_message:
-                        message = 'PTT'
-                        await websocket.send(message)
+                        match message:
+                            case 'CLOSE':
+                                return
+                            case 'PTT':
+                                await websocket.send('PTT')
+                    else:
+                        await websocket.send('ACK')
 
                     data = await websocket.recv() # TODO: JSON
-                    data_dict = json.loads(data)
-                    print(data_dict, flush=True)
-                    roof_data.counter = data_dict['counter']
-                    roof_data.connected = data_dict['connected']
-                    print(roof_data.connected, roof_data.counter, flush=True)
-        except: 
+                    roof_data = pickle.loads(data)
+                    consumer(roof_data)
+                    await websocket.pong(data=b'')
+        except:
             print('not connected', flush=True)
-            roof_data.connected = False
+            #connected = False
+            #await websocket.close()
+            return
 
     asyncio.run(handle())
 
