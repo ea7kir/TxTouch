@@ -19,7 +19,7 @@ async def listen():
 
 # Start the connection
 asyncio.get_event_loop().run_until_complete(listen())
-asyncio.get_event_loop().run_forever()
+#asyncio.get_event_loop().run_forever()
 #asyncio.run(listen)
 
 # can also test $ python -m websockets ws://roof.local:8765/
