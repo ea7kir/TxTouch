@@ -78,21 +78,31 @@ $ pip install --upgrade pip
 
 #######################################################
 
-5) INSTALL PYSIMPLEGUI & PyYAML - NOT NEEDED FOR ROOF
+5) INSTALL PYSIMPLEGUI, WEBSOCKETS & PyYAML
 
 $ pip install pysimplegui websockets PyYAML
 
 -------------------
 
-6) INSTALL A GUI - NOT NEEDED FOR ROOF
+6) INSTALL PIGPIO (for PTT and MUTE)
+
+$ sudo apt install pigpio python-pigpio python3-pigpio
+
+$ sudo systemctl enable pigpiod
+
+$ sudo systemctl start pigpiod
+
+-------------------
+
+7) INSTALL A GUI
 
 $ sudo apt install raspberrypi-ui-mods
 
 -------------------
 
-7) RUN PASPI-CONFIG - NOT NEEDED FOR ROOF
+8) RUN PASPI-CONFIG
 
-$ sudo rasps-config
+$ sudo raspi-config
 
 	* SELECT 1 Sytem -> S5 Boot -> Auto Login -> B4 Desktop Auto Login
 
