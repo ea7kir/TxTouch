@@ -19,9 +19,11 @@ def consume(roof_data):
     print(f'roof_data.connected   : {roof_data.connected}', flush=True)
     print('-------------------------------------', flush=True)
 
+# developed from "TCP echo server using streams"
+# https://docs.python.org/3/library/asyncio-stream.html#tcp-echo-client-using-streams
 async def client():
     reader, writer = await asyncio.open_connection(SERVER, PORT)
-    print('CONNECTED', flush=True)
+    print('CONNECTED TO SERVER', flush=True)
     roof_data = RoofData()
     while True:
         data_in = await reader.read(1024)
