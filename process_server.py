@@ -5,7 +5,7 @@ from read_temperature_sensors import read_pa_temperature, read_preamp_temperatur
 from read_fan_status import read_fan_status
 from read_current_sensor import read_pa_current
 
-class RoofData:
+class ServerData:
     preamp_temp:str = ''
     pa_temp: str = ''
     pa_current: str = ''
@@ -13,11 +13,11 @@ class RoofData:
     connected: bool = False
 
 
-def process_read_roof_data(roof2):
+def process_read_server_data(roof2):
     IP = '000.000.000.000' # roof.local
     PORT = 0 # whatever
 
-    roof_data = RoofData()
+    server_data = ServerData()
 
 
     while True:
@@ -26,29 +26,29 @@ def process_read_roof_data(roof2):
             cmd = roof2.recv()
             if cmd == 'STOP':
                 # close the connection
-                roof_data.connected = False
+                server_data.connected = False
             else:
                 # open the connection
-                roof_data.connected = True
+                server_data.connected = True
 
-        roof_data.connected = True # temporary fix til I implement the connection
+        server_data.connected = True # temporary fix til I implement the connection
 
-        if roof_data.connected:
+        if server_data.connected:
 
-            roof_data.preamp_temp = read_preamp_temperature()
-            roof_data.pa_temp:str = read_pa_temperature()
-            roof_data.pa_current:str = read_pa_current()
-            roof_data.fans = read_fan_status()
-            roof2.send(roof_data)
+            server_data.preamp_temp = read_preamp_temperature()
+            server_data.pa_temp:str = read_pa_temperature()
+            server_data.pa_current:str = read_pa_current()
+            server_data.fans = read_fan_status()
+            roof2.send(server_data)
             sleep(0.5)
 
         else:
 
-            roof_data.preamp_temp = '-'
-            roof_data.pa_temp:str = '-'
-            roof_data.pa_current:str = '-'
-            roof_data.fans:str = '-'
-            roof2.send(roof_data)
+            server_data.preamp_temp = '-'
+            server_data.pa_temp:str = '-'
+            server_data.pa_current:str = '-'
+            server_data.fans:str = '-'
+            roof2.send(server_data)
             sleep(0.5)
   
 

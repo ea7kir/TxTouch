@@ -7,7 +7,7 @@ import PySimpleGUI as sg
 import control_status as cs
 
 from process_spectrum import process_read_spectrum_data, SpectrumData
-from process_roof import process_read_roof_data, RoofData
+from process_server import process_read_server_data, ServerData
 
 ########################################################################### begin encoder data
 
@@ -254,30 +254,30 @@ def main_gui(recv_spectrum_data, roof1):
             # draw spectrum
             graph.draw_polygon(spectrum_data.points, fill_color='green')
         if roof1.poll():
-            roof_data = roof1.recv()
+            server_data = roof1.recv()
             while roof1.poll():
                 _ = roof1.recv()
-            window['-PREAMP_TEMP-'].update(roof_data.preamp_temp)
-            window['-PA_CURRENT-'].update(roof_data.pa_current)
-            window['-PA_TEMP-'].update(roof_data.pa_temp)
-            window['-FANS-'].update(roof_data.fans)
+            window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
+            window['-PA_CURRENT-'].update(server_data.pa_current)
+            window['-PA_TEMP-'].update(server_data.pa_temp)
+            window['-FANS-'].update(server_data.fans)
     window.close()
     del window
 
 if __name__ == '__main__':
     recv_spectrum_data, send_spectrum_data = Pipe()
-    roof1, roof2 = Pipe(duplex=True)
+    roof1, roof2 = Pipe()
     # create the process
     p_read_spectrum_data = Process(target=process_read_spectrum_data, args=(send_spectrum_data,))
-    p_read_roof_data = Process(target=process_read_roof_data, args=(roof2,))
+    p_read_server_data = Process(target=process_read_server_data, args=(roof2,))
     # start the process
     p_read_spectrum_data.start()
-    p_read_roof_data.start()
+    p_read_server_data.start()
     # main ui
     main_gui(recv_spectrum_data, roof1)
     # kill 
     p_read_spectrum_data.kill()
-    p_read_roof_data.kill()
+    p_read_server_data.kill()
     # shutdown
     print('about to shut down')
     #import subprocess
