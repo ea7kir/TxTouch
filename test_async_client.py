@@ -37,10 +37,8 @@ async def client():
     roof_data = RoofData()
     while True:
         try:
-            print('waitin for more', flush=True)
             json_dict_raw = await reader.read(1024)
             json_dict = json_dict_raw.decode()
-            print(f'{json_dict}', flush=True)
             data_dict = json.loads(json_dict)
             roof_data.preamp_temp = data_dict['preamp_temp']
             roof_data.pa_temp = data_dict['pa_temp']
