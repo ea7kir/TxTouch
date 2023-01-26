@@ -4,19 +4,18 @@ import json
 SERVER = 'roof.local'
 PORT = 8765
 
-class RoofData:
+class ServerData:
     preamp_temp:str = '-'
     pa_temp: str = '-'
     pa_current: str = '-'
     fans: str = '-'
-    #connected: bool = False
 
-async def consume(roof_data):
-    print(f'roof_data.preamp_temp : {roof_data.preamp_temp}', flush=True)
-    print(f'roof_data.pa_temp     : {roof_data.pa_temp}', flush=True)
-    print(f'roof_data.pa_current  : {roof_data.pa_current}', flush=True)
-    print(f'roof_data.fans        : {roof_data.fans}', flush=True)
-    #print(f'roof_data.connected   : {roof_data.connected}', flush=True)
+async def consume(server_data):
+    print(f'server_data.preamp_temp : {server_data.preamp_temp}', flush=True)
+    print(f'server_data.pa_temp     : {server_data.pa_temp}', flush=True)
+    print(f'server_data.pa_current  : {server_data.pa_current}', flush=True)
+    print(f'server_data.fans        : {server_data.fans}', flush=True)
+    #print(f'server_data.connected   : {server_data.connected}', flush=True)
     print('-------------------------------------', flush=True)
 
 # developed from "TCP echo server using streams"
@@ -34,18 +33,18 @@ async def client():
             print(f'EXCEPTION 1 {e}', flush=True)
             return    
 
-    roof_data = RoofData()
+    server_data = ServerData()
     while True:
         try:
             json_dict_raw = await reader.read(1024)
             json_dict = json_dict_raw.decode()
             data_dict = json.loads(json_dict)
-            roof_data.preamp_temp = data_dict['preamp_temp']
-            roof_data.pa_temp = data_dict['pa_temp']
-            roof_data.pa_current = data_dict['pa_current']
-            roof_data.fans = data_dict['fans']
-            #roof_data.connected = data_dict['connected']
-            await consume(roof_data)
+            server_data.preamp_temp = data_dict['preamp_temp']
+            server_data.pa_temp = data_dict['pa_temp']
+            server_data.pa_current = data_dict['pa_current']
+            server_data.fans = data_dict['fans']
+            #server_data.connected = data_dict['connected']
+            await consume(server_data)
         except IOError as e:
             print(f'EXCEPTION 2 {e}', flush=True)
             break
@@ -53,9 +52,9 @@ async def client():
                 print(f'EXCEPTION 2 {e}', flush=True)
                 break
 
-    roof_data = RoofData()
-    consume(roof_data)
+    server_data = ServerData()
+    consume(server_data)
 
 asyncio.run(client())
 
-#process_read_roof_data(999)
+#process_read_server_data(999)
