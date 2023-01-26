@@ -15,7 +15,6 @@ async def consume(server_data):
     print(f'server_data.pa_temp     : {server_data.pa_temp}', flush=True)
     print(f'server_data.pa_current  : {server_data.pa_current}', flush=True)
     print(f'server_data.fans        : {server_data.fans}', flush=True)
-    #print(f'server_data.connected   : {server_data.connected}', flush=True)
     print('-------------------------------------', flush=True)
 
 # developed from "TCP echo server using streams"
@@ -45,6 +44,7 @@ async def client():
             server_data.fans = data_dict['fans']
             #server_data.connected = data_dict['connected']
             await consume(server_data)
+        # TODO: this exception isn't working as I wish, or not at all!
         except IOError as e:
             print(f'EXCEPTION 2 {e}', flush=True)
             break
