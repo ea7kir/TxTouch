@@ -1,7 +1,7 @@
 import asyncio
 import json
 
-SERVER = 'roof.local'
+SERVER = 'txserver.local'
 PORT = 8765
 
 class ServerData:

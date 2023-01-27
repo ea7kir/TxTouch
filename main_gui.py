@@ -179,7 +179,7 @@ dispatch_dictionary = {
 
 # MAIN ------------------------------------------
 
-def main_gui(recv_spectrum_data, roof1):
+def main_gui(spectrum_pipe, server_pipe):
     window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
     graph = window['graph']
@@ -225,10 +225,10 @@ def main_gui(recv_spectrum_data, roof1):
             window['-PROVIDER_V-'].update(cs.curr_value.provider)
             window['-SERVICE_V-'].update(cs.curr_value.service)
             window['-GAIN_V-'].update(cs.curr_value.gain)
-        if recv_spectrum_data.poll():
-            spectrum_data = recv_spectrum_data.recv()
-            while recv_spectrum_data.poll():
-                _ = recv_spectrum_data.recv()
+        if spectrum_pipe.poll():
+            spectrum_data = spectrum_pipe.recv()
+            while spectrum_pipe.poll():
+                _ = spectrum_pipe.recv()
             # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
             graph.erase()
             # draw graticule
@@ -253,10 +253,10 @@ def main_gui(recv_spectrum_data, roof1):
             graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
             # draw spectrum
             graph.draw_polygon(spectrum_data.points, fill_color='green')
-        if roof1.poll():
-            server_data = roof1.recv()
-            while roof1.poll():
-                _ = roof1.recv()
+        if server_pipe.poll():
+            server_data = server_pipe.recv()
+            while server_pipe.poll():
+                _ = server_pipe.recv()
             window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
             window['-PA_CURRENT-'].update(server_data.pa_current)
             window['-PA_TEMP-'].update(server_data.pa_temp)
@@ -265,16 +265,16 @@ def main_gui(recv_spectrum_data, roof1):
     del window
 
 if __name__ == '__main__':
-    recv_spectrum_data, send_spectrum_data = Pipe()
-    roof1, roof2 = Pipe()
+    parent_spectrum_pipe, child_spectrum_pipe = Pipe()
+    parent_server_pipe, child_server_pipe = Pipe()
     # create the process
-    p_read_spectrum_data = Process(target=process_read_spectrum_data, args=(send_spectrum_data,))
-    p_read_server_data = Process(target=process_read_server_data, args=(roof2,))
+    p_read_spectrum_data = Process(target=process_read_spectrum_data, args=(child_spectrum_pipe,))
+    p_read_server_data = Process(target=process_read_server_data, args=(child_server_pipe,))
     # start the process
     p_read_spectrum_data.start()
     p_read_server_data.start()
     # main ui
-    main_gui(recv_spectrum_data, roof1)
+    main_gui(parent_spectrum_pipe, parent_server_pipe)
     # kill 
     p_read_spectrum_data.kill()
     p_read_server_data.kill()

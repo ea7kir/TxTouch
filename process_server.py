@@ -13,7 +13,7 @@ class ServerData:
     connected: bool = False
 
 
-def process_read_server_data(roof2):
+def process_read_server_data(pipe):
     IP = '000.000.000.000' # roof.local
     PORT = 0 # whatever
 
@@ -22,8 +22,8 @@ def process_read_server_data(roof2):
 
     while True:
 
-        if roof2.poll():
-            cmd = roof2.recv()
+        if pipe.poll():
+            cmd = pipe.recv()
             if cmd == 'STOP':
                 # close the connection
                 server_data.connected = False
@@ -39,7 +39,7 @@ def process_read_server_data(roof2):
             server_data.pa_temp:str = read_pa_temperature()
             server_data.pa_current:str = read_pa_current()
             server_data.fans = read_fan_status()
-            roof2.send(server_data)
+            pipe.send(server_data)
             sleep(0.5)
 
         else:
@@ -48,7 +48,7 @@ def process_read_server_data(roof2):
             server_data.pa_temp:str = '-'
             server_data.pa_current:str = '-'
             server_data.fans:str = '-'
-            roof2.send(server_data)
+            pipe.send(server_data)
             sleep(0.5)
   
 
