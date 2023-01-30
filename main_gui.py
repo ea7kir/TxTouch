@@ -1,5 +1,7 @@
 """TxTouch"""
 
+#import pigpio
+
 from multiprocessing import Process
 from multiprocessing import Pipe
 
@@ -8,6 +10,9 @@ import control_status as cs
 
 from process_spectrum import process_read_spectrum_data, SpectrumData
 from process_server import process_read_server_data, ServerData
+
+from device_manager import configure_devices, shutdown_devices
+from device_manager import switch_mute_On, switch_mute_Off
 
 ########################################################################### begin encoder data
 
@@ -205,11 +210,16 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-TUNE-'].update(button_color=NORMAL_BUTTON_COLOR)
                 window['-STATUS_BAR-'].update('stop (or invalid display)')
         if event == '-PTT-':
-            ptt_active = not ptt_active
-            if ptt_active:
+            
+            if not ptt_active:
                 window['-PTT-'].update(button_color=PTT_ACTIVE_BUTTON_COLOR)
+                switch_mute_On()
+                ptt_active = True
             else:
                 window['-PTT-'].update(button_color=NORMAL_BUTTON_COLOR)
+                switch_mute_Off()
+                ptt_active = False
+
         if event in dispatch_dictionary:
             # NOTE: initial control values are displayed by  window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
             func_to_call = dispatch_dictionary[event]
@@ -265,6 +275,9 @@ def main_gui(spectrum_pipe, server_pipe):
     del window
 
 if __name__ == '__main__':
+
+    configure_devices()
+
     parent_spectrum_pipe, child_spectrum_pipe = Pipe()
     parent_server_pipe, child_server_pipe = Pipe()
     # create the process
@@ -278,6 +291,9 @@ if __name__ == '__main__':
     # kill 
     p_read_spectrum_data.kill()
     p_read_server_data.kill()
+
+    shutdown_devices()
+
     # shutdown
     print('about to shut down')
     #import subprocess

@@ -4,7 +4,7 @@
 # scp install_1.sh pi@rxtouch.local:.
 # and chmod +x install_1.sh
 
-echo "Installing RxTouch Part 1"
+echo "Installing TxTouch Part 1"
 
 echo
 echo "-------------------------------"

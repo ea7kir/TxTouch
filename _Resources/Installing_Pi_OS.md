@@ -8,7 +8,7 @@ NOTE: CURRENTLY REQUIRES PIOS BULLSEYE 64-BIT FULL DESKTOP
 CHOOSE OS:	Raspberry Pi OS (64-bit)
 
 CONFIGURE:
-	Set hostname:			rxtouch
+	Set hostname:			txtouch
 	Enable SSH
 		Use password authentication
 	Set username and password
