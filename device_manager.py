@@ -2,7 +2,7 @@ import pigpio
 from time import sleep
 
 from device_rf_switch import configure_rf_switches, shutdown_rf_switches
-from device_rf_switch import switch_rf_switch_On, switch_mute_Off
+from device_rf_switch import switch_rf_switch_On, switch_rf_switch_Off
 from device_relays import configure_relays, shutdown_relays
 from device_relays import switch_mute_On, switch_mute_Off
 
