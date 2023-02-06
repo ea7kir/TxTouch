@@ -52,12 +52,16 @@ pip install pysimplegui pigpio websockets PyYAML
 
 echo
 echo "-------------------------------"
-echo "-- Cloning TxTouch from github"
+echo "-- Install xinit"
 echo "-------------------------------"
 echo
 
-echo "THIS IS NOT WORKING YET"
-# git clone https://github.com/ea7kir/TxTouch.git
+sudo apt install xinit
+sudo apt autoremove
+
+echo "To run TxTouch from my Mac,"
+echo "edit /etc/X11/Xwrapper.config"
+echo "and change allowed_users = console to allowed_users = anybody"
 
 echo
 echo "-------------------------------"
@@ -65,4 +69,7 @@ echo "-- Done"
 echo "-------------------------------"
 echo
 
-echo "Clone from VSCODE"
+echo "Clone TxTouch from within VSCODE"
+echo "using: https://github.com/ea7kir/TxTouch.git"
+echo
+echo "and run: startx /home/pi/TxTouch/txtouch"
