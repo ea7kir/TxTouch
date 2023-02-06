@@ -30,7 +30,7 @@ echo "-- Updrading PIP"
 echo "-------------------------------"
 echo
 
-echo "# install --upgrade pip # would downgrade !"
+pip install --upgrade pip
 
 echo
 echo "-------------------------------"
@@ -72,4 +72,4 @@ echo
 echo "Clone TxTouch from within VSCODE"
 echo "using: https://github.com/ea7kir/TxTouch.git"
 echo
-echo "To run TxTouch, type: txtouch"
+echo "To run TxTouch, type: ./txtouch"
