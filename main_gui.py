@@ -12,7 +12,7 @@ from process_spectrum import process_read_spectrum_data, SpectrumData
 from process_server import process_read_server_data, ServerData
 
 from device_manager import configure_devices, shutdown_devices
-from device_manager import switch_mute_On, switch_mute_Off
+from device_manager import activate_ptt, deactivate_ptt
 
 ########################################################################### begin encoder data
 
@@ -213,10 +213,12 @@ def main_gui(spectrum_pipe, server_pipe):
             
             if not ptt_active:
                 window['-PTT-'].update(button_color=PTT_ACTIVE_BUTTON_COLOR)
+                activate_ptt()
                 switch_mute_On()
                 ptt_active = True
             else:
                 window['-PTT-'].update(button_color=NORMAL_BUTTON_COLOR)
+                deactivate_ptt()
                 switch_mute_Off()
                 ptt_active = False
 
