@@ -72,4 +72,4 @@ echo
 echo "Clone TxTouch from within VSCODE"
 echo "using: https://github.com/ea7kir/TxTouch.git"
 echo
-echo "and run: startx /home/pi/TxTouch/txtouch"
+echo "To run TxTouch, type: txtouch"
