@@ -30,7 +30,7 @@ echo "-- Updrading PIP"
 echo "-------------------------------"
 echo
 
-pip install --upgrade pip
+echo "# install --upgrade pip # would downgrade !"
 
 echo
 echo "-------------------------------"
