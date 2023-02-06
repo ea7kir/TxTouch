@@ -38,7 +38,7 @@ echo "-- Install pigio & enable"
 echo "-------------------------------"
 echo
 
-sudo apt install pigpio python-pigpio python3-pigpio
+sudo apt install pigpio python-pigpio python3-pigpio -y
 sudo systemctl enable pigpiod
 sudo systemctl start pigpiod
 
@@ -48,7 +48,7 @@ echo "-- Installing PySimpleGUI, pigpio, websockets & PyYAML"
 echo "-------------------------------"
 echo
 
-pip install pysimplegui, pigpio websockets PyYAML
+pip install pysimplegui pigpio websockets PyYAML
 
 echo
 echo "-------------------------------"
@@ -57,7 +57,7 @@ echo "-------------------------------"
 echo
 
 echo "THIS IS NOT WORKING YET"
-# git clone https://github.com/ea7kir/RxTouch.git
+# git clone https://github.com/ea7kir/TxTouch.git
 
 echo
 echo "-------------------------------"
