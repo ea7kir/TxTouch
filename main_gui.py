@@ -193,7 +193,7 @@ def main_gui(spectrum_pipe, server_pipe):
     # fix to display initial controll values
     window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
     while True:
-        event, values = window.read(timeout=100)
+        event, values = window.read(timeout=1)
         if event == '-SHUTDOWN-':
             #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
             break
@@ -209,15 +209,15 @@ def main_gui(spectrum_pipe, server_pipe):
             else:
                 window['-TUNE-'].update(button_color=NORMAL_BUTTON_COLOR)
                 window['-STATUS_BAR-'].update('stop (or invalid display)')
+        # TODO: interlock TUNE and PTT
         if event == '-PTT-':
-            if not ptt_active:
+            ptt_active = not ptt_active
+            if ptt_active:
                 window['-PTT-'].update(button_color=PTT_ACTIVE_BUTTON_COLOR)
                 activate_ptt()
-                ptt_active = True
             else:
                 window['-PTT-'].update(button_color=NORMAL_BUTTON_COLOR)
                 deactivate_ptt()
-                ptt_active = False
 
         if event in dispatch_dictionary:
             # NOTE: initial control values are displayed by  window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
