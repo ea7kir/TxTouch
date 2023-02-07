@@ -20,14 +20,10 @@ def shutdown_devices():
     _pi.stop() # TypeError: pi.stop() missing 1 required positional argument: 'self'
 
 def activate_ptt():
-    switch_rf_switch_On
+    switch_rf_switch_On()
+    switch_mute_On()
     
 def deactivate_ptt():
-    switch_rf_switch_Off
-    
-def mute_audio():
-    # sleep(5) # TODO: this may not be the best place - 0r use a thread !
-    switch_mute_On()
-
-def unmute_audio():
+    switch_rf_switch_Off()
     switch_mute_Off()
+    

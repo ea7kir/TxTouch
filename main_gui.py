@@ -210,16 +210,13 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-TUNE-'].update(button_color=NORMAL_BUTTON_COLOR)
                 window['-STATUS_BAR-'].update('stop (or invalid display)')
         if event == '-PTT-':
-            
             if not ptt_active:
                 window['-PTT-'].update(button_color=PTT_ACTIVE_BUTTON_COLOR)
                 activate_ptt()
-                switch_mute_On()
                 ptt_active = True
             else:
                 window['-PTT-'].update(button_color=NORMAL_BUTTON_COLOR)
                 deactivate_ptt()
-                switch_mute_Off()
                 ptt_active = False
 
         if event in dispatch_dictionary:
