@@ -12,71 +12,6 @@ from process_spectrum import process_read_spectrum_data, SpectrumData
 from process_server import process_read_server_data, ServerData
 
 from device_manager import configure_devices, shutdown_devices
-#from device_manager import activate_ptt, deactivate_ptt
-
-########################################################################### begin encoder data
-
-#class EncoderData:
-#    def __init__(self):
-#        self.ip:str = '000.000.000.000'
-#        self.port:int = 0
-#        self.encoding:str = 'H.265'
-#        self.bit_rate:str = '430'
-#        self.changed: bool = False
-    
-#encoder_data = EncoderData()
-
-########################################################################### end encoder data
-
-############################################################################ begin pluto data#
-
-#class PlutoData:
-#    def __init__(self):
-#        # TODO: note these are just example values
-#        self.ip:str = '000.000.000.000',
-#        self.port:int = 8282,
-#        self.frequency:str = '2409.75',
-#        self.mode:str = 'DBS2',
-#        self.constellation:str = 'QPSK',
-#        self.rate:str = '333',
-#        self.fec:str = '23',
-#        self.gain:str = '-10',
-#        self.calibration_mode:str = 'nocalib',
-#        self.pcr_pts_delay:str = '800',
-#        self.audio_bit_rate:str = '32',
-#        self.provider:str = 'EA7KIR',
-#        self.service:str = 'Malaga',
-#        self.pluto_running: bool = False#
-
-#pluto_data = PlutoData()#
-
-#def start_pluto():
-#    stop_pluto()
-#    # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
-#    cmd_str = 'rtmp://{}:{}/,{},{},{},{},{},{},{},{},{},/,{}'.format(
-#        pluto_data.ip,
-#        pluto_data.port,
-#        pluto_data.frequency,
-#        pluto_data.mode,
-#        pluto_data.constellation,
-#        pluto_data.symbol_rate,
-#        pluto_data.fec,
-#        pluto_data.gain,
-#        pluto_data.calibration_mode,
-#        pluto_data.pcr_pts_delay,
-#        pluto_data.audio_bit_rate,
-#        pluto_data.provider)
-#    # TODO: send to pluto
-#    print(cmd_str)
-#    pluto_data.pluto_running = True#
-
-#def stop_pluto():
-#    if not pluto_data.pluto_running:
-#        return
-#    # ...
-#    pluto_data.pluto_running = False#
-
-############################################################################ end pluto data
 
 # LAYOUT ----------------------------------------
 
@@ -190,37 +125,13 @@ def main_gui(spectrum_pipe, server_pipe):
     window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
     graph = window['graph']
-    #tune_active = False
-    #ptt_active = False
     # fix to display initial control values
     window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
     while True:
-        event, values = window.read(timeout=1)
+        event, values = window.read(timeout=100)
         if event == '-SHUTDOWN-':
             #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
             break
-        #if event == '-TUNE-':
-        #    tune_active = not tune_active
-        #    if tune_active:
-        #        window['-TUNE-'].update(button_color=TUNE_ACTIVE_BUTTON_COLOR)
-        #        encoder_args = cs.encoder_args()
-        #        # TODO: send encoder_args to the encoder
-        #        pluto_args = cs.pluto_args()
-        #        # TODO: send pluto_args to the pluto
-        #        window['-STATUS_BAR-'].update(f'start: {pluto_args.frequency},{pluto_args.symbol_rate}')
-        #    else:
-        #        window['-TUNE-'].update(button_color=NORMAL_BUTTON_COLOR)
-        #        window['-STATUS_BAR-'].update('stop (or invalid display)')
-        ## TODO: interlock TUNE and PTT
-        #if event == '-PTT-':
-        #    ptt_active = not ptt_active
-        #    if ptt_active:
-        #        window['-PTT-'].update(button_color=PTT_ACTIVE_BUTTON_COLOR)
-        #        activate_ptt()
-        #    else:
-        #        window['-PTT-'].update(button_color=NORMAL_BUTTON_COLOR)
-        #        deactivate_ptt()
-
         if event in dispatch_dictionary:
             # NOTE: initial control values are displayed by  window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
             func_to_call = dispatch_dictionary[event]
@@ -238,8 +149,6 @@ def main_gui(spectrum_pipe, server_pipe):
             window['-GAIN_V-'].update(cs.curr_value.gain)
             window['-TUNE-'].update(button_color=cs.tune_button_color)
             window['-PTT-'].update(button_color=cs.ptt_button_color)
-            #print(f'tune_is_active = {cs.tune_is_active} {cs.tune_button_color}')
-            #print(f'ptt_is_active = {cs.ptt_is_active} {cs.tune_button_color}')
         if spectrum_pipe.poll():
             spectrum_data = spectrum_pipe.recv()
             while spectrum_pipe.poll():
