@@ -1,4 +1,4 @@
-from device_constants import PLUTO_ADDRESS
+#from device_constants import PLUTO_ADDRESS
 
 # TODO: network access to Pluto
 
@@ -25,9 +25,10 @@ class PlutoArgs:
 def setup_pluto(plu):
     # stop_pluto()
     # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
-    cmd_str = 'rtmp://{}:{}/,{},{},{},{},{},{},{},{},{},/,{}'.format(
-        PLUTO_ADDRESS,
-        plu.port,
+    cmd_str = '{}/,{},{},{},{},{},{},{},{},{},/,{}'.format(
+        #PLUTO_ADDRESS,
+        #plu.port,
+        plu.url,
         plu.frequency,
         plu.mode,
         plu.constellation,

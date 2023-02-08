@@ -1,4 +1,5 @@
 from device_manager import activate_ptt, deactivate_ptt, setup_encoder_and_pluto
+from device_constants import PLUTO_ADDRESS
 
 TUNED_MARKER = [
     # first Int16 represents 10490.500 MHz
@@ -355,6 +356,7 @@ curr_band = INITIAL_BAND
 curr_value = value[curr_band]
 curr_index = index[curr_band]
 max_band_list = len(BAND_LIST) - 1 # TODO: messy!  try integrating band into the Index classes
+curr_url = None # TODO: attach to band
 
 def inc_band():
     global curr_band, max_band_list, curr_value, curr_index
@@ -411,7 +413,7 @@ def inc_codecs():
     if curr_index.codecs < curr_index.max_codecs_list:
         curr_index.codecs += 1
         curr_value.codecs = curr_index.codecs_list[curr_index.codecs]
-
+        # TODO: curr_value.url = 
 def dec_codecs():
     global curr_value, curr_index
     if curr_index.codecs > 0:
@@ -509,14 +511,22 @@ class EncoderArgs:
     url = None                 # 'udp://192.168.3.10:8282' OR 'rtmp://192.168.3.10:7272 BUT this could require changing the encoder stream to pimary?
 
 def encoder_args():
-    global curr_value
+    global curr_value, curr_url
+    tmp_tuple = curr_value.codecs.partition(" ")
+    if tmp_tuple[0] == 'H264':
+        tmp_video_codec = 'H.264'
+        curr_url = f'rtmp://{PLUTO_ADDRESS}:7272'
+    else:
+        tmp_video_codec = 'H.265'
+        curr_url = f'udp://{PLUTO_ADDRESS}:8282'
+    tmp_audio_codec = tmp_tuple[2]
     args = EncoderArgs()
-    args.audio_codec = curr_value.codecs    # TODO: split video audio
+    args.audio_codec = tmp_audio_codec
     args.audio_bitrate = '64000'            # NOTE: not implemented
-    args.video_codec = curr_value.codecs    # TODO: split video audio
+    args.video_codec = tmp_video_codec
     args.video_size = '1280x720'            # NOTE: not implemented
     args.video_bitrate = curr_value.video_bitrate
-    args.url = 'url'
+    args.url = curr_url
     return args
 
 class PlutoArgs:
@@ -532,22 +542,26 @@ class PlutoArgs:
     audio_bit_rate = None           # '32'
     provider = None                 # 'EA7KIR'
     service = None                  # 'Malaga'
+    url = None                      # 'udp://192.168.3.10:8282'
 
 def pluto_args():
     global curr_value
+    tmp_tuple = curr_value.fec.partition("/")
+    tmp_fec = tmp_tuple[0] + tmp_tuple[2]
     args = PlutoArgs()
     args.port = '8282'              # TODO: '8282' or '7272'
     args.frequency = curr_value.frequency[:7]
     args.mode = curr_value.mode
     args.constellation = curr_value.constellation
     args.symbol_rate = curr_value.symbol_rate
-    args.fec = curr_value.fec       # TODO: get '23' from '2/3'
+    args.fec = tmp_fec
     args.gain = curr_value.gain
     calibration_mode = 'nocalib'    # NOTE: not implemented
     pcr_pts_delay = '800'           # NOTE: not implemented
     audio_bit_rate = '32'           # NOTE: not implemented
     args.provider = curr_value.provider
     args.service = curr_value.service
+    args.url = curr_url
     return args 
 
     """
