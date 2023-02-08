@@ -531,7 +531,7 @@ def tune_args():
 
     s =  f'rtmp://{IP},{PORT},{frequency},{mode},{constellation},{symbol_rate},{fec},{gain},nocalib,800,32,/,{provider},'
 
-    IP = '192.168.1.40'
+    IP = '192.168.2.1'
     PORT = '7277' or '8282'
     frequency = '2409.75'
     mode = 'DVBS2'
