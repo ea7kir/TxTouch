@@ -494,66 +494,61 @@ def selected_frequency_marker():
     i = int(curr_value.frequency[9:])
     return TUNED_MARKER[i]
 
-class EncoderArgs:
-    codecs = None
-    video_bitrate = None
+#class EncoderArgs:
+#    codecs = None
+#    video_bitrate = None
 
 # TODO: split codecs to video_codec and audio_codec
 
-#class EncoderArgs:
-#    audio_codec = None         # 'ACC'
-#    audio_bitrate = None       # '64000'
-#    video_codec = None         # 'H.265'
-#    video_size = None          # '1280x720'
-#    video_bitrate = None       # '330'
-#    url = None                 # 'udp://192.168.3.10:8282' OR 'rtmp://192.168.3.10:7272 BUT this could require changing the encoder stream to pimary?
+class EncoderArgs:
+    audio_codec = None         # 'ACC'
+    audio_bitrate = None       # '64000'
+    video_codec = None         # 'H.265'
+    video_size = None          # '1280x720'
+    video_bitrate = None       # '330'
+    url = None                 # 'udp://192.168.3.10:8282' OR 'rtmp://192.168.3.10:7272 BUT this could require changing the encoder stream to pimary?
 
 def encoder_args():
     global curr_value
-    # TODO: args = EncoderArgs() etc.
-    EncoderArgs.codecs = curr_value.codecs
-    EncoderArgs.video_bitrate = curr_value.video_bitrate
-    return EncoderArgs
+    args = EncoderArgs()
+    args.audio_codec = curr_value.codecs    # TODO: split video audio
+    args.audio_bitrate = '64000'            # NOTE: not implemented
+    args.video_codec = curr_value.codecs    # TODO: split video audio
+    args.video_size = '1280x720'            # NOTE: not implemented
+    args.video_bitrate = curr_value.video_bitrate
+    args.url = 'url'
+    return args
 
 class PlutoArgs:
-    frequency = None
-    symbol_rate = None
-    mode = None
-    constellation = None
-    fec = None
-    provider = None
-    service = None
-    gain = None
-
-# TODO: rename some of these to match current names
-
-#class PlutoArgs:
-#    frequency = None           # '2409.75'
-#    mode = None                # 'DBS2'
-#    constellation = None       # 'QPSK'
-#    rate = None                # '333'
-#    fec = None                 # '23'
-#    gain = None                # '-10'
-#    calibration_mode = None    # 'nocalib'
-#    pcr_pts_delay = None       # '800'
-#    audio_bit_rate = None      # '32'
-#    provider = None            # 'EA7KIR'
-#    service = None             # 'Malaga'
-
-# TODO: split codecs to video_codec and audio_codec
+    port = None                     # '8282'
+    frequency = None                # '2409.75'
+    mode = None                     # 'DBS2'
+    constellation = None            # 'QPSK'
+    symbol_rate = None              # '333'
+    fec = None                      # '23'
+    gain = None                     # '-10'
+    calibration_mode = None         # 'nocalib'
+    pcr_pts_delay = None            # '800'
+    audio_bit_rate = None           # '32'
+    provider = None                 # 'EA7KIR'
+    service = None                  # 'Malaga'
 
 def pluto_args():
     global curr_value
-    # TODO: args = PlutoArgs() etc.
-    PlutoArgs.frequency = curr_value.frequency[:7]
-    PlutoArgs.symbol_rate = curr_value.symbol_rate
-    PlutoArgs.mode = curr_value.mode
-    PlutoArgs.constellation = curr_value.constellation
-    PlutoArgs.fec = curr_value.fec
-    PlutoArgs.provider = curr_value.provider
-    PlutoArgs.service = curr_value.service
-    PlutoArgs.gain = curr_value.gain
-    return PlutoArgs 
+    args = PlutoArgs()
+    args.port = '8282'              # TODO: '8282' or '7272'
+    args.frequency = curr_value.frequency[:7]
+    args.mode = curr_value.mode
+    args.constellation = curr_value.constellation
+    args.symbol_rate = curr_value.symbol_rate
+    args.fec = curr_value.fec       # TODO: get '23' from '2/3'
+    args.gain = curr_value.gain
+    calibration_mode = 'nocalib'    # NOTE: not implemented
+    pcr_pts_delay = '800'           # NOTE: not implemented
+    audio_bit_rate = '32'           # NOTE: not implemented
+    args.provider = curr_value.provider
+    args.service = curr_value.service
+    return args 
 
     """
     # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
