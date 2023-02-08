@@ -12,3 +12,6 @@ RELAY_MUTE_GPIO                 = 16 # pin 36 GPIO_16 (GND pin 34, pin 17 3.3v)
 # NOTE: the opto coupleers need reverse logic
 RELAY_ON                        = 0  # TODO: int or bool?
 RELAY_OFF                       = 1
+
+PLUTO_ADDRESS                   = '192.168.2.1'
+ENCODER_ADDRESS                 = '192.168.3.1'

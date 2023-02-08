@@ -2,7 +2,7 @@ Current Encoder Settings
 
 iMac has 2nd IP 192.168.3.3
 
-HEV-10 IP address is 192.168.3.2 and sending UDP stream to 192.168.3.3
+HEV-10 IP address is 192.168.3.1 and sending UDP stream to 192.168.3.10
 
 Secondary Stream
 Audio Encoding Type: AAC
@@ -12,5 +12,5 @@ Video Encoding Size: 1280*720
 Video Bitrate(Kbps): 330
 RTSP URL1: Disabled
 RTSP URL2(TS): Disabled
-UDP(unicast/multicast) URL: udp://192.168.3.3:8282
+Misc Stream/Secondary Stream UDP(unicast/multicast) URL: udp://192.168.3.10:8282
 SRT: Disabled

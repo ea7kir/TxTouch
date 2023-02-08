@@ -1,4 +1,4 @@
-#import
+from device_manager import activate_ptt, deactivate_ptt, setup_encoder_and_pluto
 
 TUNED_MARKER = [
     # first Int16 represents 10490.500 MHz
@@ -133,13 +133,13 @@ VERY_NARROW_FEC_LIST = [
     '1/2','2/3','3/4','4/5','5/6','6/7','7/8','8/9',
 ]
 WIDE_BITRATE_LIST = [
-    '400','410','430',
+    '290','300','310','330','340','350','360',
 ]
 NARROW_BITRATE_LIST = [
-    '400','410','430',
+    '290','300','310','330','340','350','360',
 ]
 VERY_NARROW_BITRATE_LIST = [
-    '400','410','430',
+    '290','300','310','330','340','350','360',
 ]
 WIDE_PROVIDER_LIST = [
     'EA7KIR','G8WAA',
@@ -181,7 +181,7 @@ INITIAL_WIDE_MODE                   = 1 # DVB-S2
 INITIAL_WIDE_CODEC                  = 1 # H265 ACC
 INITIAL_WIDE_CONSTELLATION          = 0 # QPSK
 INITIAL_WIDE_FEC                    = 2 # 3/4
-INITIAL_WIDE_BITRATE                = 1 # 410
+INITIAL_WIDE_BITRATE                = 3 # 330
 INITIAL_WIDE_PROVIDER               = 0 # EA7KIR
 INITIAL_WIDE_SERVICE                = 0 # Malaga
 INITIAL_WIDE_GAIN                   = 3 # -7
@@ -192,7 +192,7 @@ INITIAL_NARROW_MODE                 = 1 # DVB-S2
 INITIAL_NARROW_CODEC                = 1 # H265 ACC
 INITIAL_NARROW_CONSTELLATION        = 0 # QPSK
 INITIAL_NARROW_FEC                  = 2 # 3/4
-INITIAL_NARROW_BITRATE              = 1 # 410
+INITIAL_NARROW_BITRATE              = 3 # 330
 INITIAL_NARROW_PROVIDER             = 0 # EA7KIR
 INITIAL_NARROW_SERVICE              = 0 # Malaga
 INITIAL_NARROW_GAIN                 = 3 # -7
@@ -203,7 +203,7 @@ INITIAL_VERY_NARROW_MODE            = 1 # DVB-S2
 INITIAL_VERY_NARROW_CODEC           = 1 # H265 ACC
 INITIAL_VERY_NARROW_CONSTELLATION   = 0 # QPSK
 INITIAL_VERY_NARROW_FEC             = 2 # 3/4
-INITIAL_VERY_NARROW_BITRATE         = 1 # 410
+INITIAL_VERY_NARROW_BITRATE         = 3 # 330
 INITIAL_VERY_NARROW_PROVIDER        = 0 # EA7KIR
 INITIAL_VERY_NARROW_SERVICE         = 0 # Malaga
 INITIAL_VERY_NARROW_GAIN            = 3 # -7
@@ -498,6 +498,14 @@ class EncoderArgs:
     codecs = ''
     bitrate = ''
 
+#class EncoderArgs:
+#    audio_codec = ''
+#    audio_bitrate = ''
+#    video_codec = ''
+#    video_size = ''
+#    video_bitrate = ''
+#    url = ''
+
 def encoder_args():
     global curr_value
     EncoderArgs.codecs = curr_value.codecs
@@ -514,7 +522,7 @@ class TuneArgs:
     service = ''
     gain = ''
 
-def tune_args():
+def pluto_args():
     global curr_value
     TuneArgs.frequency = curr_value.frequency[:7]
     TuneArgs.symbol_rate = curr_value.symbol_rate
@@ -540,3 +548,37 @@ def tune_args():
     gain = '-2'
     provider = 'EA7KIR'
     """
+
+NORMAL_BUTTON_COLOR = ('#FFFFFF','#222222')
+DISABALED_BUTTON_COLOR = ('#444444',None)
+TUNE_ACTIVE_BUTTON_COLOR = ('#FFFFFF','#007700')
+PTT_ACTIVE_BUTTON_COLOR = ('#FFFFFF','#FF0000')
+   
+tune_is_active = False
+ptt_is_active = False
+tune_button_color = NORMAL_BUTTON_COLOR
+ptt_button_color = NORMAL_BUTTON_COLOR
+
+def tune():
+    global tune_is_active, tune_button_color
+    if ptt_is_active:
+        return
+    tune_is_active = not tune_is_active
+    if tune_is_active:
+        tune_button_color = TUNE_ACTIVE_BUTTON_COLOR
+        setup_encoder_and_pluto(encoder_args(), pluto_args())
+    else:
+        tune_button_color = NORMAL_BUTTON_COLOR
+
+def ptt():
+    global ptt_is_active, ptt_button_color
+    if not tune_is_active:
+        return
+    ptt_is_active = not ptt_is_active
+    if ptt_is_active:
+        ptt_button_color = PTT_ACTIVE_BUTTON_COLOR
+        activate_ptt()
+    else:
+        ptt_button_color = NORMAL_BUTTON_COLOR
+        deactivate_ptt()
+
