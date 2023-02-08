@@ -216,7 +216,7 @@ class WideIndex:
     codecs = INITIAL_WIDE_CODEC
     constellation = INITIAL_WIDE_CONSTELLATION
     fec = INITIAL_WIDE_FEC
-    bitrate = INITIAL_WIDE_BITRATE
+    video_bitrate = INITIAL_WIDE_BITRATE
     provider = INITIAL_WIDE_PROVIDER
     service = INITIAL_WIDE_SERVICE
     gain = INITIAL_WIDE_GAIN
@@ -232,8 +232,8 @@ class WideIndex:
     max_constellation_list = len(WIDE_CONSTELLATION_LIST) - 1
     fec_list = WIDE_FEC_LIST
     max_fec_list = len(WIDE_FEC_LIST) - 1
-    bitrate_list = WIDE_BITRATE_LIST
-    max_bitrate_list = len(WIDE_BITRATE_LIST) - 1
+    video_bitrate_list = WIDE_BITRATE_LIST
+    max_video_bitrate_list = len(WIDE_BITRATE_LIST) - 1
     provider_list = WIDE_PROVIDER_LIST
     max_provider_list = len(WIDE_PROVIDER_LIST) - 1
     service_list = WIDE_SERVICE_LIST
@@ -249,7 +249,7 @@ class NarrowIndex:
     codecs = INITIAL_NARROW_CODEC
     constellation = INITIAL_NARROW_CONSTELLATION
     fec = INITIAL_NARROW_FEC
-    bitrate = INITIAL_NARROW_BITRATE
+    video_bitrate = INITIAL_NARROW_BITRATE
     provider = INITIAL_NARROW_PROVIDER
     service = INITIAL_NARROW_SERVICE
     gain = INITIAL_NARROW_GAIN
@@ -265,8 +265,8 @@ class NarrowIndex:
     max_constellation_list = len(NARROW_CONSTELLATION_LIST) - 1
     fec_list = NARROW_FEC_LIST
     max_fec_list = len(NARROW_FEC_LIST) - 1
-    bitrate_list = NARROW_BITRATE_LIST
-    max_bitrate_list = len(NARROW_BITRATE_LIST) - 1
+    video_bitrate_list = NARROW_BITRATE_LIST
+    max_video_bitrate_list = len(NARROW_BITRATE_LIST) - 1
     provider_list = NARROW_PROVIDER_LIST
     max_provider_list = len(NARROW_PROVIDER_LIST) - 1
     service_list = NARROW_SERVICE_LIST
@@ -282,7 +282,7 @@ class VeryNarrowIndex:
     codecs = INITIAL_VERY_NARROW_CODEC
     constellation = INITIAL_VERY_NARROW_CONSTELLATION
     fec = INITIAL_VERY_NARROW_FEC
-    bitrate = INITIAL_VERY_NARROW_BITRATE
+    video_bitrate = INITIAL_VERY_NARROW_BITRATE
     provider = INITIAL_VERY_NARROW_PROVIDER
     service = INITIAL_VERY_NARROW_SERVICE
     gain = INITIAL_VERY_NARROW_GAIN
@@ -298,8 +298,8 @@ class VeryNarrowIndex:
     max_constellation_list = len(VERY_NARROW_CONSTELLATION_LIST) - 1
     fec_list = VERY_NARROW_FEC_LIST
     max_fec_list = len(VERY_NARROW_FEC_LIST) - 1
-    bitrate_list = VERY_NARROW_BITRATE_LIST
-    max_bitrate_list = len(VERY_NARROW_BITRATE_LIST) - 1
+    video_bitrate_list = VERY_NARROW_BITRATE_LIST
+    max_video_bitrate_list = len(VERY_NARROW_BITRATE_LIST) - 1
     provider_list = VERY_NARROW_PROVIDER_LIST
     max_provider_list = len(VERY_NARROW_PROVIDER_LIST) - 1
     service_list = VERY_NARROW_SERVICE_LIST
@@ -318,7 +318,7 @@ class  WideValue:
     codecs = WIDE_CODECS_LIST[WideIndex.codecs]
     constellation = WIDE_CONSTELLATION_LIST[WideIndex.constellation]
     fec = WIDE_FEC_LIST[WideIndex.fec]
-    bitrate = WIDE_BITRATE_LIST[WideIndex.bitrate]
+    video_bitrate = WIDE_BITRATE_LIST[WideIndex.video_bitrate]
     provider = WIDE_PROVIDER_LIST[WideIndex.provider]
     service = WIDE_SERVICE_LIST[WideIndex.service]
     gain = WIDE_GAIN_LIST[WideIndex.gain]
@@ -331,7 +331,7 @@ class NarrowValue:
     codecs = NARROW_CODECS_LIST[NarrowIndex.codecs]
     constellation = NARROW_CONSTELLATION_LIST[NarrowIndex.constellation]
     fec = NARROW_FEC_LIST[NarrowIndex.fec]
-    bitrate = NARROW_BITRATE_LIST[NarrowIndex.bitrate]
+    video_bitrate = NARROW_BITRATE_LIST[NarrowIndex.video_bitrate]
     provider = NARROW_PROVIDER_LIST[NarrowIndex.provider]
     service = NARROW_SERVICE_LIST[NarrowIndex.service]
     gain = NARROW_GAIN_LIST[NarrowIndex.gain]
@@ -344,7 +344,7 @@ class VeryNarrowValue:
     codecs = VERY_NARROW_CODECS_LIST[VeryNarrowIndex.codecs]
     constellation = VERY_NARROW_CONSTELLATION_LIST[VeryNarrowIndex.constellation]
     fec = VERY_NARROW_FEC_LIST[VeryNarrowIndex.fec]
-    bitrate = VERY_NARROW_BITRATE_LIST[VeryNarrowIndex.bitrate]
+    video_bitrate = VERY_NARROW_BITRATE_LIST[VeryNarrowIndex.video_bitrate]
     provider = VERY_NARROW_PROVIDER_LIST[VeryNarrowIndex.provider]
     service = VERY_NARROW_SERVICE_LIST[VeryNarrowIndex.service]
     gain = VERY_NARROW_GAIN_LIST[VeryNarrowIndex.gain]
@@ -442,17 +442,17 @@ def dec_fec():
         curr_index.fec -= 1
         curr_value.fec = curr_index.fec_list[curr_index.fec]
     
-def inc_bitrate():
+def inc_video_bitrate():
     global curr_value, curr_index
-    if curr_index.bitrate < curr_index.max_bitrate_list:
-        curr_index.bitrate += 1
-        curr_value.bitrate = curr_index.bitrate_list[curr_index.bitrate]
+    if curr_index.video_bitrate < curr_index.max_video_bitrate_list:
+        curr_index.video_bitrate += 1
+        curr_value.video_bitrate = curr_index.video_bitrate_list[curr_index.video_bitrate]
 
-def dec_bitrate():
+def dec_video_bitrate():
     global curr_value, curr_index
-    if curr_index.bitrate > 0:
-        curr_index.bitrate -= 1
-        curr_value.bitrate = curr_index.bitrate_list[curr_index.bitrate]
+    if curr_index.video_bitrate > 0:
+        curr_index.video_bitrate -= 1
+        curr_value.video_bitrate = curr_index.video_bitrate_list[curr_index.video_bitrate]
     
 def inc_provider():
     global curr_value, curr_index
@@ -495,44 +495,65 @@ def selected_frequency_marker():
     return TUNED_MARKER[i]
 
 class EncoderArgs:
-    codecs = ''
-    bitrate = ''
+    codecs = None
+    video_bitrate = None
+
+# TODO: split codecs to video_codec and audio_codec
 
 #class EncoderArgs:
-#    audio_codec = ''
-#    audio_bitrate = ''
-#    video_codec = ''
-#    video_size = ''
-#    video_bitrate = ''
-#    url = ''
+#    audio_codec = None         # 'ACC'
+#    audio_bitrate = None       # '64000'
+#    video_codec = None         # 'H.265'
+#    video_size = None          # '1280x720'
+#    video_bitrate = None       # '330'
+#    url = None                 # 'udp://192.168.3.10:8282' OR 'rtmp://192.168.3.10:7272 BUT this could require changing the encoder stream to pimary?
 
 def encoder_args():
     global curr_value
+    # TODO: args = EncoderArgs() etc.
     EncoderArgs.codecs = curr_value.codecs
-    EncoderArgs.bitrate = curr_value.bitrate
+    EncoderArgs.video_bitrate = curr_value.video_bitrate
     return EncoderArgs
 
-class TuneArgs:
-    frequency = ''
-    symbol_rate = ''
-    mode = ''
-    constellation = ''
-    fec = ''
-    provider = ''
-    service = ''
-    gain = ''
+class PlutoArgs:
+    frequency = None
+    symbol_rate = None
+    mode = None
+    constellation = None
+    fec = None
+    provider = None
+    service = None
+    gain = None
+
+# TODO: rename some of these to match current names
+
+#class PlutoArgs:
+#    frequency = None           # '2409.75'
+#    mode = None                # 'DBS2'
+#    constellation = None       # 'QPSK'
+#    rate = None                # '333'
+#    fec = None                 # '23'
+#    gain = None                # '-10'
+#    calibration_mode = None    # 'nocalib'
+#    pcr_pts_delay = None       # '800'
+#    audio_bit_rate = None      # '32'
+#    provider = None            # 'EA7KIR'
+#    service = None             # 'Malaga'
+
+# TODO: split codecs to video_codec and audio_codec
 
 def pluto_args():
     global curr_value
-    TuneArgs.frequency = curr_value.frequency[:7]
-    TuneArgs.symbol_rate = curr_value.symbol_rate
-    TuneArgs.mode = curr_value.mode
-    TuneArgs.constellation = curr_value.constellation
-    TuneArgs.fec = curr_value.fec
-    TuneArgs.provider = curr_value.provider
-    TuneArgs.service = curr_value.service
-    TuneArgs.gain = curr_value.gain
-    return TuneArgs 
+    # TODO: args = PlutoArgs() etc.
+    PlutoArgs.frequency = curr_value.frequency[:7]
+    PlutoArgs.symbol_rate = curr_value.symbol_rate
+    PlutoArgs.mode = curr_value.mode
+    PlutoArgs.constellation = curr_value.constellation
+    PlutoArgs.fec = curr_value.fec
+    PlutoArgs.provider = curr_value.provider
+    PlutoArgs.service = curr_value.service
+    PlutoArgs.gain = curr_value.gain
+    return PlutoArgs 
 
     """
     # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
