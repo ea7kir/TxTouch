@@ -1,5 +1,3 @@
-#from device_constants import PLUTO_ADDRESS
-
 # TODO: network access to Pluto
 
 def configure_pluto():
@@ -9,7 +7,6 @@ def shutdown_pluto():
     pass
 
 class PlutoArgs:
-    port = None                     # '8282' or '7272'
     frequency = None                # '2409.75'
     mode = None                     # 'DBS2'
     constellation = None            # 'QPSK'
@@ -21,13 +18,12 @@ class PlutoArgs:
     audio_bit_rate = '32'           # NOTE: not implemented
     provider = None                 # 'EA7KIR'
     service = None                  # 'Malaga'
+    url = None                      #
 
 def setup_pluto(plu):
     # stop_pluto()
     # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
     cmd_str = '{}/,{},{},{},{},{},{},{},{},{},/,{}'.format(
-        #PLUTO_ADDRESS,
-        #plu.port,
         plu.url,
         plu.frequency,
         plu.mode,

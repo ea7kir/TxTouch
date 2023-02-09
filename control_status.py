@@ -1,5 +1,5 @@
 from device_manager import activate_ptt, deactivate_ptt, setup_encoder_and_pluto
-from device_constants import PLUTO_ADDRESS
+from device_constants import ENCODER_ADDRESS, PLUTO_ADDRESS
 
 TUNED_MARKER = [
     # first Int16 represents 10490.500 MHz
@@ -356,7 +356,6 @@ curr_band = INITIAL_BAND
 curr_value = value[curr_band]
 curr_index = index[curr_band]
 max_band_list = len(BAND_LIST) - 1 # TODO: messy!  try integrating band into the Index classes
-curr_url = None # TODO: attach to band
 
 def inc_band():
     global curr_band, max_band_list, curr_value, curr_index
@@ -508,29 +507,28 @@ class EncoderArgs:
     video_codec = None         # 'H.265'
     video_size = None          # '1280x720'
     video_bitrate = None       # '330'
-    url = None                 # 'udp://192.168.3.10:8282' OR 'rtmp://192.168.3.10:7272 BUT this could require changing the encoder stream to pimary?
+    url = None                 # 'udp://192.168.3.10:8282'
 
 def encoder_args():
-    global curr_value, curr_url
-    tmp_tuple = curr_value.codecs.partition(" ")
-    if tmp_tuple[0] == 'H264':
-        tmp_video_codec = 'H.264'
-        curr_url = f'rtmp://{PLUTO_ADDRESS}:7272'
+    global curr_value
+    tup = curr_value.codecs.partition(" ")
+    audio_codec = tup[2]
+    if tup[0] == 'H264':
+        video_codec = 'H.264'
+        url = f'rtmp://{ENCODER_ADDRESS}:7272'
     else:
-        tmp_video_codec = 'H.265'
-        curr_url = f'udp://{PLUTO_ADDRESS}:8282'
-    tmp_audio_codec = tmp_tuple[2]
+        video_codec = 'H.265'
+        url = f'udp://{ENCODER_ADDRESS}:8282'
     args = EncoderArgs()
-    args.audio_codec = tmp_audio_codec
+    args.audio_codec = audio_codec
     args.audio_bitrate = '64000'            # NOTE: not implemented
-    args.video_codec = tmp_video_codec
+    args.video_codec = video_codec
     args.video_size = '1280x720'            # NOTE: not implemented
     args.video_bitrate = curr_value.video_bitrate
-    args.url = curr_url
+    args.url = url
     return args
 
 class PlutoArgs:
-    port = None                     # '8282'
     frequency = None                # '2409.75'
     mode = None                     # 'DBS2'
     constellation = None            # 'QPSK'
@@ -546,22 +544,26 @@ class PlutoArgs:
 
 def pluto_args():
     global curr_value
-    tmp_tuple = curr_value.fec.partition("/")
-    tmp_fec = tmp_tuple[0] + tmp_tuple[2]
+    tup = curr_value.fec.partition("/")
+    fec = tup[0] + tup[2]
+    tup = curr_value.codecs.partition(" ")
+    if tup[0] == 'H264':
+        url = f'rtmp://{ENCODER_ADDRESS}:7272'
+    else:
+        url = f'udp://{ENCODER_ADDRESS}:8282'
     args = PlutoArgs()
-    args.port = '8282'              # TODO: '8282' or '7272'
     args.frequency = curr_value.frequency[:7]
     args.mode = curr_value.mode
     args.constellation = curr_value.constellation
     args.symbol_rate = curr_value.symbol_rate
-    args.fec = tmp_fec
+    args.fec = fec
     args.gain = curr_value.gain
-    calibration_mode = 'nocalib'    # NOTE: not implemented
-    pcr_pts_delay = '800'           # NOTE: not implemented
-    audio_bit_rate = '32'           # NOTE: not implemented
+    args.calibration_mode = 'nocalib'    # NOTE: not implemented
+    args.pcr_pts_delay = '800'           # NOTE: not implemented
+    args.audio_bit_rate = '32'           # NOTE: not implemented
     args.provider = curr_value.provider
     args.service = curr_value.service
-    args.url = curr_url
+    args.url = url
     return args 
 
     """

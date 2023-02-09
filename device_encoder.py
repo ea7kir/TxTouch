@@ -1,5 +1,3 @@
-from device_constants import ENCODER_ADDRESS
-
 # TODO: network access to HEV-10
 
 def configure_encoder():
