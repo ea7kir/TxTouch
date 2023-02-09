@@ -14,4 +14,12 @@ RELAY_ON                        = 0  # TODO: int or bool?
 RELAY_OFF                       = 1
 
 PLUTO_ADDRESS                   = '192.168.2.1'
+
 ENCODER_ADDRESS                 = '192.168.3.1'
+
+TX_SERVER_ADDRESS               = 'txserver.local'
+TX_SERVER_PORT                  = 8765
+
+ENCODER_ADDRESS                 = '192.168.3.1'
+
+SPECTRUM_URL                    = 'wss://eshail.batc.org.uk/wb/fft/fft_ea7kirsatcontroller'

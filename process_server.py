@@ -1,8 +1,7 @@
 import asyncio
 import json
-
-SERVER = 'txserver.local'
-PORT = 8765
+from time import sleep
+from device_constants import TX_SERVER_ADDRESS, TX_SERVER_PORT
 
 class ServerData:
     preamp_temp = '-'
@@ -16,10 +15,10 @@ def process_read_server_data(pipe):
 
     async def client():
         try:
-            reader, writer = await asyncio.open_connection(SERVER, PORT)
-            print(f'Connected to {SERVER}:{PORT}', flush=True)
+            reader, writer = await asyncio.open_connection(TX_SERVER_ADDRESS, TX_SERVER_PORT)
+            print(f'Connected to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}', flush=True)
         except:
-            print(f'Failed to connected to {SERVER}:{PORT}', flush=True)
+            print(f'Failed to connected to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Server unavailable', flush=True)
 
         server_data = ServerData()
         while True:
@@ -33,11 +32,13 @@ def process_read_server_data(pipe):
                 server_data.fans = data_dict['fans']
                 pipe.send(server_data)
             except:
-                print(f'Connection to {SERVER}:{PORT} Failed', flush=True)
+                print(f'Connection to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Failed during transfer', flush=True)
                 break
 
 
         server_data = ServerData()
         pipe.send(server_data)
+        while True:
+            sleep(1.0) # keep the process running
 
     asyncio.run(client())
