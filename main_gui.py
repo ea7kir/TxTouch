@@ -1,7 +1,5 @@
 """TxTouch"""
 
-#import pigpio
-
 from multiprocessing import Process
 from multiprocessing import Pipe
 
