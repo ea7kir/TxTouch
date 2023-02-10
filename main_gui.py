@@ -130,9 +130,8 @@ def main_gui(spectrum_pipe, server_pipe):
         if event == '__TIMEOUT__':
             if spectrum_pipe.poll():
                 spectrum_data = spectrum_pipe.recv()
-                #while spectrum_pipe.poll():
-                #    _ = spectrum_pipe.recv()
-                #    print('SPECTRUM')
+                while spectrum_pipe.poll():
+                    _ = spectrum_pipe.recv()
                 # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
                 graph.erase()
                 # draw graticule
@@ -159,9 +158,8 @@ def main_gui(spectrum_pipe, server_pipe):
                 graph.draw_polygon(spectrum_data.points, fill_color='green')
             if server_pipe.poll():
                 server_data = server_pipe.recv()
-                #while server_pipe.poll():
-                #    _ = server_pipe.recv()
-                #    print('SERRVER')
+                while server_pipe.poll():
+                    _ = server_pipe.recv()
                 window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
                 window['-PA_CURRENT-'].update(server_data.pa_current)
                 window['-PA_TEMP-'].update(server_data.pa_temp)
