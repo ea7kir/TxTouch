@@ -102,8 +102,8 @@ def display_initial_values():
 dispatch_dictionary = { 
     # Lookup dictionary that maps button to function to call
     # NOTE: the order could affect responsiveness, but maybe a disctionary lookup is just too slow
-    '-TUNE-':cs.tune,
-    '-PTT-':cs.ptt,
+    #'-TUNE-':cs.tune,
+    #'-PTT-':cs.ptt,
     '-BD-':cs.dec_band, '-BU-':cs.inc_band, 
     '-FD-':cs.dec_frequency, '-FU-':cs.inc_frequency, 
     '-SD-':cs.dec_symbol_rate, '-SU-':cs.inc_symbol_rate,
@@ -156,7 +156,7 @@ def main_gui(spectrum_pipe, server_pipe):
                 graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
                 # draw spectrum
                 graph.draw_polygon(spectrum_data.points, fill_color='green')
-            if server_pipe.poll():
+            elif server_pipe.poll():
                 server_data = server_pipe.recv()
                 while server_pipe.poll():
                     _ = server_pipe.recv()
@@ -168,7 +168,8 @@ def main_gui(spectrum_pipe, server_pipe):
             if event == '-SHUTDOWN-':
                 #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
                 break
-            if event in dispatch_dictionary:
+            elif event in dispatch_dictionary:
+                cs.cancel_tune()
                 # NOTE: initial control values are displayed by window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
                 func_to_call = dispatch_dictionary[event]
                 func_to_call()
@@ -185,6 +186,17 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-GAIN_V-'].update(cs.curr_value.gain)
                 window['-TUNE-'].update(button_color=cs.tune_button_color)
                 window['-PTT-'].update(button_color=cs.ptt_button_color)
+            elif event == '-TUNE-':
+                cs.tune()
+                # if tune is active, cancel ptt
+                window['-TUNE-'].update(button_color=cs.tune_button_color)
+                window['-PTT-'].update(button_color=cs.ptt_button_color)
+            elif event == '-PTT-':
+                # only is tune is active
+                cs.ptt()
+                window['-TUNE-'].update(button_color=cs.tune_button_color)
+                window['-PTT-'].update(button_color=cs.ptt_button_color)
+
     window.close()
     del window
 

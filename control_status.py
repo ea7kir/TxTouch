@@ -614,3 +614,9 @@ def ptt():
         ptt_button_color = NORMAL_BUTTON_COLOR
         deactivate_ptt()
 
+def cancel_tune():
+    if ptt_is_active:
+        ptt()
+    if tune_is_active:
+        tune()
+    
