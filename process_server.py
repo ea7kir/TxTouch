@@ -1,6 +1,7 @@
 import asyncio
 import json
 from time import sleep
+
 from device_constants import TX_SERVER_ADDRESS, TX_SERVER_PORT
 
 class ServerData:
@@ -31,6 +32,7 @@ def process_read_server_data(pipe):
                 server_data.pa_current = data_dict['pa_current']
                 server_data.fans = data_dict['fans']
                 pipe.send(server_data)
+                sleep(0)
             except:
                 print(f'Connection to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Failed during transfer', flush=True)
                 break

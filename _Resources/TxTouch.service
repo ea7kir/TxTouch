@@ -1,0 +1,18 @@
+[Unit]
+Description=EA7KIR TxTouch Service
+After=multi-user.target
+
+[Service]
+User=pi
+
+WorkingDirectory=/home/pi/TxTouch
+
+ExecStart=/usr/bin/startx /home/pi/.pyenv/shims/python /home/pi/TxTouch/main_gui.py
+
+#SuccessExitStatus=143
+#TimeoutStopSec=10
+#Restart=on-failure
+#RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
