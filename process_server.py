@@ -37,7 +37,6 @@ def process_read_server_data(pipe):
                 print(f'Connection to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Failed during transfer', flush=True)
                 break
 
-
         server_data = ServerData()
         pipe.send(server_data)
         while True:

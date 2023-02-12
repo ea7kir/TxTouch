@@ -17,9 +17,6 @@ sg.theme('Black')
 
 SCREEN_COLOR = '#111111'
 NORMAL_BUTTON_COLOR = ('#FFFFFF','#222222')
-# DISABALED_BUTTON_COLOR = ('#444444',None)
-# TUNE_ACTIVE_BUTTON_COLOR = ('#FFFFFF','#007700')
-# PTT_ACTIVE_BUTTON_COLOR = ('#FFFFFF','#FF0000')
    
 def text_data(name, key):
     return sg.Text(name, size=11), sg.Text(' ', size=9, key=key, text_color='orange')
