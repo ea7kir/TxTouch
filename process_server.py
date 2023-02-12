@@ -18,11 +18,13 @@ def process_read_server_data(pipe):
         try:
             reader, writer = await asyncio.open_connection(TX_SERVER_ADDRESS, TX_SERVER_PORT)
             print(f'Connected to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}', flush=True)
+            connected = True
         except:
             print(f'Failed to connected to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Server unavailable', flush=True)
+            connected = False
 
         server_data = ServerData()
-        while True:
+        while connected:
             try:
                 json_dict_raw = await reader.read(1024)
                 json_dict = json_dict_raw.decode()
@@ -35,6 +37,7 @@ def process_read_server_data(pipe):
                 sleep(0)
             except:
                 print(f'Connection to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Failed during transfer', flush=True)
+                connected = False
                 break
 
         server_data = ServerData()

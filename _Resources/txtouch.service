@@ -1,0 +1,31 @@
+# cd /home/pi/TxTouch/_Resources
+# sudo cp txtouch.service /etc/systemd/system/
+# sudo chmod 644 /etc/systemd/system/txtouch.service
+# sudo systemctl daemon-reload
+#
+# sudo systemctl enable txtouch
+# sudo systemctl start txtouch
+#
+# sudo systemctl status txtouch
+#
+# sudo systemctl stop txtouch
+# sudo systemctl disable txtouch
+#
+[Unit]
+Description=TxTouch QO-100/Es'Hail-2 DATV Transmitter
+After=multi-user.target
+
+[Service]
+User=pi
+
+#WorkingDirectory=/home/pi/TxTouch
+
+ExecStart=/home/pi/TxTouch/txtouch
+
+#SuccessExitStatus=143
+#TimeoutStopSec=10
+#Restart=on-failure
+#RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
