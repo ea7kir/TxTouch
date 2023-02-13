@@ -615,8 +615,13 @@ def ptt():
         deactivate_ptt()
 
 def cancel_tune():
+    global ptt_is_active, ptt_button_color, tune_is_active, tune_button_color
     if ptt_is_active:
-        ptt()
+        ptt_is_active = False
+        ptt_button_color = NORMAL_BUTTON_COLOR
+        deactivate_ptt()
     if tune_is_active:
-        tune()
+        tune_is_active = False
+        tune_button_color = NORMAL_BUTTON_COLOR
+   
     
