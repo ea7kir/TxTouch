@@ -21,8 +21,7 @@ def process_read_server_data(pipe):
             connected = True
         except:
             print(f'Failed to connected to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Server unavailable', flush=True)
-            connected = False
-
+            connected = False#
         server_data = ServerData()
         while connected:
             try:

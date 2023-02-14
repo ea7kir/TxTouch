@@ -99,8 +99,8 @@ def display_initial_values():
 dispatch_dictionary = { 
     # Lookup dictionary that maps button to function to call
     # NOTE: the order could affect responsiveness, but maybe a disctionary lookup is just too slow
-#    '-TUNE-':cs.tune,
-#    '-PTT-':cs.ptt,
+    '-TUNE-':cs.tune,
+    '-PTT-':cs.ptt,
     '-BD-':cs.dec_band, '-BU-':cs.inc_band, 
     '-FD-':cs.dec_frequency, '-FU-':cs.inc_frequency, 
     '-SD-':cs.dec_symbol_rate, '-SU-':cs.inc_symbol_rate,
@@ -153,36 +153,22 @@ def main_gui(spectrum_pipe, server_pipe):
                 graph.draw_polygon(spectrum_data.points, fill_color='green')
                 while spectrum_pipe.poll():
                     _ = spectrum_pipe.recv()
-            if server_pipe.poll():
+            elif server_pipe.poll():
                 server_data = server_pipe.recv()
                 window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
                 window['-PA_CURRENT-'].update(server_data.pa_current)
                 window['-PA_TEMP-'].update(server_data.pa_temp)
                 window['-FANS-'].update(server_data.fans)
-                #while server_pipe.poll():
-                #    _ = server_pipe.recv()
+                while server_pipe.poll():
+                    _ = server_pipe.recv()
         else: # don't bother searching for __TIMEOUT__ events
             print('new event: ', event)
-            if event == '-SHUTDOWN-':
-                #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
-                break
-            if event == '-TUNE-':
-                print('-TUNE-')
-                # if tune is active, cancel ptt
-                cs.tune()
-                window['-TUNE-'].update(button_color=cs.tune_button_color)
-                window['-PTT-'].update(button_color=cs.ptt_button_color)
-            elif event == '-PTT-':
-                print('-PTT-')
-                # only is tune is active
-                cs.ptt()
-                window['-TUNE-'].update(button_color=cs.tune_button_color)
-                window['-PTT-'].update(button_color=cs.ptt_button_color)
-            elif event in dispatch_dictionary:
-                cs.cancel_tune()
+            if event in dispatch_dictionary:
                 # NOTE: initial control values are displayed by window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
                 func_to_call = dispatch_dictionary[event]
                 func_to_call()
+                window['-TUNE-'].update(button_color=cs.tune_button_color)
+                window['-PTT-'].update(button_color=cs.ptt_button_color)
                 window['-BV-'].update(cs.curr_value.band)
                 window['-FV-'].update(cs.curr_value.frequency)
                 window['-SV-'].update(cs.curr_value.symbol_rate)
@@ -194,8 +180,10 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-PROVIDER_V-'].update(cs.curr_value.provider)
                 window['-SERVICE_V-'].update(cs.curr_value.service)
                 window['-GAIN_V-'].update(cs.curr_value.gain)
-#                window['-TUNE-'].update(button_color=cs.tune_button_color)
-#                window['-PTT-'].update(button_color=cs.ptt_button_color)
+            elif event == '-SHUTDOWN-':
+                #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
+                break
+
 
     window.close()
     del window

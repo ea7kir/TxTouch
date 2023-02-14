@@ -27,9 +27,17 @@ def shutdown_devices():
     shutdown_pluto()
     _pi.stop() # TypeError: pi.stop() missing 1 required positional argument: 'self'
 
-def setup_encoder_and_pluto(encoder_args, pluto_args):
+def activate_encoder(encoder_args):
     setup_encoder(encoder_args)
+
+def deactivate_encoder():
+    pass
+
+def activate_pluto(pluto_args):
     setup_pluto(pluto_args)
+
+def deactivate_pluto():
+    pass
 
 def activate_ptt():
     switch_rf_switch_On()

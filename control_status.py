@@ -1,4 +1,6 @@
-from device_manager import activate_ptt, deactivate_ptt, setup_encoder_and_pluto
+from device_manager import activate_encoder, deactivate_encoder
+from device_manager import activate_pluto, deactivate_pluto
+from device_manager import activate_ptt, deactivate_ptt
 from device_constants import ENCODER_ADDRESS, PLUTO_ADDRESS
 
 TUNED_MARKER = [
@@ -359,6 +361,7 @@ max_band_list = len(BAND_LIST) - 1 # TODO: messy!  try integrating band into the
 
 def inc_band():
     global curr_band, max_band_list, curr_value, curr_index
+    cancel_tune()
     if curr_band < max_band_list:
         curr_band += 1
         curr_value = value[curr_band]
@@ -366,6 +369,7 @@ def inc_band():
 
 def dec_band():
     global curr_band, curr_value, curr_index
+    cancel_tune()
     if curr_band > 0:
         curr_band -= 1
         curr_value = value[curr_band]
@@ -373,72 +377,84 @@ def dec_band():
     
 def inc_frequency():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.frequency < curr_index.max_frequency_index:
         curr_index.frequency += 1
         curr_value.frequency = curr_index.frequency_list[curr_index.frequency]
 
 def dec_frequency():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.frequency > 0:
         curr_index.frequency -= 1
         curr_value.frequency = curr_index.frequency_list[curr_index.frequency]
     
 def inc_symbol_rate():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.symbol_rate < curr_index.max_symbol_rate_list:
         curr_index.symbol_rate += 1
         curr_value.symbol_rate = curr_index.symbol_rate_list[curr_index.symbol_rate]
 
 def dec_symbol_rate():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.symbol_rate > 0:
         curr_index.symbol_rate -= 1
         curr_value.symbol_rate = curr_index.symbol_rate_list[curr_index.symbol_rate]
     
 def inc_mode():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.mode < curr_index.max_mode_list:
         curr_index.mode += 1
         curr_value.mode = curr_index.mode_list[curr_index.mode]
 
 def dec_mode():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.mode > 0:
         curr_index.mode -= 1
         curr_value.mode = curr_index.mode_list[curr_index.mode]
 
 def inc_codecs():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.codecs < curr_index.max_codecs_list:
         curr_index.codecs += 1
         curr_value.codecs = curr_index.codecs_list[curr_index.codecs]
         # TODO: curr_value.url = 
 def dec_codecs():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.codecs > 0:
         curr_index.codecs -= 1
         curr_value.codecs = curr_index.codecs_list[curr_index.codecs]
     
 def inc_constellation():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.constellation < curr_index.max_constellation_list:
         curr_index.constellation += 1
         curr_value.constellation = curr_index.constellation_list[curr_index.constellation]
 
 def dec_constellation():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.constellation > 0:
         curr_index.constellation -= 1
         curr_value.constellation = curr_index.constellation_list[curr_index.constellation]
     
 def inc_fec():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.fec < curr_index.max_fec_list:
         curr_index.fec += 1
         curr_value.fec = curr_index.fec_list[curr_index.fec]
 
 def dec_fec():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.fec > 0:
         curr_index.fec -= 1
         curr_value.fec = curr_index.fec_list[curr_index.fec]
@@ -457,24 +473,28 @@ def dec_video_bitrate():
     
 def inc_provider():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.provider < curr_index.max_provider_list:
         curr_index.provider += 1
         curr_value.provider = curr_index.provider_list[curr_index.provider]
 
 def dec_provider():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.provider > 0:
         curr_index.provider -= 1
         curr_value.provider = curr_index.provider_list[curr_index.provider]
    
 def inc_service():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.service < curr_index.max_service_list:
         curr_index.service += 1
         curr_value.service = curr_index.service_list[curr_index.service]
 
 def dec_service():
     global curr_value, curr_index
+    cancel_tune()
     if curr_index.service > 0:
         curr_index.service -= 1
         curr_value.service = curr_index.service_list[curr_index.service]
@@ -494,12 +514,6 @@ def dec_gain():
 def selected_frequency_marker():
     i = int(curr_value.frequency[9:])
     return TUNED_MARKER[i]
-
-#class EncoderArgs:
-#    codecs = None
-#    video_bitrate = None
-
-# TODO: split codecs to video_codec and audio_codec
 
 class EncoderArgs:
     audio_codec = None         # 'ACC'
@@ -592,17 +606,22 @@ tune_button_color = NORMAL_BUTTON_COLOR
 ptt_button_color = NORMAL_BUTTON_COLOR
 
 def tune():
+    print('IN tune()')
     global tune_is_active, tune_button_color
     if ptt_is_active:
         return
     tune_is_active = not tune_is_active
     if tune_is_active:
         tune_button_color = TUNE_ACTIVE_BUTTON_COLOR
-        setup_encoder_and_pluto(encoder_args(), pluto_args())
+        activate_encoder(encoder_args())
+        activate_pluto(pluto_args())
     else:
         tune_button_color = NORMAL_BUTTON_COLOR
+        deactivate_pluto()
+        deactivate_encoder()
 
 def ptt():
+    print('IN ptt()')
     global ptt_is_active, ptt_button_color
     if not tune_is_active:
         return
@@ -615,6 +634,7 @@ def ptt():
         deactivate_ptt()
 
 def cancel_tune():
+    print('IN cancel_tune()')
     global ptt_is_active, ptt_button_color, tune_is_active, tune_button_color
     if ptt_is_active:
         ptt_is_active = False
@@ -623,5 +643,7 @@ def cancel_tune():
     if tune_is_active:
         tune_is_active = False
         tune_button_color = NORMAL_BUTTON_COLOR
+        deactivate_pluto()
+        deactivate_encoder()
    
     
