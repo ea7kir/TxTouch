@@ -1,7 +1,7 @@
 from device_manager import activate_encoder, deactivate_encoder
 from device_manager import activate_pluto, deactivate_pluto
 from device_manager import activate_ptt, deactivate_ptt
-from device_constants import ENCODER_ADDRESS, PLUTO_ADDRESS
+from device_constants import PLUTO_ADDRESS, PROVIDER_NAME, SERVICE_NAME
 
 TUNED_MARKER = [
     # first Int16 represents 10490.500 MHz
@@ -144,23 +144,23 @@ NARROW_BITRATE_LIST = [
 VERY_NARROW_BITRATE_LIST = [
     '290','300','310','330','340','350','360',
 ]
-WIDE_PROVIDER_LIST = [
-    'EA7KIR','G8WAA',
+WIDE_SPARE1_LIST = [
+    'sp1-a','sp1-b',
 ]
-NARROW_PROVIDER_LIST = [
-    'EA7KIR','G8WAA',
+NARROW_SPARE1_LIST = [
+    'sp1-a','sp1-b',
 ]
-VERY_NARROW_PROVIDER_LIST = [
-    'EA7KIR','G8WAA',
+VERY_NARROW_SPARE1_LIST = [
+    'sp1-a','sp1-b',
 ]
-WIDE_SERVICE_LIST = [
-    'Malaga','Yorkshire'
+WIDE_SPARE2_LIST = [
+    'sp2-a','sp2-b'
 ]
-NARROW_SERVICE_LIST = [
-    'Malaga','Yorkshire'
+NARROW_SPARE2_LIST = [
+    'sp2-a','sp2-b'
 ]
-VERY_NARROW_SERVICE_LIST = [
-    'Malaga','Yorkshire'
+VERY_NARROW_SPARE2_LIST = [
+    'sp2-a','sp2-b'
 ]
 WIDE_GAIN_LIST = [
     '-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
@@ -185,8 +185,8 @@ INITIAL_WIDE_CODEC                  = 1 # H265 ACC
 INITIAL_WIDE_CONSTELLATION          = 0 # QPSK
 INITIAL_WIDE_FEC                    = 2 # 3/4
 INITIAL_WIDE_BITRATE                = 3 # 330
-INITIAL_WIDE_PROVIDER               = 0 # EA7KIR
-INITIAL_WIDE_SERVICE                = 0 # Malaga
+INITIAL_WIDE_SPARE1                 = 0 # sp1_a 
+INITIAL_WIDE_SPARE2                 = 0 # sp2_a
 INITIAL_WIDE_GAIN                   = 3 # -7
 
 INITIAL_NARROW_SYMBOL_RATE          = 2 # 333
@@ -196,8 +196,8 @@ INITIAL_NARROW_CODEC                = 1 # H265 ACC
 INITIAL_NARROW_CONSTELLATION        = 0 # QPSK
 INITIAL_NARROW_FEC                  = 2 # 3/4
 INITIAL_NARROW_BITRATE              = 3 # 330
-INITIAL_NARROW_PROVIDER             = 0 # EA7KIR
-INITIAL_NARROW_SERVICE              = 0 # Malaga
+INITIAL_NARROW_SPARE1               = 0 # sp1_a
+INITIAL_NARROW_SPARE2               = 0 # sp2_a
 INITIAL_NARROW_GAIN                 = 3 # -7
 
 INITIAL_VERY_NARROW_SYMBOL_RATE     = 2 # 66
@@ -207,8 +207,8 @@ INITIAL_VERY_NARROW_CODEC           = 1 # H265 ACC
 INITIAL_VERY_NARROW_CONSTELLATION   = 0 # QPSK
 INITIAL_VERY_NARROW_FEC             = 2 # 3/4
 INITIAL_VERY_NARROW_BITRATE         = 3 # 330
-INITIAL_VERY_NARROW_PROVIDER        = 0 # EA7KIR
-INITIAL_VERY_NARROW_SERVICE         = 0 # Malaga
+INITIAL_VERY_NARROW_SPARE1          = 0 # sp1_a 
+INITIAL_VERY_NARROW_SPARE2          = 0 # sp2_a 
 INITIAL_VERY_NARROW_GAIN            = 3 # -7
 
 class WideIndex:
@@ -220,8 +220,8 @@ class WideIndex:
     constellation = INITIAL_WIDE_CONSTELLATION
     fec = INITIAL_WIDE_FEC
     video_bitrate = INITIAL_WIDE_BITRATE
-    provider = INITIAL_WIDE_PROVIDER
-    service = INITIAL_WIDE_SERVICE
+    spare1 = INITIAL_WIDE_SPARE1
+    spare2 = INITIAL_WIDE_SPARE2
     gain = INITIAL_WIDE_GAIN
     frequency_list = WIDE_FREQUENCY_LIST
     max_frequency_index = len(WIDE_FREQUENCY_LIST) - 1
@@ -237,10 +237,10 @@ class WideIndex:
     max_fec_list = len(WIDE_FEC_LIST) - 1
     video_bitrate_list = WIDE_BITRATE_LIST
     max_video_bitrate_list = len(WIDE_BITRATE_LIST) - 1
-    provider_list = WIDE_PROVIDER_LIST
-    max_provider_list = len(WIDE_PROVIDER_LIST) - 1
-    service_list = WIDE_SERVICE_LIST
-    max_service_list = len(WIDE_SERVICE_LIST) - 1
+    spare1_list = WIDE_SPARE1_LIST
+    max_spare1_list = len(WIDE_SPARE1_LIST) - 1
+    spare2_list = WIDE_SPARE2_LIST
+    max_spare2_list = len(WIDE_SPARE2_LIST) - 1
     gain_list = WIDE_GAIN_LIST
     max_gain_list = len(WIDE_GAIN_LIST) - 1
 
@@ -253,8 +253,8 @@ class NarrowIndex:
     constellation = INITIAL_NARROW_CONSTELLATION
     fec = INITIAL_NARROW_FEC
     video_bitrate = INITIAL_NARROW_BITRATE
-    provider = INITIAL_NARROW_PROVIDER
-    service = INITIAL_NARROW_SERVICE
+    spare1 = INITIAL_NARROW_SPARE1
+    spare2 = INITIAL_NARROW_SPARE2
     gain = INITIAL_NARROW_GAIN
     frequency_list = NARROW_FREQUENCY_LIST
     max_frequency_index = len(NARROW_FREQUENCY_LIST) - 1
@@ -270,10 +270,10 @@ class NarrowIndex:
     max_fec_list = len(NARROW_FEC_LIST) - 1
     video_bitrate_list = NARROW_BITRATE_LIST
     max_video_bitrate_list = len(NARROW_BITRATE_LIST) - 1
-    provider_list = NARROW_PROVIDER_LIST
-    max_provider_list = len(NARROW_PROVIDER_LIST) - 1
-    service_list = NARROW_SERVICE_LIST
-    max_service_list = len(NARROW_SERVICE_LIST) - 1
+    spare1_list = NARROW_SPARE1_LIST
+    max_spare1_list = len(NARROW_SPARE1_LIST) - 1
+    spare2_list = NARROW_SPARE2_LIST
+    max_spare2_list = len(NARROW_SPARE2_LIST) - 1
     gain_list = NARROW_GAIN_LIST
     max_gain_list = len(NARROW_GAIN_LIST) - 1
 
@@ -286,8 +286,8 @@ class VeryNarrowIndex:
     constellation = INITIAL_VERY_NARROW_CONSTELLATION
     fec = INITIAL_VERY_NARROW_FEC
     video_bitrate = INITIAL_VERY_NARROW_BITRATE
-    provider = INITIAL_VERY_NARROW_PROVIDER
-    service = INITIAL_VERY_NARROW_SERVICE
+    spare1 = INITIAL_VERY_NARROW_SPARE1
+    spare2 = INITIAL_VERY_NARROW_SPARE2
     gain = INITIAL_VERY_NARROW_GAIN
     frequency_list = VERY_NARROW_FREQUENCY_LIST
     max_frequency_index = len(VERY_NARROW_FREQUENCY_LIST) - 1
@@ -303,10 +303,10 @@ class VeryNarrowIndex:
     max_fec_list = len(VERY_NARROW_FEC_LIST) - 1
     video_bitrate_list = VERY_NARROW_BITRATE_LIST
     max_video_bitrate_list = len(VERY_NARROW_BITRATE_LIST) - 1
-    provider_list = VERY_NARROW_PROVIDER_LIST
-    max_provider_list = len(VERY_NARROW_PROVIDER_LIST) - 1
-    service_list = VERY_NARROW_SERVICE_LIST
-    max_service_list = len(VERY_NARROW_SERVICE_LIST) - 1
+    spare1_list = VERY_NARROW_SPARE1_LIST
+    max_spare1_list = len(VERY_NARROW_SPARE1_LIST) - 1
+    spare2_list = VERY_NARROW_SPARE2_LIST
+    max_spare2_list = len(VERY_NARROW_SPARE2_LIST) - 1
     gain_list = VERY_NARROW_GAIN_LIST
     max_gain_list = len(VERY_NARROW_GAIN_LIST) - 1
 
@@ -322,8 +322,8 @@ class  WideValue:
     constellation = WIDE_CONSTELLATION_LIST[WideIndex.constellation]
     fec = WIDE_FEC_LIST[WideIndex.fec]
     video_bitrate = WIDE_BITRATE_LIST[WideIndex.video_bitrate]
-    provider = WIDE_PROVIDER_LIST[WideIndex.provider]
-    service = WIDE_SERVICE_LIST[WideIndex.service]
+    spare1 = WIDE_SPARE1_LIST[WideIndex.spare1]
+    spare2 = WIDE_SPARE2_LIST[WideIndex.spare2]
     gain = WIDE_GAIN_LIST[WideIndex.gain]
 
 class NarrowValue:
@@ -335,8 +335,8 @@ class NarrowValue:
     constellation = NARROW_CONSTELLATION_LIST[NarrowIndex.constellation]
     fec = NARROW_FEC_LIST[NarrowIndex.fec]
     video_bitrate = NARROW_BITRATE_LIST[NarrowIndex.video_bitrate]
-    provider = NARROW_PROVIDER_LIST[NarrowIndex.provider]
-    service = NARROW_SERVICE_LIST[NarrowIndex.service]
+    spare1 = NARROW_SPARE1_LIST[NarrowIndex.spare1]
+    spare2 = NARROW_SPARE2_LIST[NarrowIndex.spare2]
     gain = NARROW_GAIN_LIST[NarrowIndex.gain]
 
 class VeryNarrowValue:
@@ -348,8 +348,8 @@ class VeryNarrowValue:
     constellation = VERY_NARROW_CONSTELLATION_LIST[VeryNarrowIndex.constellation]
     fec = VERY_NARROW_FEC_LIST[VeryNarrowIndex.fec]
     video_bitrate = VERY_NARROW_BITRATE_LIST[VeryNarrowIndex.video_bitrate]
-    provider = VERY_NARROW_PROVIDER_LIST[VeryNarrowIndex.provider]
-    service = VERY_NARROW_SERVICE_LIST[VeryNarrowIndex.service]
+    spare1 = VERY_NARROW_SPARE1_LIST[VeryNarrowIndex.spare1]
+    spare2 = VERY_NARROW_SPARE2_LIST[VeryNarrowIndex.spare2]
     gain = VERY_NARROW_GAIN_LIST[VeryNarrowIndex.gain]
 
 value = [ WideValue, NarrowValue, VeryNarrowValue ]
@@ -471,33 +471,33 @@ def dec_video_bitrate():
         curr_index.video_bitrate -= 1
         curr_value.video_bitrate = curr_index.video_bitrate_list[curr_index.video_bitrate]
     
-def inc_provider():
+def inc_spare1():
     global curr_value, curr_index
     cancel_tune()
-    if curr_index.provider < curr_index.max_provider_list:
-        curr_index.provider += 1
-        curr_value.provider = curr_index.provider_list[curr_index.provider]
+    if curr_index.spare1 < curr_index.max_spare1_list:
+        curr_index.spare1 += 1
+        curr_value.spare1 = curr_index.spare1_list[curr_index.spare1]
 
-def dec_provider():
+def dec_spare1():
     global curr_value, curr_index
     cancel_tune()
-    if curr_index.provider > 0:
-        curr_index.provider -= 1
-        curr_value.provider = curr_index.provider_list[curr_index.provider]
+    if curr_index.spare1 > 0:
+        curr_index.spare1 -= 1
+        curr_value.spare1 = curr_index.spare1_list[curr_index.spare1]
    
-def inc_service():
+def inc_spare2():
     global curr_value, curr_index
     cancel_tune()
-    if curr_index.service < curr_index.max_service_list:
-        curr_index.service += 1
-        curr_value.service = curr_index.service_list[curr_index.service]
+    if curr_index.spare2 < curr_index.max_spare2_list:
+        curr_index.spare2 += 1
+        curr_value.spare2 = curr_index.spare2_list[curr_index.spare2]
 
-def dec_service():
+def dec_spare2():
     global curr_value, curr_index
     cancel_tune()
-    if curr_index.service > 0:
-        curr_index.service -= 1
-        curr_value.service = curr_index.service_list[curr_index.service]
+    if curr_index.spare2 > 0:
+        curr_index.spare2 -= 1
+        curr_value.spare2 = curr_index.spare2_list[curr_index.spare2]
     
 def inc_gain():
     global curr_value, curr_index
@@ -529,10 +529,10 @@ def encoder_args():
     audio_codec = tup[2]
     if tup[0] == 'H264':
         video_codec = 'H.264'
-        url = f'rtmp://{ENCODER_ADDRESS}:7272'
+        url = f'rtmp://{PLUTO_ADDRESS}:7272'
     else:
         video_codec = 'H.265'
-        url = f'udp://{ENCODER_ADDRESS}:8282'
+        url = f'udp://{PLUTO_ADDRESS}:8282'
     args = EncoderArgs()
     args.audio_codec = audio_codec
     args.audio_bitrate = '64000'            # NOTE: not implemented
@@ -553,7 +553,7 @@ class PlutoArgs:
     pcr_pts_delay = None            # '800'
     audio_bit_rate = None           # '32'
     provider = None                 # 'EA7KIR'
-    service = None                  # 'Malaga'
+    service = None                  # 'Michael'
     url = None                      # 'udp://192.168.3.10:8282'
 
 def pluto_args():
@@ -562,9 +562,9 @@ def pluto_args():
     fec = tup[0] + tup[2]
     tup = curr_value.codecs.partition(" ")
     if tup[0] == 'H264':
-        url = f'rtmp://{ENCODER_ADDRESS}:7272'
+        url = f'rtmp://{PLUTO_ADDRESS}:7272'
     else:
-        url = f'udp://{ENCODER_ADDRESS}:8282'
+        url = f'udp://{PLUTO_ADDRESS}:8282'
     args = PlutoArgs()
     args.frequency = curr_value.frequency[:7]
     args.mode = curr_value.mode
@@ -575,15 +575,15 @@ def pluto_args():
     args.calibration_mode = 'nocalib'    # NOTE: not implemented
     args.pcr_pts_delay = '800'           # NOTE: not implemented
     args.audio_bit_rate = '32'           # NOTE: not implemented
-    args.provider = curr_value.provider
-    args.service = curr_value.service
+    args.provider = PROVIDER_NAME
+    args.service = SERVICE_NAME
     args.url = url
     return args 
 
     """
     # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
 
-    s =  f'rtmp://{IP},{PORT},{frequency},{mode},{constellation},{symbol_rate},{fec},{gain},nocalib,800,32,/,{provider},'
+    s =  f'rtmp://{IP},{PORT},{frequency},{mode},{constellation},{symbol_rate},{fec},{gain},nocalib,800,32,/,{spare1},'
 
     IP = '192.168.2.1'
     PORT = '7277' or '8282'
@@ -606,23 +606,25 @@ tune_button_color = NORMAL_BUTTON_COLOR
 ptt_button_color = NORMAL_BUTTON_COLOR
 
 def tune():
-    print('IN tune()')
-    global tune_is_active, tune_button_color
+    global tune_is_active, tune_button_color, ptt_is_active
+    print(f'IN tune() with tune_is_active:{tune_is_active} ptt_is_active:{ptt_is_active}')
     if ptt_is_active:
         return
     tune_is_active = not tune_is_active
     if tune_is_active:
         tune_button_color = TUNE_ACTIVE_BUTTON_COLOR
-        activate_encoder(encoder_args())
-        activate_pluto(pluto_args())
+        enc_args = encoder_args()
+        activate_encoder(enc_args)
+        plu_args = pluto_args()
+        activate_pluto(plu_args)
     else:
         tune_button_color = NORMAL_BUTTON_COLOR
         deactivate_pluto()
         deactivate_encoder()
 
 def ptt():
-    print('IN ptt()')
-    global ptt_is_active, ptt_button_color
+    global ptt_is_active, ptt_button_color, tune_is_active
+    print(f'IN ptt() with tune_is_active:{tune_is_active} ptt_is_active:{ptt_is_active}')
     if not tune_is_active:
         return
     ptt_is_active = not ptt_is_active
@@ -634,8 +636,8 @@ def ptt():
         deactivate_ptt()
 
 def cancel_tune():
-    print('IN cancel_tune()')
     global ptt_is_active, ptt_button_color, tune_is_active, tune_button_color
+    print(f'IN cancel_tune() with tune_is_active:{tune_is_active} ptt_is_active:{ptt_is_active}')
     if ptt_is_active:
         ptt_is_active = False
         ptt_button_color = NORMAL_BUTTON_COLOR

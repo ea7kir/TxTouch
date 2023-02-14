@@ -63,8 +63,8 @@ status_layout = [
     sg.Column([
         # control data
         button_selector('-VIDEO_BITRATE_D-', '-VIDEO_BITRATE_V-', '-VIDEO_BITRATE_U-', 8),
-        button_selector('-PROVIDER_D-', '-PROVIDER_V-', '-PROVIDER_U-', 8),
-        button_selector('-SERVICE_D-', '-SERVICE_V-', '-SERVICE_U-', 8),
+        button_selector('-SPARE1_D-', '-SPARE1_V-', '-SPARE1_U-', 8),
+        button_selector('-SPARE2_D-', '-SPARE2_V-', '-SPARE2_U-', 8),
         button_selector('-GAIN_D-', '-GAIN_V-', '-GAIN_U-', 8),
     ]),
     sg.Column([
@@ -109,8 +109,8 @@ dispatch_dictionary = {
     '-CONSTELLATION_D-':cs.dec_constellation, '-CONSTELLATION_U-':cs.inc_constellation,
     '-FEC_D-':cs.dec_fec, '-FEC_U-':cs.inc_fec,
     '-VIDEO_BITRATE_D-':cs.dec_video_bitrate, '-VIDEO_BITRATE_U-':cs.inc_video_bitrate,
-    '-PROVIDER_D-':cs.dec_provider, '-PROVIDER_U-':cs.inc_provider,
-    '-SERVICE_D-':cs.dec_service, '-SERVICE_U-':cs.inc_service,
+    '-SPARE1_D-':cs.dec_spare1, '-SPARE1_U-':cs.inc_spare1,
+    '-SPARE2_D-':cs.dec_spare2, '-SPARE2_U-':cs.inc_spare2,
     '-GAIN_D-':cs.dec_gain, '-GAIN_U-':cs.inc_gain,
     '-DISPLAY_INITIAL_VALUES-':display_initial_values,
 }
@@ -177,8 +177,8 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-CONSTELLATION_V-'].update(cs.curr_value.constellation)
                 window['-FEC_V-'].update(cs.curr_value.fec)
                 window['-VIDEO_BITRATE_V-'].update(cs.curr_value.video_bitrate)
-                window['-PROVIDER_V-'].update(cs.curr_value.provider)
-                window['-SERVICE_V-'].update(cs.curr_value.service)
+                window['-SPARE1_V-'].update(cs.curr_value.spare1)
+                window['-SPARE2_V-'].update(cs.curr_value.spare2)
                 window['-GAIN_V-'].update(cs.curr_value.gain)
             elif event == '-SHUTDOWN-':
                 #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':

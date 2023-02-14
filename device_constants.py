@@ -20,6 +20,7 @@ ENCODER_ADDRESS                 = '192.168.3.1'
 TX_SERVER_ADDRESS               = 'txserver.local'
 TX_SERVER_PORT                  = 8765
 
-ENCODER_ADDRESS                 = '192.168.3.1'
-
 SPECTRUM_URL                    = 'wss://eshail.batc.org.uk/wb/fft/fft_ea7kirsatcontroller'
+
+PROVIDER_NAME                   = 'EA7KIR'
+SERVICE_NAME                    = 'Michael'
