@@ -123,7 +123,7 @@ def main_gui(spectrum_pipe, server_pipe):
     graph = window['graph']
     window.write_event_value('-DISPLAY_INITIAL_VALUES-', None) # fix to display initial control values
     while True:
-        event, values = window.read(timeout=1)
+        event, _ = window.read(timeout=200)
         if event == '__TIMEOUT__':
             if spectrum_pipe.poll():
                 spectrum_data = spectrum_pipe.recv()
@@ -162,7 +162,6 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-PA_TEMP-'].update(server_data.pa_temp)
                 window['-FANS-'].update(server_data.fans)
         else: # don't bother searching for __TIMEOUT__ events
-            print('new event: ', event)
             if event in dispatch_dictionary:
                 # NOTE: initial control values are displayed by window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
                 func_to_call = dispatch_dictionary[event]

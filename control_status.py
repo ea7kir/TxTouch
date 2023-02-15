@@ -606,8 +606,7 @@ tune_button_color = NORMAL_BUTTON_COLOR
 ptt_button_color = NORMAL_BUTTON_COLOR
 
 def tune():
-    global tune_is_active, tune_button_color, ptt_is_active
-    print(f'IN tune() with tune_is_active:{tune_is_active} ptt_is_active:{ptt_is_active}')
+    global tune_is_active, tune_button_color
     if ptt_is_active:
         return
     tune_is_active = not tune_is_active
@@ -623,8 +622,7 @@ def tune():
         deactivate_encoder()
 
 def ptt():
-    global ptt_is_active, ptt_button_color, tune_is_active
-    print(f'IN ptt() with tune_is_active:{tune_is_active} ptt_is_active:{ptt_is_active}')
+    global ptt_is_active, ptt_button_color
     if not tune_is_active:
         return
     ptt_is_active = not ptt_is_active
@@ -637,7 +635,6 @@ def ptt():
 
 def cancel_tune():
     global ptt_is_active, ptt_button_color, tune_is_active, tune_button_color
-    print(f'IN cancel_tune() with tune_is_active:{tune_is_active} ptt_is_active:{ptt_is_active}')
     if ptt_is_active:
         ptt_is_active = False
         ptt_button_color = NORMAL_BUTTON_COLOR
