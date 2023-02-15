@@ -182,6 +182,7 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-GAIN_V-'].update(cs.curr_value.gain)
             elif event == '-SHUTDOWN-':
                 #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
+                cs.cancel_tune()
                 break
 
 
