@@ -123,7 +123,7 @@ def main_gui(spectrum_pipe, server_pipe):
     graph = window['graph']
     window.write_event_value('-DISPLAY_INITIAL_VALUES-', None) # fix to display initial control values
     while True:
-        event, _ = window.read(timeout=200)
+        event, _ = window.read(timeout=1)
         if event == '__TIMEOUT__':
             if spectrum_pipe.poll():
                 spectrum_data = spectrum_pipe.recv()
