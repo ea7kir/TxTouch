@@ -14,16 +14,16 @@ def shutdown_encoder():
 #    video_bitrate = None       # '330'
 #    url = None                 # 'udp://192.168.3.10:8282' OR 'rtmp://192.168.3.10:7272 BUT this could require changing the encoder stream to pimary?
 
-def setup_encoder(enc):
+def setup_encoder(args):
     # stop_encoder()
     cmd_str = '{} {} {} {} {} {}'.format(
-        enc.audio_codec,
-        enc.audio_bitrate,
-        enc.video_codec,
-        enc.video_size,
-        enc.video_bitrate,
-        enc.url)
+        args.audio_codec,
+        args.audio_bitrate,
+        args.video_codec,
+        args.video_size,
+        args.video_bitrate,
+        args.url)
     # TODO: send to encoder
     # start_encoder()
-    print(f'\nENCODER -> {cmd_str}\n')
+    print(f'ENCODER -> {cmd_str}')
 

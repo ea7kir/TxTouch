@@ -20,7 +20,8 @@ def process_read_server_data(pipe):
             print(f'Connected to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}', flush=True)
             connected = True
         except:
-            print(f'Failed to connected to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Server unavailable', flush=True)
+            msg = f'Failed to connected to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Server unavailable'
+            print(msg, flush=True)
             connected = False#
         server_data = ServerData()
         while connected:
@@ -35,7 +36,8 @@ def process_read_server_data(pipe):
                 pipe.send(server_data)
                 sleep(0)
             except:
-                print(f'Connection to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Failed during transfer', flush=True)
+                msg = f'Connection to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Failed during transfer'
+                print(msg, flush=True)
                 connected = False
                 break
 

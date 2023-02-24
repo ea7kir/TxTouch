@@ -10,11 +10,11 @@ from device_encoder import setup_encoder
 from device_pluto import configure_pluto, shutdown_pluto
 from device_pluto import setup_pluto
 
-_pi = None
+_pi = pigpio.pi()
 
 def configure_devices():
-    global _pi
-    _pi = pigpio.pi()
+#    global _pi
+#    _pi = pigpio.pi()
     configure_rf_switches(_pi)
     configure_relays(_pi)
     configure_encoder()
@@ -27,14 +27,14 @@ def shutdown_devices():
     shutdown_pluto()
     _pi.stop() # TypeError: pi.stop() missing 1 required positional argument: 'self'
 
-def activate_encoder(encoder_args):
-    setup_encoder(encoder_args)
+def activate_encoder(args):
+    setup_encoder(args)
 
 def deactivate_encoder():
     pass
 
-def activate_pluto(pluto_args):
-    setup_pluto(pluto_args)
+def activate_pluto(args):
+    setup_pluto(args)
 
 def deactivate_pluto():
     pass

@@ -20,22 +20,22 @@ class PlutoArgs:
     service = None                  # 'Malaga'
     url = None                      #
 
-def setup_pluto(plu):
+def setup_pluto(args):
     # stop_pluto()
     # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
     cmd_str = '{}/,{},{},{},{},{},{},{},{},{},/,{}'.format(
-        plu.url,
-        plu.frequency,
-        plu.mode,
-        plu.constellation,
-        plu.symbol_rate,
-        plu.fec,
-        plu.gain,
-        plu.calibration_mode,
-        plu.pcr_pts_delay,
-        plu.audio_bit_rate,
-        plu.provider)
+        args.url,
+        args.frequency,
+        args.mode,
+        args.constellation,
+        args.symbol_rate,
+        args.fec,
+        args.gain,
+        args.calibration_mode,
+        args.pcr_pts_delay,
+        args.audio_bit_rate,
+        args.provider)
     # TODO: send to pluto
     # start_pluto()
-    print(f'\nPLUTO -> {cmd_str}\n')
+    print(f'PLUTO -> {cmd_str}')
 

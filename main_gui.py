@@ -11,13 +11,12 @@ from process_server import process_read_server_data, ServerData
 
 from device_manager import configure_devices, shutdown_devices
 
-# LAYOUT ----------------------------------------
-
 sg.theme('Black')
-
 SCREEN_COLOR = '#111111'
 NORMAL_BUTTON_COLOR = ('#FFFFFF','#222222')
    
+""" LAYOUT FUNCTIONS ------------------------------ """
+
 def text_data(name, key):
     return sg.Text(name, size=11), sg.Text(' ', size=9, key=key, text_color='orange')
 
@@ -26,6 +25,8 @@ def incdec_but(name, key):
 
 def button_selector(key_down, value, key_up, width):
     return  incdec_but('<', key_down), sg.Text(' ', size=width, justification='center', key=value, text_color='orange'), incdec_but('>', key_up) 
+
+""" LAYOUTS --------------------------------------- """
 
 top_layout = [
     sg.Button('TxTouch', key='-SYSTEM-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR),
@@ -68,7 +69,7 @@ status_layout = [
         button_selector('-GAIN_D-', '-GAIN_V-', '-GAIN_U-', 8),
     ]),
     sg.Column([
-        # roof data
+        # server data
         text_data('Preamp Temp', '-PREAMP_TEMP-'),
         text_data('PA Current', '-PA_CURRENT-'),
         text_data('PA Temp', '-PA_TEMP-'),
@@ -78,7 +79,7 @@ status_layout = [
         # control data
         [sg.Button(' TUNE ', key='-TUNE-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR)],
         [sg.Text(' ')],
-        # roof data
+        # control data
         [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR)],
     ]),
 ]
@@ -90,101 +91,213 @@ layout = [
     status_layout,
 ]
 
-# CALLBACK DISPATCH -----------------------------
-
-def display_initial_values():
-    # fix to display initial controll values
-    pass
-
-dispatch_dictionary = { 
-    # Lookup dictionary that maps button to function to call
-    # NOTE: the order could affect responsiveness, but maybe a disctionary lookup is just too slow
-    '-TUNE-':cs.tune,
-    '-PTT-':cs.ptt,
-    '-BD-':cs.dec_band, '-BU-':cs.inc_band, 
-    '-FD-':cs.dec_frequency, '-FU-':cs.inc_frequency, 
-    '-SD-':cs.dec_symbol_rate, '-SU-':cs.inc_symbol_rate,
-    '-MODE_D-':cs.dec_mode, '-MODE_U-':cs.inc_mode,
-    '-CODECS_D-':cs.dec_codecs, '-CODECS_U-':cs.inc_codecs,
-    '-CONSTELLATION_D-':cs.dec_constellation, '-CONSTELLATION_U-':cs.inc_constellation,
-    '-FEC_D-':cs.dec_fec, '-FEC_U-':cs.inc_fec,
-    '-VIDEO_BITRATE_D-':cs.dec_video_bitrate, '-VIDEO_BITRATE_U-':cs.inc_video_bitrate,
-    '-SPARE1_D-':cs.dec_spare1, '-SPARE1_U-':cs.inc_spare1,
-    '-SPARE2_D-':cs.dec_spare2, '-SPARE2_U-':cs.inc_spare2,
-    '-GAIN_D-':cs.dec_gain, '-GAIN_U-':cs.inc_gain,
-    '-DISPLAY_INITIAL_VALUES-':display_initial_values,
-}
-
-# MAIN ------------------------------------------
+""" MAIN ------------------------------------------ """
 
 def main_gui(spectrum_pipe, server_pipe):
     window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
     graph = window['graph']
-    window.write_event_value('-DISPLAY_INITIAL_VALUES-', None) # fix to display initial control values
+    window['-TUNE-'].update(button_color=cs.tune_button_color)
+    window['-PTT-'].update(button_color=cs.ptt_button_color)
+    window['-BV-'].update(cs.curr_value.band)
+    window['-FV-'].update(cs.curr_value.frequency)
+    window['-SV-'].update(cs.curr_value.symbol_rate)
+    window['-MODE_V-'].update(cs.curr_value.mode)
+    window['-CODECS_V-'].update(cs.curr_value.codecs)
+    window['-CONSTELLATION_V-'].update(cs.curr_value.constellation)
+    window['-FEC_V-'].update(cs.curr_value.fec)
+    window['-VIDEO_BITRATE_V-'].update(cs.curr_value.video_bitrate)
+    window['-SPARE1_V-'].update(cs.curr_value.spare1)
+    window['-SPARE2_V-'].update(cs.curr_value.spare2)
+    window['-GAIN_V-'].update(cs.curr_value.gain)
+    window.refresh()
     while True:
         event, _ = window.read(timeout=1)
-        if event == '__TIMEOUT__':
-            if spectrum_pipe.poll():
-                spectrum_data = spectrum_pipe.recv()
-                while spectrum_pipe.poll():
-                    _ = spectrum_pipe.recv()
-                # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
-                graph.erase()
-                # draw graticule
-                c = 0
-                for y in range(0x2697, 0xFFFF, 0xD2D): # 0x196A, 0xFFFF, 0xD2D
-                    if c == 5:
-                        graph.draw_text('5dB', (13,y), color='#444444')
-                        graph.draw_line((40, y), (918, y), color='#444444')
-                    elif c == 10:
-                        graph.draw_text('10dB', (17,y), color='#444444')
-                        graph.draw_line((40, y), (918, y), color='#444444')
-                    elif c == 15:
-                        graph.draw_text('15dB', (17,y), color='#444444')
-                        graph.draw_line((40, y), (918, y), color='#444444')
-                    else:
-                        graph.draw_line((0, y), (918, y), color='#222222')
-                    c += 1
-                # draw tuned marker
-                x = cs.selected_frequency_marker()
-                graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
-                # draw beacon level
-                graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
-                # draw spectrum
-                graph.draw_polygon(spectrum_data.points, fill_color='green')
-            elif server_pipe.poll():
-                server_data = server_pipe.recv()
-                while server_pipe.poll():
-                    _ = server_pipe.recv()
-                window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
-                window['-PA_CURRENT-'].update(server_data.pa_current)
-                window['-PA_TEMP-'].update(server_data.pa_temp)
-                window['-FANS-'].update(server_data.fans)
-        else: # don't bother searching for __TIMEOUT__ events
-            if event in dispatch_dictionary:
-                # NOTE: initial control values are displayed by window.write_event_value('-DISPLAY_INITIAL_VALUES-', None)
-                func_to_call = dispatch_dictionary[event]
-                func_to_call()
+        match event:
+            case '-TUNE-':
+                cs.tune()
                 window['-TUNE-'].update(button_color=cs.tune_button_color)
                 window['-PTT-'].update(button_color=cs.ptt_button_color)
-                window['-BV-'].update(cs.curr_value.band)
-                window['-FV-'].update(cs.curr_value.frequency)
-                window['-SV-'].update(cs.curr_value.symbol_rate)
-                window['-MODE_V-'].update(cs.curr_value.mode)
-                window['-CODECS_V-'].update(cs.curr_value.codecs)
-                window['-CONSTELLATION_V-'].update(cs.curr_value.constellation)
-                window['-FEC_V-'].update(cs.curr_value.fec)
-                window['-VIDEO_BITRATE_V-'].update(cs.curr_value.video_bitrate)
-                window['-SPARE1_V-'].update(cs.curr_value.spare1)
-                window['-SPARE2_V-'].update(cs.curr_value.spare2)
-                window['-GAIN_V-'].update(cs.curr_value.gain)
-            elif event == '-SHUTDOWN-':
+            case '-PTT-':
+                cs.ptt()
+                window['-TUNE-'].update(button_color=cs.tune_button_color)
+                window['-PTT-'].update(button_color=cs.ptt_button_color)
+            case '-BD-':
+                if cs.dec_band():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-BV-'].update(cs.curr_value.band)
+            case '-BU-':
+                if cs.inc_band():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-BV-'].update(cs.curr_value.band)
+            case '-FD-':
+                if cs.dec_frequency():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-FV-'].update(cs.curr_value.frequency)
+            case '-FU-':
+                if cs.inc_frequency():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-FV-'].update(cs.curr_value.frequency)
+            case '-SD-':
+                if cs.dec_symbol_rate():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-SV-'].update(cs.curr_value.symbol_rate)
+            case '-SU-':
+                if cs.inc_symbol_rate():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-SV-'].update(cs.curr_value.symbol_rate)
+            case '-MODE_D-':
+                if cs.dec_mode():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-MODE_V-'].update(cs.curr_value.mode)
+            case '-MODE_U-':
+                if cs.inc_mode():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-MODE_V-'].update(cs.curr_value.mode)
+            case '-CODECS_D-':
+                if cs.dec_codecs():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-CODECS_V-'].update(cs.curr_value.codecs)
+            case '-CODECS_U-':
+                if cs.inc_codecs():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-CODECS_V-'].update(cs.curr_value.codecs)
+            case '-CONSTELLATION_D-':
+                if cs.dec_constellation():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-CONSTELLATION_V-'].update(cs.curr_value.constellation)
+            case '-CONSTELLATION_U-':
+                if cs.inc_constellation():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-CONSTELLATION_V-'].update(cs.curr_value.constellation)
+            case '-FEC_D-':
+                if cs.dec_fec():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-FEC_V-'].update(cs.curr_value.fec)
+            case '-FEC_U-':
+                if cs.inc_fec():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-FEC_V-'].update(cs.curr_value.fec)
+            case '-VIDEO_BITRATE_D-':
+                if cs.dec_video_bitrate():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-VIDEO_BITRATE_V-'].update(cs.curr_value.video_bitrate)
+            case '-VIDEO_BITRATE_U-':
+                if cs.inc_video_bitrate():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-VIDEO_BITRATE_V-'].update(cs.curr_value.video_bitrate)
+            case 'SPARE1_D-':
+                if cs.dec_spare1():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-SPARE1_V-'].update(cs.curr_value.spare1)
+            case '-SPARE1_U-':
+                if cs.inc_spare1():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-SPARE1_V-'].update(cs.curr_value.spare1)
+            case '-SPARE2_D-':
+                if cs.dec_spare2():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-SPARE2_V-'].update(cs.curr_value.spare2)
+            case '-SPARE2_U-':
+                if cs.inc_spare2():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-SPARE2_V-'].update(cs.curr_value.spare2)
+            case '-GAIN_D-':
+                if cs.dec_gain():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-GAIN_V-'].update(cs.curr_value.gain)
+            case '-GAIN_U-':
+                if cs.inc_gain():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-GAIN_V-'].update(cs.curr_value.gain)
+            case '-SHUTDOWN-':
                 #if sg.popup_yes_no('Shutdown Now?', background_color='red', keep_on_top=True) == 'Yes':
                 cs.cancel_tune()
+                window['-TUNE-'].update(button_color=cs.tune_button_color)
+                window['-PTT-'].update(button_color=cs.ptt_button_color)
+                window.refresh()
                 break
-
-
+            case _:
+                if spectrum_pipe.poll():
+                    spectrum_data = spectrum_pipe.recv()
+                    while spectrum_pipe.poll():
+                        _ = spectrum_pipe.recv()
+                    # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
+                    graph.erase()
+                    # draw graticule
+                    c = 0
+                    for y in range(0x2697, 0xFFFF, 0xD2D): # 0x196A, 0xFFFF, 0xD2D
+                        if c == 5:
+                            graph.draw_text('5dB', (13,y), color='#444444')
+                            graph.draw_line((40, y), (918, y), color='#444444')
+                        elif c == 10:
+                            graph.draw_text('10dB', (17,y), color='#444444')
+                            graph.draw_line((40, y), (918, y), color='#444444')
+                        elif c == 15:
+                            graph.draw_text('15dB', (17,y), color='#444444')
+                            graph.draw_line((40, y), (918, y), color='#444444')
+                        else:
+                            graph.draw_line((0, y), (918, y), color='#222222')
+                        c += 1
+                    # draw tuned marker
+                    x = cs.selected_frequency_marker()
+                    graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
+                    # draw beacon level
+                    graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
+                    # draw spectrum
+                    graph.draw_polygon(spectrum_data.points, fill_color='green')
+                elif server_pipe.poll():
+                    server_data = server_pipe.recv()
+                    while server_pipe.poll():
+                        _ = server_pipe.recv()
+                    window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
+                    window['-PA_CURRENT-'].update(server_data.pa_current)
+                    window['-PA_TEMP-'].update(server_data.pa_temp)
+                    window['-FANS-'].update(server_data.fans)
     window.close()
     del window
 

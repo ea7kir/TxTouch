@@ -361,155 +361,181 @@ max_band_list = len(BAND_LIST) - 1 # TODO: messy!  try integrating band into the
 
 def inc_band():
     global curr_band, max_band_list, curr_value, curr_index
-    cancel_tune()
     if curr_band < max_band_list:
         curr_band += 1
         curr_value = value[curr_band]
         curr_index = index[curr_band]
+        return True
+    return False
 
 def dec_band():
     global curr_band, curr_value, curr_index
-    cancel_tune()
     if curr_band > 0:
         curr_band -= 1
         curr_value = value[curr_band]
         curr_index = index[curr_band]
+        return True
+    return False
     
 def inc_frequency():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.frequency < curr_index.max_frequency_index:
         curr_index.frequency += 1
         curr_value.frequency = curr_index.frequency_list[curr_index.frequency]
+        return True
+    return False
 
 def dec_frequency():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.frequency > 0:
         curr_index.frequency -= 1
         curr_value.frequency = curr_index.frequency_list[curr_index.frequency]
+        return True
+    return False
     
 def inc_symbol_rate():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.symbol_rate < curr_index.max_symbol_rate_list:
         curr_index.symbol_rate += 1
         curr_value.symbol_rate = curr_index.symbol_rate_list[curr_index.symbol_rate]
+        return True
+    return False
 
 def dec_symbol_rate():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.symbol_rate > 0:
         curr_index.symbol_rate -= 1
         curr_value.symbol_rate = curr_index.symbol_rate_list[curr_index.symbol_rate]
+        return True
+    return False
     
 def inc_mode():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.mode < curr_index.max_mode_list:
         curr_index.mode += 1
         curr_value.mode = curr_index.mode_list[curr_index.mode]
+        return True
+    return False
 
 def dec_mode():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.mode > 0:
         curr_index.mode -= 1
         curr_value.mode = curr_index.mode_list[curr_index.mode]
+        return True
+    return False
 
 def inc_codecs():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.codecs < curr_index.max_codecs_list:
         curr_index.codecs += 1
         curr_value.codecs = curr_index.codecs_list[curr_index.codecs]
-        # TODO: curr_value.url = 
+        return True
+    return False
+
 def dec_codecs():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.codecs > 0:
         curr_index.codecs -= 1
         curr_value.codecs = curr_index.codecs_list[curr_index.codecs]
+        return True
+    return False
     
 def inc_constellation():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.constellation < curr_index.max_constellation_list:
         curr_index.constellation += 1
         curr_value.constellation = curr_index.constellation_list[curr_index.constellation]
+        return True
+    return False
 
 def dec_constellation():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.constellation > 0:
         curr_index.constellation -= 1
         curr_value.constellation = curr_index.constellation_list[curr_index.constellation]
+        return True
+    return False
     
 def inc_fec():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.fec < curr_index.max_fec_list:
         curr_index.fec += 1
         curr_value.fec = curr_index.fec_list[curr_index.fec]
+        return True
+    return False
 
 def dec_fec():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.fec > 0:
         curr_index.fec -= 1
         curr_value.fec = curr_index.fec_list[curr_index.fec]
+        return True
+    return False
     
 def inc_video_bitrate():
     global curr_value, curr_index
     if curr_index.video_bitrate < curr_index.max_video_bitrate_list:
         curr_index.video_bitrate += 1
         curr_value.video_bitrate = curr_index.video_bitrate_list[curr_index.video_bitrate]
+        return True
+    return False
 
 def dec_video_bitrate():
     global curr_value, curr_index
     if curr_index.video_bitrate > 0:
         curr_index.video_bitrate -= 1
         curr_value.video_bitrate = curr_index.video_bitrate_list[curr_index.video_bitrate]
+        return True
+    return False
     
 def inc_spare1():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.spare1 < curr_index.max_spare1_list:
         curr_index.spare1 += 1
         curr_value.spare1 = curr_index.spare1_list[curr_index.spare1]
+        return True
+    return False
 
 def dec_spare1():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.spare1 > 0:
         curr_index.spare1 -= 1
         curr_value.spare1 = curr_index.spare1_list[curr_index.spare1]
+        return True
+    return False
    
 def inc_spare2():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.spare2 < curr_index.max_spare2_list:
         curr_index.spare2 += 1
         curr_value.spare2 = curr_index.spare2_list[curr_index.spare2]
+        return True
+    return False
 
 def dec_spare2():
     global curr_value, curr_index
-    cancel_tune()
     if curr_index.spare2 > 0:
         curr_index.spare2 -= 1
         curr_value.spare2 = curr_index.spare2_list[curr_index.spare2]
+        return True
+    return False
     
 def inc_gain():
     global curr_value, curr_index
     if curr_index.gain < curr_index.max_gain_list:
         curr_index.gain += 1
         curr_value.gain = curr_index.gain_list[curr_index.gain]
+        return True
+    return False
 
 def dec_gain():
     global curr_value, curr_index
     if curr_index.gain > 0:
         curr_index.gain -= 1
         curr_value.gain = curr_index.gain_list[curr_index.gain]
+        return True
+    return False
 
 def selected_frequency_marker():
     i = int(curr_value.frequency[9:])
