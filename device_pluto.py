@@ -1,4 +1,5 @@
-# TODO: network access to Pluto
+import subprocess
+import sys
 
 def configure_pluto():
     pass
@@ -25,6 +26,16 @@ h265box undefined
 remux 1
 
 ssh root@pluto.local (pwd analog) and updating this file appears to work.
+
+OR:
+
+write to a file and copy to Pluto with scp
+
+scp settings.txt root@pluto.local:/www/
+
+To make this work I need to eliminate the need for ssh paswords
+
+I don't think its possible to copy to /www/ using the mas-storage-device
 """
 
 def setup_pluto(args):
@@ -63,7 +74,10 @@ def setup_pluto(args):
     n = f'remux {tmp_remux}\n\n'
     txt = a + b + c + d + e + f + g + h + i + j + k + l + m + n
     print(txt)
-    # TODO: send to pluto
+    # TODO: send this to /home/pi/settings.txt and scp /home/pi/settings.txt root@pluto.local:/www/
+    f = open("/home/pi/settings.txt", "w")
+    f.write(txt)
+    f.close()
+    # scp /home/pi/settings.txt root@pluto.local:/www/
+    #result = subprocess.run([sys.executable, "-c", "/usr/bin/scp /home/pi/settings.txt root@pluto.local:/www/"])
     # start_pluto()
-
-

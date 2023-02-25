@@ -163,13 +163,13 @@ VERY_NARROW_SPARE2_LIST = [
     'sp2-a','sp2-b'
 ]
 WIDE_GAIN_LIST = [
-    '-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
+    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
 ]
 NARROW_GAIN_LIST = [
-    '-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
+    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
 ]
 VERY_NARROW_GAIN_LIST = [
-    '-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
+    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
 ]
 
 WIDE_BAND_LIST_INDEX = 0
@@ -187,7 +187,7 @@ INITIAL_WIDE_FEC                    = 2 # 3/4
 INITIAL_WIDE_BITRATE                = 3 # 330
 INITIAL_WIDE_SPARE1                 = 0 # sp1_a 
 INITIAL_WIDE_SPARE2                 = 0 # sp2_a
-INITIAL_WIDE_GAIN                   = 3 # -7
+INITIAL_WIDE_GAIN                   = 4 # -16
 
 INITIAL_NARROW_SYMBOL_RATE          = 2 # 333
 INITIAL_NARROW_FREQUENCY            = 13 # chan 27
@@ -198,7 +198,7 @@ INITIAL_NARROW_FEC                  = 2 # 3/4
 INITIAL_NARROW_BITRATE              = 3 # 330
 INITIAL_NARROW_SPARE1               = 0 # sp1_a
 INITIAL_NARROW_SPARE2               = 0 # sp2_a
-INITIAL_NARROW_GAIN                 = 3 # -7
+INITIAL_NARROW_GAIN                 = 4 # -16
 
 INITIAL_VERY_NARROW_SYMBOL_RATE     = 2 # 66
 INITIAL_VERY_NARROW_FREQUENCY       = 0 # chan 01
@@ -209,7 +209,7 @@ INITIAL_VERY_NARROW_FEC             = 2 # 3/4
 INITIAL_VERY_NARROW_BITRATE         = 3 # 330
 INITIAL_VERY_NARROW_SPARE1          = 0 # sp1_a 
 INITIAL_VERY_NARROW_SPARE2          = 0 # sp2_a 
-INITIAL_VERY_NARROW_GAIN            = 3 # -7
+INITIAL_VERY_NARROW_GAIN            = 4 # -16
 
 class WideIndex:
     band = WIDE_BAND_LIST_INDEX
