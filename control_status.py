@@ -672,14 +672,16 @@ def ptt():
 
 def cancel_tune():
     global ptt_is_active, ptt_button_color, tune_is_active, tune_button_color
+    if not tune_is_active:
+        return False
     if ptt_is_active:
         ptt_is_active = False
         ptt_button_color = NORMAL_BUTTON_COLOR
         deactivate_ptt()
-    if tune_is_active:
-        tune_is_active = False
-        tune_button_color = NORMAL_BUTTON_COLOR
-        deactivate_pluto()
-        deactivate_encoder()
+    tune_is_active = False
+    tune_button_color = NORMAL_BUTTON_COLOR
+    deactivate_pluto()
+    deactivate_encoder()
+    return True
    
     

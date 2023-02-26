@@ -3,6 +3,9 @@
 from multiprocessing import Process
 from multiprocessing import Pipe
 
+import threading            # experimenting
+from time import sleep      # experimenting
+
 import PySimpleGUI as sg
 import control_status as cs
 
@@ -11,12 +14,12 @@ from process_server import process_read_server_data, ServerData
 
 from device_manager import configure_devices, shutdown_devices
 
+""" LAYOUT FUNCTIONS ------------------------------ """
+
 sg.theme('Black')
 SCREEN_COLOR = '#111111'
 NORMAL_BUTTON_COLOR = ('#FFFFFF','#222222')
    
-""" LAYOUT FUNCTIONS ------------------------------ """
-
 def text_data(name, key):
     return sg.Text(name, size=11), sg.Text(' ', size=9, key=key, text_color='orange')
 
@@ -91,6 +94,22 @@ layout = [
     status_layout,
 ]
 
+""" TREADS --------------------------------------- """
+
+def spectrum_thread(window, pipe):
+    dummy = 0
+    while True:
+        if pipe.poll():
+            window.write_event_value('-SPECTRUM_THREAD-', (threading.current_thread().name, dummy))
+        sleep(0.166)
+
+def server_thread(window, pipe):
+    dummy = 0
+    while True:
+        if pipe.poll():
+            window.write_event_value('-SERVER_THREAD-', (threading.current_thread().name, dummy))
+        sleep(0.5)
+            
 """ MAIN ------------------------------------------ """
 
 def main_gui(spectrum_pipe, server_pipe):
@@ -111,8 +130,12 @@ def main_gui(spectrum_pipe, server_pipe):
     window['-SPARE2_V-'].update(cs.curr_value.spare2)
     window['-GAIN_V-'].update(cs.curr_value.gain)
     window.refresh()
+
+    threading.Thread(target=spectrum_thread, args=(window, spectrum_pipe), daemon=True).start()
+    threading.Thread(target=server_thread, args=(window, server_pipe), daemon=True).start()
+
     while True:
-        event, _ = window.read(timeout=100)
+        event, _ = window.read()
         match event:
             case '-TUNE-':
                 cs.tune()
@@ -261,43 +284,45 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-PTT-'].update(button_color=cs.ptt_button_color)
                 window.refresh()
                 break
-            case _:
-                if spectrum_pipe.poll():
-                    spectrum_data = spectrum_pipe.recv()
-                    while spectrum_pipe.poll():
-                        _ = spectrum_pipe.recv()
-                    # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
-                    graph.erase()
-                    # draw graticule
-                    c = 0
-                    for y in range(0x2697, 0xFFFF, 0xD2D): # 0x196A, 0xFFFF, 0xD2D
-                        if c == 5:
-                            graph.draw_text('5dB', (13,y), color='#444444')
-                            graph.draw_line((40, y), (918, y), color='#444444')
-                        elif c == 10:
-                            graph.draw_text('10dB', (17,y), color='#444444')
-                            graph.draw_line((40, y), (918, y), color='#444444')
-                        elif c == 15:
-                            graph.draw_text('15dB', (17,y), color='#444444')
-                            graph.draw_line((40, y), (918, y), color='#444444')
-                        else:
-                            graph.draw_line((0, y), (918, y), color='#222222')
-                        c += 1
-                    # draw tuned marker
-                    x = cs.selected_frequency_marker()
-                    graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
-                    # draw beacon level
-                    graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
-                    # draw spectrum
-                    graph.draw_polygon(spectrum_data.points, fill_color='green')
-                elif server_pipe.poll():
-                    server_data = server_pipe.recv()
-                    while server_pipe.poll():
-                        _ = server_pipe.recv()
-                    window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
-                    window['-PA_CURRENT-'].update(server_data.pa_current)
-                    window['-PA_TEMP-'].update(server_data.pa_temp)
-                    window['-FANS-'].update(server_data.fans)
+            case '-SPECTRUM_THREAD-':
+                spectrum_data = spectrum_pipe.recv()
+                while spectrum_pipe.poll():
+                    _ = spectrum_pipe.recv()
+                # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
+                graph.erase()
+                # draw graticule
+                c = 0
+                for y in range(0x2697, 0xFFFF, 0xD2D): # 0x196A, 0xFFFF, 0xD2D
+                    if c == 5:
+                        graph.draw_text('5dB', (13,y), color='#444444')
+                        graph.draw_line((40, y), (918, y), color='#444444')
+                    elif c == 10:
+                        graph.draw_text('10dB', (17,y), color='#444444')
+                        graph.draw_line((40, y), (918, y), color='#444444')
+                    elif c == 15:
+                        graph.draw_text('15dB', (17,y), color='#444444')
+                        graph.draw_line((40, y), (918, y), color='#444444')
+                    else:
+                        graph.draw_line((0, y), (918, y), color='#222222')
+                    c += 1
+                # draw tuned marker
+                x = cs.selected_frequency_marker()
+                graph.draw_line((x, 0x2000), (x, 0xFFFF), color='#880000')
+                # draw beacon level
+                graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
+                # draw spectrum
+                graph.draw_polygon(spectrum_data.points, fill_color='green')
+                window.refresh()
+            case '-SERVER_THREAD-':
+                server_data = server_pipe.recv()
+                while server_pipe.poll():
+                    _ = server_pipe.recv()
+                window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
+                window['-PA_CURRENT-'].update(server_data.pa_current)
+                window['-PA_TEMP-'].update(server_data.pa_temp)
+                window['-FANS-'].update(server_data.fans)
+                window.refresh()
+
     window.close()
     del window
 
