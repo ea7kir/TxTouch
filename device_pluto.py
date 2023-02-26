@@ -1,5 +1,5 @@
 import subprocess
-import sys
+#import sys
 
 def configure_pluto():
     pass
@@ -24,18 +24,6 @@ pcrpts 800
 patperiod 200
 h265box undefined
 remux 1
-
-ssh root@pluto.local (pwd analog) and updating this file appears to work.
-
-OR:
-
-write to a file and copy to Pluto with scp
-
-scp settings.txt root@pluto.local:/www/
-
-To make this work I need to eliminate the need for ssh paswords
-
-I don't think its possible to copy to /www/ using the mas-storage-device
 """
 
 def setup_pluto(args):
@@ -73,11 +61,38 @@ def setup_pluto(args):
         args.pat_period,
         tmp_h265box,
         tmp_remux)
-    print(settings)
-    # TODO: send this to /home/pi/settings.txt and scp /home/pi/settings.txt root@pluto.local:/www/
+    #print(settings)
     f = open("/home/pi/settings.txt", "w")
     f.write(settings)
     f.close()
-    # scp /home/pi/settings.txt root@pluto.local:/www/
-    #result = subprocess.run([sys.executable, "-c", "/usr/bin/scp /home/pi/settings.txt root@pluto.local:/www/"])
+    """
+    See: https://wiki.analog.com/university/tools/pluto/drivers/linux
+
+    sudo apt install libiio-utils
+
+    iio_info -n 192.168.2.1 | grep device
+
+    io_readdev -n 192.168.2.1 -s 64 cf-ad9361-lpc | hexdump -x
+
+    AND FOR PASSWORDS:
+
+    wget https://raw.githubusercontent.com/analogdevicesinc/plutosdr_scripts/master/ssh_config -O ~/.ssh/config
+
+    sudo apt install sshpass
+
+    Now I can ssh and scp like this...
+
+    sshpass -panalog ssh root@pluto.local
+
+    sshpass -panalog ssh root@192.168.2.1 # not working
+
+    sshpass -panalog scp /home/pi/settings.txt root@pluto.local:/www/
+
+    sshpass -panalog scp /home/pi/settings.txt root@192.168.2.1:/www/  # not working
+
+    """
+    result = subprocess.run(['sshpass', '-panalog', 'scp', '/home/pi/settings.txt', 'root@pluto.local:/www/'])
+    if result.returncode != 0:
+        print('ERROR updating pluto settings.txt')
     # start_pluto()
+
