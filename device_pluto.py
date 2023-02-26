@@ -58,25 +58,25 @@ def setup_pluto(args):
 #########    print(f'PLUTO -> {cmd_str}')
     tmp_h265box = 'undefined'
     tmp_remux = '1'
-    a = f'callsign {args.provider}\n'
-    b = f'freq {args.frequency}\n'
-    c = f'mode {args.mode}\n'
-    d = f'mod {args.constellation}\n'
-    e = f'sr {args.symbol_rate}\n'
-    f = f'fec {args.fec}\n'
-    g = f'pilots {args.pilots}\n'
-    h = f'frame {args.frame}\n'
-    i = f'power {args.gain}\n'
-    j = f'rolloff {args.roll_off}\n'
-    k = f'pcrpts {args.pcr_pts}\n'
-    l = f'patperiod {args.pat_period}\n'
-    m = f'h265box {tmp_h265box}\n'
-    n = f'remux {tmp_remux}\n\n'
-    txt = a + b + c + d + e + f + g + h + i + j + k + l + m + n
-    print(txt)
+    settings = 'callsign {}\nfreq {}\nmode {}\nmod {}\nsr {}\nfec {}\npilots {}\nframe {}\npower {}\nrolloff {}\npcrpts {}\npatperiod {}\nh265box {}\nremux {}\n\n'.format(
+        args.provider,
+        args.frequency,
+        args.mode,
+        args.constellation,
+        args.symbol_rate,
+        args.fec,
+        args.pilots,
+        args.frame,
+        args.gain,
+        args.roll_off,
+        args.pcr_pts,
+        args.pat_period,
+        tmp_h265box,
+        tmp_remux)
+    print(settings)
     # TODO: send this to /home/pi/settings.txt and scp /home/pi/settings.txt root@pluto.local:/www/
     f = open("/home/pi/settings.txt", "w")
-    f.write(txt)
+    f.write(settings)
     f.close()
     # scp /home/pi/settings.txt root@pluto.local:/www/
     #result = subprocess.run([sys.executable, "-c", "/usr/bin/scp /home/pi/settings.txt root@pluto.local:/www/"])

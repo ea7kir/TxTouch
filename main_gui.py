@@ -119,6 +119,7 @@ def main_gui(spectrum_pipe, server_pipe):
                 window['-TUNE-'].update(button_color=cs.tune_button_color)
                 window['-PTT-'].update(button_color=cs.ptt_button_color)
             case '-PTT-':
+                print('PTT PRESSED')
                 cs.ptt()
                 window['-TUNE-'].update(button_color=cs.tune_button_color)
                 window['-PTT-'].update(button_color=cs.ptt_button_color)
