@@ -112,7 +112,7 @@ def main_gui(spectrum_pipe, server_pipe):
     window['-GAIN_V-'].update(cs.curr_value.gain)
     window.refresh()
     while True:
-        event, _ = window.read(timeout=1)
+        event, _ = window.read(timeout=100)
         match event:
             case '-TUNE-':
                 cs.tune()

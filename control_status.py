@@ -91,13 +91,13 @@ VERY_NARROW_FREQUENCY_LIST = [
     '2409.75 / 27',
 ]
 WIDE_SYMBOL_RATE_LIST = [
-    '500','1000','1500',
+    '1000','1500','2000',
 ]
 NARROW_SYMBOL_RATE_LIST = [
-    '125','250','333',
+    '250','333','500',
 ]
 VERY_NARROW_SYMBOL_RATE_LIST = [
-    '25','33','66',
+    '33','66','125',
 ]
 WIDE_MODE_LIST = [
     'DVB-S','DVB-S2',
@@ -178,7 +178,9 @@ VERY_NARROW_BAND_LIST_INDEX = 2
 
 INITIAL_BAND                        = 1 # narrow
 
-INITIAL_WIDE_SYMBOL_RATE            = 0 # 500
+# See: https://www.f5uii.net/en/transmit-datv-over-qo100-with-sdr-adalm-pluto-f5oeo-plutodvb/11/
+
+INITIAL_WIDE_SYMBOL_RATE            = 1 # 1500
 INITIAL_WIDE_FREQUENCY              = 2 # chan 15
 INITIAL_WIDE_MODE                   = 1 # DVB-S2
 INITIAL_WIDE_CODEC                  = 1 # H265 ACC
@@ -189,7 +191,7 @@ INITIAL_WIDE_SPARE1                 = 0 # sp1_a
 INITIAL_WIDE_SPARE2                 = 0 # sp2_a
 INITIAL_WIDE_GAIN                   = 4 # -16
 
-INITIAL_NARROW_SYMBOL_RATE          = 2 # 333
+INITIAL_NARROW_SYMBOL_RATE          = 1 # 333
 INITIAL_NARROW_FREQUENCY            = 13 # chan 27
 INITIAL_NARROW_MODE                 = 1 # DVB-S2
 INITIAL_NARROW_CODEC                = 1 # H265 ACC
@@ -200,7 +202,7 @@ INITIAL_NARROW_SPARE1               = 0 # sp1_a
 INITIAL_NARROW_SPARE2               = 0 # sp2_a
 INITIAL_NARROW_GAIN                 = 4 # -16
 
-INITIAL_VERY_NARROW_SYMBOL_RATE     = 2 # 66
+INITIAL_VERY_NARROW_SYMBOL_RATE     = 1 # 66
 INITIAL_VERY_NARROW_FREQUENCY       = 0 # chan 01
 INITIAL_VERY_NARROW_MODE            = 1 # DVB-S2
 INITIAL_VERY_NARROW_CODEC           = 1 # H265 ACC
