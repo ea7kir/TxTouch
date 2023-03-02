@@ -241,7 +241,7 @@ def main_gui(spectrum_pipe, server_pipe):
                     window['-TUNE-'].update(button_color=cs.tune_button_color)
                     window['-PTT-'].update(button_color=cs.ptt_button_color)
                     window['-VIDEO_BITRATE_V-'].update(cs.curr_value.video_bitrate)
-            case 'SPARE1_D-':
+            case '-SPARE1_D-':
                 if cs.dec_spare1():
                     cs.cancel_tune()
                     window['-TUNE-'].update(button_color=cs.tune_button_color)
