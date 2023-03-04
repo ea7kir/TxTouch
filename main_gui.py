@@ -97,18 +97,20 @@ layout = [
 """ THREADS -------------------------------------- """
 
 def spectrum_thread(window, pipe):
-    dummy = 0
     while True:
-        if pipe.poll():
-            window.write_event_value('-SPECTRUM_THREAD-', (threading.current_thread().name, dummy))
-        sleep(0.166)
+        spectrum_data = pipe.recv()
+        window.write_event_value('-SPECTRUM_THREAD-', (threading.current_thread().name, spectrum_data))
+        while pipe.poll():
+            _ = pipe.recv()
+            print('dump spectrum data', flush= True)
 
 def server_thread(window, pipe):
-    dummy = 0
     while True:
-        if pipe.poll():
-            window.write_event_value('-SERVER_THREAD-', (threading.current_thread().name, dummy))
-        sleep(0.5)
+        server_data = pipe.recv()
+        window.write_event_value('-SERVER_THREAD-', (threading.current_thread().name, server_data))
+        while pipe.poll():
+            _ = pipe.recv()
+            print('dump server data', flush= True)
             
 """ MAIN ------------------------------------------ """
 
@@ -135,7 +137,8 @@ def main_gui(spectrum_pipe, server_pipe):
     threading.Thread(target=server_thread, args=(window, server_pipe), daemon=True).start()
 
     while True:
-        event, _ = window.read()
+        event, values = window.read()
+        #print(event)
         match event:
             case '-TUNE-':
                 cs.tune()
@@ -285,9 +288,7 @@ def main_gui(spectrum_pipe, server_pipe):
                 window.refresh()
                 break
             case '-SPECTRUM_THREAD-':
-                spectrum_data = spectrum_pipe.recv()
-                while spectrum_pipe.poll():
-                    _ = spectrum_pipe.recv()
+                spectrum_data = values['-SPECTRUM_THREAD-'][1]
                 # TODO: try just deleting the polygon and beakcon_level with delete_figure(id)
                 graph.erase()
                 # draw graticule
@@ -312,16 +313,12 @@ def main_gui(spectrum_pipe, server_pipe):
                 graph.draw_line((0, spectrum_data.beacon_level), (918, spectrum_data.beacon_level), color='#880000', width=1)
                 # draw spectrum
                 graph.draw_polygon(spectrum_data.points, fill_color='green')
-                window.refresh()
             case '-SERVER_THREAD-':
-                server_data = server_pipe.recv()
-                while server_pipe.poll():
-                    _ = server_pipe.recv()
+                server_data = values['-SERVER_THREAD-'][1]
                 window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
                 window['-PA_CURRENT-'].update(server_data.pa_current)
                 window['-PA_TEMP-'].update(server_data.pa_temp)
                 window['-FANS-'].update(server_data.fans)
-                window.refresh()
 
     window.close()
     del window

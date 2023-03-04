@@ -26,7 +26,7 @@ def process_read_server_data(pipe):
         server_data = ServerData()
         while connected:
             try:
-                json_dict_raw = await reader.read(1024)
+                json_dict_raw = await reader.read(128) # normally 100 bytes
                 json_dict = json_dict_raw.decode()
                 data_dict = json.loads(json_dict)
                 server_data.preamp_temp = data_dict['preamp_temp']
@@ -34,7 +34,6 @@ def process_read_server_data(pipe):
                 server_data.pa_current = data_dict['pa_current']
                 server_data.fans = data_dict['fans']
                 pipe.send(server_data)
-                sleep(0)
             except:
                 msg = f'Connection to {TX_SERVER_ADDRESS}:{TX_SERVER_PORT}. Failed during transfer'
                 print(msg, flush=True)
