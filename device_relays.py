@@ -21,9 +21,9 @@ def shutdown_relays():
     _switch_relay(RELAY_MUTE_GPIO, RELAY_OFF)
 
 def switch_mute_On():
-    print("SWITCHING ON MUTE")
+    #print("SWITCHING ON MUTE", flush=True)
     _switch_relay(RELAY_MUTE_GPIO, RELAY_ON)
 
 def switch_mute_Off():
-    print("SWITCHING OFF MUTE")
+    #print("SWITCHING OFF MUTE", flush=True)
     _switch_relay(RELAY_MUTE_GPIO, RELAY_OFF)

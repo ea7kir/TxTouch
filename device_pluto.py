@@ -72,7 +72,7 @@ def setup_pluto(args):
     result = subprocess.run(['/usr/bin/sshpass', '-panalog', '/usr/bin/scp', '/home/pi/settings.txt', 'root@pluto.local:/www/'])
     if result.returncode != 0:
         print('ERROR updating pluto settings.txt', flush=True)
-    else:
-        print('pluto configured ok', flush=True)
+    #else:
+    #    print('pluto configured ok', flush=True)
     # start_pluto()
 

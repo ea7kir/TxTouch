@@ -25,10 +25,10 @@ def shutdown_rf_switches():
     _switch_HMC349(RF_SWITCH_EN_GPIO, RF_SWITCH_HIGH)
 
 def switch_rf_switch_On():
-    print("SWITCHING ON RF SWITCH")
+    #print("SWITCHING ON RF SWITCH", flush=True)
     _switch_HMC349(RF_SWITCH_CTRL_GPIO, RF_SWITCH_LOW)
 
 def switch_rf_switch_Off():
-    print("SWITCHING OFF RF SWITCH")
+    #print("SWITCHING OFF RF SWITCH", flush=True)
     _switch_HMC349(RF_SWITCH_CTRL_GPIO, RF_SWITCH_HIGH)
 

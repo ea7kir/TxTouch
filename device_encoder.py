@@ -25,5 +25,5 @@ def setup_encoder(args):
         args.url)
     # TODO: send to encoder
     # start_encoder()
-    print(f'ENCODER -> {cmd_str}')
+    print(f'ENCODER -> {cmd_str}', flush=True)
 

@@ -26,6 +26,8 @@ def process_read_server_data(pipe):
         server_data = ServerData()
         while connected:
             try:
+                # TODO: read one line at a time
+                
                 json_dict_raw = await reader.read(128) # normally 100 bytes
                 json_dict = json_dict_raw.decode()
                 data_dict = json.loads(json_dict)

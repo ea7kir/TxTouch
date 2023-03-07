@@ -93,21 +93,21 @@ layout = [
 
 def spectrum_thread(window, pipe):
     while True:
-        spectrum_data = pipe.recv()
-        window.write_event_value('-SPECTRUM_THREAD-', (threading.current_thread().name, spectrum_data))
         while pipe.poll():
             _ = pipe.recv()
-            sleep(0)
+            sleep(0.166)
             #print('dump spectrum data', flush= True)
+        spectrum_data = pipe.recv()
+        window.write_event_value('-SPECTRUM_THREAD-', (threading.current_thread().name, spectrum_data))
 
 def server_thread(window, pipe):
     while True:
-        server_data = pipe.recv()
-        window.write_event_value('-SERVER_THREAD-', (threading.current_thread().name, server_data))
         while pipe.poll():
             _ = pipe.recv()
-            sleep(0)
+            sleep(0.5)
             #print('dump server data', flush= True)
+        server_data = pipe.recv()
+        window.write_event_value('-SERVER_THREAD-', (threading.current_thread().name, server_data))
             
 """ MAIN ------------------------------------------ """
 
@@ -314,10 +314,18 @@ def main_gui(spectrum_pipe, server_pipe):
                 graph.draw_polygon(spectrum_data.points, fill_color='green')
             case '-SERVER_THREAD-':
                 server_data = values['-SERVER_THREAD-'][1]
-                window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
-                window['-PA_CURRENT-'].update(server_data.pa_current)
-                window['-PA_TEMP-'].update(server_data.pa_temp)
-                window['-FANS-'].update(server_data.fans)
+                #window['-PREAMP_TEMP-'].update(server_data.preamp_temp)
+                #window['-PA_CURRENT-'].update(server_data.pa_current)
+                #window['-PA_TEMP-'].update(server_data.pa_temp)
+                #window['-FANS-'].update(server_data.fans)
+
+                # TODO: show one line
+                msg = 'Pre {}, PA {} {}, Ein {} Eout {} PAin {} PAout {}'.format(
+                    server_data.preamp_temp,
+                    server_data.pa_temp,
+                    server_data.pa_current,
+                    '9999', '9999', '9999', '9999')
+                window['-STATUS_BAR-'].update(msg)
 
     window.close()
     del window
@@ -345,7 +353,7 @@ if __name__ == '__main__':
     shutdown_devices()
 
     # shutdown
-    print('about to shut down')
+    print('about to shut down', flush=True)
     #import subprocess
     #args = ['/usr/bin/sudo', 'poweroff']
     #subprocess.check_call(args)
