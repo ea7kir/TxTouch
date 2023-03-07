@@ -320,12 +320,12 @@ def main_gui(spectrum_pipe, server_pipe):
                 #window['-FANS-'].update(server_data.fans)
 
                 # TODO: show one line
-                msg = 'Pre {}, PA {} {}, Ein {} Eout {} PAin {} PAout {}'.format(
-                    server_data.preamp_temp,
-                    server_data.pa_temp,
-                    server_data.pa_current,
-                    '9999', '9999', '9999', '9999')
-                window['-STATUS_BAR-'].update(msg)
+                #msg = 'Pre {}, PA {} {}, Ein {} Eout {} PAin {} PAout {}'.format(
+                #    server_data.preamp_temp,
+                #    server_data.pa_temp,
+                #    server_data.pa_current,
+                #    '9999', '9999', '9999', '9999')
+                window['-STATUS_BAR-'].update(server_data)
 
     window.close()
     del window
