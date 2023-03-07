@@ -3,8 +3,8 @@
 from multiprocessing import Process
 from multiprocessing import Pipe
 
-import threading            # experimenting
-from time import sleep      # experimenting
+import threading
+from time import sleep
 
 import PySimpleGUI as sg
 import control_status as cs
@@ -57,32 +57,27 @@ tune_layout = [
 ]
 
 status_layout = [
-    sg.Column([
-        # control data   
+    sg.Column([ 
         button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-', 8),
         button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-', 8),
         button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-', 8),
         button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-', 8),
     ]),
     sg.Column([
-        # control data
         button_selector('-VIDEO_BITRATE_D-', '-VIDEO_BITRATE_V-', '-VIDEO_BITRATE_U-', 8),
         button_selector('-SPARE1_D-', '-SPARE1_V-', '-SPARE1_U-', 8),
         button_selector('-SPARE2_D-', '-SPARE2_V-', '-SPARE2_U-', 8),
         button_selector('-GAIN_D-', '-GAIN_V-', '-GAIN_U-', 8),
     ]),
     sg.Column([
-        # server data
         text_data('Preamp Temp', '-PREAMP_TEMP-'),
         text_data('PA Current', '-PA_CURRENT-'),
         text_data('PA Temp', '-PA_TEMP-'),
         text_data('Fans Running', '-FANS-'),
     ]),
     sg.Column([
-        # control data
         [sg.Button(' TUNE ', key='-TUNE-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR)],
         [sg.Text(' ')],
-        # control data
         [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR)],
     ]),
 ]
@@ -102,7 +97,8 @@ def spectrum_thread(window, pipe):
         window.write_event_value('-SPECTRUM_THREAD-', (threading.current_thread().name, spectrum_data))
         while pipe.poll():
             _ = pipe.recv()
-            print('dump spectrum data', flush= True)
+            sleep(0)
+            #print('dump spectrum data', flush= True)
 
 def server_thread(window, pipe):
     while True:
@@ -110,7 +106,8 @@ def server_thread(window, pipe):
         window.write_event_value('-SERVER_THREAD-', (threading.current_thread().name, server_data))
         while pipe.poll():
             _ = pipe.recv()
-            print('dump server data', flush= True)
+            sleep(0)
+            #print('dump server data', flush= True)
             
 """ MAIN ------------------------------------------ """
 
@@ -285,7 +282,9 @@ def main_gui(spectrum_pipe, server_pipe):
                 cs.cancel_tune()
                 window['-TUNE-'].update(button_color=cs.tune_button_color)
                 window['-PTT-'].update(button_color=cs.ptt_button_color)
+                window['-STATUS_BAR-'].update('Shutting down...')
                 window.refresh()
+                sleep(5)
                 break
             case '-SPECTRUM_THREAD-':
                 spectrum_data = values['-SPECTRUM_THREAD-'][1]
@@ -327,6 +326,8 @@ if __name__ == '__main__':
 
     configure_devices()
 
+    # TODO: consider using duplex=False
+
     parent_spectrum_pipe, child_spectrum_pipe = Pipe()
     parent_server_pipe, child_server_pipe = Pipe()
     # create the process
@@ -346,4 +347,5 @@ if __name__ == '__main__':
     # shutdown
     print('about to shut down')
     #import subprocess
-    #subprocess.check_call(['sudo', 'poweroff'])
+    #args = ['/usr/bin/sudo', 'poweroff']
+    #subprocess.check_call(args)

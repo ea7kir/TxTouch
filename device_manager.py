@@ -25,7 +25,7 @@ def shutdown_devices():
     shutdown_relays()
     shutdown_encoder()
     shutdown_pluto()
-    _pi.stop() # TypeError: pi.stop() missing 1 required positional argument: 'self'
+    _pi.stop()
 
 def activate_encoder(args):
     setup_encoder(args)

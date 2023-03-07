@@ -583,20 +583,12 @@ class PlutoArgs:
     roll_off = None                 # '0.25'
     pilots = None                   # 'off'
     frame = None                    # 'LongFrame'
-    audio_bit_rate = None           # '32'
     provider = None                 # 'EA7KIR'
     service = None                  # 'Michael'
-    url = None                      # 'udp://192.168.3.10:8282'
 
 def pluto_args():
-    global curr_value
     tup = curr_value.fec.partition("/")
     fec = tup[0] + tup[2]
-    tup = curr_value.codecs.partition(" ")
-    if tup[0] == 'H264':
-        url = f'rtmp://{PLUTO_ADDRESS}:7272'
-    else:
-        url = f'udp://{PLUTO_ADDRESS}:8282'
     tup = curr_value.mode.partition("-")
     mode = tup[0] + tup[2]
     args = PlutoArgs()
@@ -611,10 +603,8 @@ def pluto_args():
     args.pat_period = '200'             # NOTE: not implemented
     args.roll_off = '0.25'              # NOTE: not implemented
     args.frame = 'LongFrame'            # NOTE: not implemented
-    args.audio_bit_rate = '32'          # NOTE: not implemented
     args.provider = PROVIDER_NAME
     args.service = SERVICE_NAME
-    args.url = url
     return args 
 
     """
@@ -633,7 +623,6 @@ def pluto_args():
     """
 
 NORMAL_BUTTON_COLOR = ('#FFFFFF','#222222')
-DISABALED_BUTTON_COLOR = ('#444444',None)
 TUNE_ACTIVE_BUTTON_COLOR = ('#FFFFFF','#007700')
 PTT_ACTIVE_BUTTON_COLOR = ('#FFFFFF','#FF0000')
    
