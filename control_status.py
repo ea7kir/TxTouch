@@ -135,41 +135,50 @@ NARROW_FEC_LIST = [
 VERY_NARROW_FEC_LIST = [
     '1/2','2/3','3/4','4/5','5/6','6/7','7/8','8/9',
 ]
-WIDE_BITRATE_LIST = [
+WIDE_VIDEO_BITRATE_LIST = [
     '290','300','310','330','340','350','360',
 ]
-NARROW_BITRATE_LIST = [
+NARROW_VIDEO_BITRATE_LIST = [
     '290','300','310','330','340','350','360',
 ]
-VERY_NARROW_BITRATE_LIST = [
+VERY_NARROW_VIDEO_BITRATE_LIST = [
     '290','300','310','330','340','350','360',
 ]
-WIDE_SPARE1_LIST = [
-    'sp1-a','sp1-b',
+WIDE_AUDIO_BITRATE_LIST = [
+    '32000','64000',
 ]
-NARROW_SPARE1_LIST = [
-    'sp1-a','sp1-b',
+NARROW_AUDIO_BITRATE_LIST = [
+    '32000','64000',
 ]
-VERY_NARROW_SPARE1_LIST = [
-    'sp1-a','sp1-b',
+VERY_NARROW_AUDIO_BITRATE_LIST = [
+    '32000','64000',
 ]
 WIDE_SPARE2_LIST = [
-    'sp2-a','sp2-b'
+    'sp2-a','sp2-b',
 ]
 NARROW_SPARE2_LIST = [
-    'sp2-a','sp2-b'
+    'sp2-a','sp2-b',
 ]
 VERY_NARROW_SPARE2_LIST = [
-    'sp2-a','sp2-b'
+    'sp2-a','sp2-b',
+]
+WIDE_SPARE3_LIST = [
+    'sp3-a','sp3-b',
+]
+NARROW_SPARE3_LIST = [
+    'sp3-a','sp3-b',
+]
+VERY_NARROW_SPARE3_LIST = [
+    'sp3-a','sp3-b',
 ]
 WIDE_GAIN_LIST = [
-    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
+    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10', #'-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
 ]
 NARROW_GAIN_LIST = [
-    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
+    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10', #'-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
 ]
 VERY_NARROW_GAIN_LIST = [
-    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10','-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
+    '-20','-19','-18','-17','-16','-15','-14','-13','-12','-11','-10', #'-9','-8','-7','-6','-5','-4','-3','-2','-1','0',
 ]
 
 WIDE_BAND_LIST_INDEX = 0
@@ -186,9 +195,10 @@ INITIAL_WIDE_MODE                   = 1 # DVB-S2
 INITIAL_WIDE_CODEC                  = 1 # H265 ACC
 INITIAL_WIDE_CONSTELLATION          = 0 # QPSK
 INITIAL_WIDE_FEC                    = 2 # 3/4
-INITIAL_WIDE_BITRATE                = 3 # 330
-INITIAL_WIDE_SPARE1                 = 0 # sp1_a 
+INITIAL_WIDE_VIDEO_BITRATE          = 3 # 330
+INITIAL_WIDE_AUDIO_BITRATE          = 1 # 64000 
 INITIAL_WIDE_SPARE2                 = 0 # sp2_a
+INITIAL_WIDE_SPARE3                 = 0 # sp3_a
 INITIAL_WIDE_GAIN                   = 4 # -16
 
 INITIAL_NARROW_SYMBOL_RATE          = 1 # 333
@@ -197,9 +207,10 @@ INITIAL_NARROW_MODE                 = 1 # DVB-S2
 INITIAL_NARROW_CODEC                = 1 # H265 ACC
 INITIAL_NARROW_CONSTELLATION        = 0 # QPSK
 INITIAL_NARROW_FEC                  = 2 # 3/4
-INITIAL_NARROW_BITRATE              = 3 # 330
-INITIAL_NARROW_SPARE1               = 0 # sp1_a
+INITIAL_NARROW_VIDEO_BITRATE        = 3 # 330
+INITIAL_NARROW_AUDIO_BITRATE        = 1 # 64000
 INITIAL_NARROW_SPARE2               = 0 # sp2_a
+INITIAL_NARROW_SPARE3               = 0 # sp3_a
 INITIAL_NARROW_GAIN                 = 4 # -16
 
 INITIAL_VERY_NARROW_SYMBOL_RATE     = 1 # 66
@@ -208,9 +219,10 @@ INITIAL_VERY_NARROW_MODE            = 1 # DVB-S2
 INITIAL_VERY_NARROW_CODEC           = 1 # H265 ACC
 INITIAL_VERY_NARROW_CONSTELLATION   = 0 # QPSK
 INITIAL_VERY_NARROW_FEC             = 2 # 3/4
-INITIAL_VERY_NARROW_BITRATE         = 3 # 330
-INITIAL_VERY_NARROW_SPARE1          = 0 # sp1_a 
+INITIAL_VERY_NARROW_VIDEO_BITRATE   = 3 # 330
+INITIAL_VERY_NARROW_AUDIO_BITRATE   = 1 # 64000
 INITIAL_VERY_NARROW_SPARE2          = 0 # sp2_a 
+INITIAL_VERY_NARROW_SPARE3          = 0 # sp3_a 
 INITIAL_VERY_NARROW_GAIN            = 4 # -16
 
 class WideIndex:
@@ -221,9 +233,10 @@ class WideIndex:
     codecs = INITIAL_WIDE_CODEC
     constellation = INITIAL_WIDE_CONSTELLATION
     fec = INITIAL_WIDE_FEC
-    video_bitrate = INITIAL_WIDE_BITRATE
-    spare1 = INITIAL_WIDE_SPARE1
+    video_bitrate = INITIAL_WIDE_VIDEO_BITRATE
+    audio_bitrate = INITIAL_WIDE_AUDIO_BITRATE
     spare2 = INITIAL_WIDE_SPARE2
+    spare3 = INITIAL_WIDE_SPARE3
     gain = INITIAL_WIDE_GAIN
     frequency_list = WIDE_FREQUENCY_LIST
     max_frequency_index = len(WIDE_FREQUENCY_LIST) - 1
@@ -237,12 +250,14 @@ class WideIndex:
     max_constellation_list = len(WIDE_CONSTELLATION_LIST) - 1
     fec_list = WIDE_FEC_LIST
     max_fec_list = len(WIDE_FEC_LIST) - 1
-    video_bitrate_list = WIDE_BITRATE_LIST
-    max_video_bitrate_list = len(WIDE_BITRATE_LIST) - 1
-    spare1_list = WIDE_SPARE1_LIST
-    max_spare1_list = len(WIDE_SPARE1_LIST) - 1
+    video_bitrate_list = WIDE_VIDEO_BITRATE_LIST
+    max_video_bitrate_list = len(WIDE_VIDEO_BITRATE_LIST) - 1
+    audio_bitrate_list = WIDE_AUDIO_BITRATE_LIST
+    max_audio_bitrate_list = len(WIDE_AUDIO_BITRATE_LIST) - 1
     spare2_list = WIDE_SPARE2_LIST
     max_spare2_list = len(WIDE_SPARE2_LIST) - 1
+    spare3_list = WIDE_SPARE3_LIST
+    max_spare3_list = len(WIDE_SPARE3_LIST) - 1
     gain_list = WIDE_GAIN_LIST
     max_gain_list = len(WIDE_GAIN_LIST) - 1
 
@@ -254,9 +269,10 @@ class NarrowIndex:
     codecs = INITIAL_NARROW_CODEC
     constellation = INITIAL_NARROW_CONSTELLATION
     fec = INITIAL_NARROW_FEC
-    video_bitrate = INITIAL_NARROW_BITRATE
-    spare1 = INITIAL_NARROW_SPARE1
+    video_bitrate = INITIAL_NARROW_VIDEO_BITRATE
+    audio_bitrate = INITIAL_NARROW_AUDIO_BITRATE
     spare2 = INITIAL_NARROW_SPARE2
+    spare3 = INITIAL_NARROW_SPARE3
     gain = INITIAL_NARROW_GAIN
     frequency_list = NARROW_FREQUENCY_LIST
     max_frequency_index = len(NARROW_FREQUENCY_LIST) - 1
@@ -270,12 +286,14 @@ class NarrowIndex:
     max_constellation_list = len(NARROW_CONSTELLATION_LIST) - 1
     fec_list = NARROW_FEC_LIST
     max_fec_list = len(NARROW_FEC_LIST) - 1
-    video_bitrate_list = NARROW_BITRATE_LIST
-    max_video_bitrate_list = len(NARROW_BITRATE_LIST) - 1
-    spare1_list = NARROW_SPARE1_LIST
-    max_spare1_list = len(NARROW_SPARE1_LIST) - 1
+    video_bitrate_list = NARROW_VIDEO_BITRATE_LIST
+    max_video_bitrate_list = len(NARROW_VIDEO_BITRATE_LIST) - 1
+    audio_bitrate_list = NARROW_AUDIO_BITRATE_LIST
+    max_audio_bitrate_list = len(NARROW_AUDIO_BITRATE_LIST) - 1
     spare2_list = NARROW_SPARE2_LIST
     max_spare2_list = len(NARROW_SPARE2_LIST) - 1
+    spare3_list = NARROW_SPARE3_LIST
+    max_spare3_list = len(NARROW_SPARE3_LIST) - 1
     gain_list = NARROW_GAIN_LIST
     max_gain_list = len(NARROW_GAIN_LIST) - 1
 
@@ -287,9 +305,10 @@ class VeryNarrowIndex:
     codecs = INITIAL_VERY_NARROW_CODEC
     constellation = INITIAL_VERY_NARROW_CONSTELLATION
     fec = INITIAL_VERY_NARROW_FEC
-    video_bitrate = INITIAL_VERY_NARROW_BITRATE
-    spare1 = INITIAL_VERY_NARROW_SPARE1
+    video_bitrate = INITIAL_VERY_NARROW_VIDEO_BITRATE
+    audio_bitrate = INITIAL_VERY_NARROW_AUDIO_BITRATE
     spare2 = INITIAL_VERY_NARROW_SPARE2
+    spare3 = INITIAL_VERY_NARROW_SPARE3
     gain = INITIAL_VERY_NARROW_GAIN
     frequency_list = VERY_NARROW_FREQUENCY_LIST
     max_frequency_index = len(VERY_NARROW_FREQUENCY_LIST) - 1
@@ -303,12 +322,14 @@ class VeryNarrowIndex:
     max_constellation_list = len(VERY_NARROW_CONSTELLATION_LIST) - 1
     fec_list = VERY_NARROW_FEC_LIST
     max_fec_list = len(VERY_NARROW_FEC_LIST) - 1
-    video_bitrate_list = VERY_NARROW_BITRATE_LIST
-    max_video_bitrate_list = len(VERY_NARROW_BITRATE_LIST) - 1
-    spare1_list = VERY_NARROW_SPARE1_LIST
-    max_spare1_list = len(VERY_NARROW_SPARE1_LIST) - 1
+    video_bitrate_list = VERY_NARROW_VIDEO_BITRATE_LIST
+    max_video_bitrate_list = len(VERY_NARROW_VIDEO_BITRATE_LIST) - 1
+    audio_bitrate_list = VERY_NARROW_AUDIO_BITRATE_LIST
+    max_audio_bitrate_list = len(VERY_NARROW_AUDIO_BITRATE_LIST) - 1
     spare2_list = VERY_NARROW_SPARE2_LIST
     max_spare2_list = len(VERY_NARROW_SPARE2_LIST) - 1
+    spare3_list = VERY_NARROW_SPARE3_LIST
+    max_spare3_list = len(VERY_NARROW_SPARE3_LIST) - 1
     gain_list = VERY_NARROW_GAIN_LIST
     max_gain_list = len(VERY_NARROW_GAIN_LIST) - 1
 
@@ -323,9 +344,10 @@ class  WideValue:
     codecs = WIDE_CODECS_LIST[WideIndex.codecs]
     constellation = WIDE_CONSTELLATION_LIST[WideIndex.constellation]
     fec = WIDE_FEC_LIST[WideIndex.fec]
-    video_bitrate = WIDE_BITRATE_LIST[WideIndex.video_bitrate]
-    spare1 = WIDE_SPARE1_LIST[WideIndex.spare1]
+    video_bitrate = WIDE_VIDEO_BITRATE_LIST[WideIndex.video_bitrate]
+    audio_bitrate = WIDE_AUDIO_BITRATE_LIST[WideIndex.audio_bitrate]
     spare2 = WIDE_SPARE2_LIST[WideIndex.spare2]
+    spare3 = WIDE_SPARE3_LIST[WideIndex.spare3]
     gain = WIDE_GAIN_LIST[WideIndex.gain]
 
 class NarrowValue:
@@ -336,9 +358,10 @@ class NarrowValue:
     codecs = NARROW_CODECS_LIST[NarrowIndex.codecs]
     constellation = NARROW_CONSTELLATION_LIST[NarrowIndex.constellation]
     fec = NARROW_FEC_LIST[NarrowIndex.fec]
-    video_bitrate = NARROW_BITRATE_LIST[NarrowIndex.video_bitrate]
-    spare1 = NARROW_SPARE1_LIST[NarrowIndex.spare1]
+    video_bitrate = NARROW_VIDEO_BITRATE_LIST[NarrowIndex.video_bitrate]
+    audio_bitrate = NARROW_AUDIO_BITRATE_LIST[NarrowIndex.audio_bitrate]
     spare2 = NARROW_SPARE2_LIST[NarrowIndex.spare2]
+    spare3 = NARROW_SPARE3_LIST[NarrowIndex.spare3]
     gain = NARROW_GAIN_LIST[NarrowIndex.gain]
 
 class VeryNarrowValue:
@@ -349,9 +372,10 @@ class VeryNarrowValue:
     codecs = VERY_NARROW_CODECS_LIST[VeryNarrowIndex.codecs]
     constellation = VERY_NARROW_CONSTELLATION_LIST[VeryNarrowIndex.constellation]
     fec = VERY_NARROW_FEC_LIST[VeryNarrowIndex.fec]
-    video_bitrate = VERY_NARROW_BITRATE_LIST[VeryNarrowIndex.video_bitrate]
-    spare1 = VERY_NARROW_SPARE1_LIST[VeryNarrowIndex.spare1]
+    video_bitrate = VERY_NARROW_VIDEO_BITRATE_LIST[VeryNarrowIndex.video_bitrate]
+    audio_bitrate = VERY_NARROW_AUDIO_BITRATE_LIST[VeryNarrowIndex.audio_bitrate]
     spare2 = VERY_NARROW_SPARE2_LIST[VeryNarrowIndex.spare2]
+    spare3 = VERY_NARROW_SPARE3_LIST[VeryNarrowIndex.spare3]
     gain = VERY_NARROW_GAIN_LIST[VeryNarrowIndex.gain]
 
 value = [ WideValue, NarrowValue, VeryNarrowValue ]
@@ -491,19 +515,19 @@ def dec_video_bitrate():
         return True
     return False
     
-def inc_spare1():
+def inc_audio_bitrate():
     global curr_value, curr_index
-    if curr_index.spare1 < curr_index.max_spare1_list:
-        curr_index.spare1 += 1
-        curr_value.spare1 = curr_index.spare1_list[curr_index.spare1]
+    if curr_index.audio_bitrate < curr_index.max_audio_bitrate_list:
+        curr_index.audio_bitrate += 1
+        curr_value.audio_bitrate = curr_index.audio_bitrate_list[curr_index.audio_bitrate]
         return True
     return False
 
-def dec_spare1():
+def dec_audio_bitrate():
     global curr_value, curr_index
-    if curr_index.spare1 > 0:
-        curr_index.spare1 -= 1
-        curr_value.spare1 = curr_index.spare1_list[curr_index.spare1]
+    if curr_index.audio_bitrate > 0:
+        curr_index.audio_bitrate -= 1
+        curr_value.audio_bitrate = curr_index.audio_bitrate_list[curr_index.audio_bitrate]
         return True
     return False
    
@@ -520,6 +544,22 @@ def dec_spare2():
     if curr_index.spare2 > 0:
         curr_index.spare2 -= 1
         curr_value.spare2 = curr_index.spare2_list[curr_index.spare2]
+        return True
+    return False
+    
+def inc_spare3():
+    global curr_value, curr_index
+    if curr_index.spare3 < curr_index.max_spare3_list:
+        curr_index.spare3 += 1
+        curr_value.spare3 = curr_index.spare3_list[curr_index.spare3]
+        return True
+    return False
+
+def dec_spare3():
+    global curr_value, curr_index
+    if curr_index.spare3 > 0:
+        curr_index.spare3 -= 1
+        curr_value.spare3 = curr_index.spare3_list[curr_index.spare3]
         return True
     return False
     
@@ -544,12 +584,12 @@ def selected_frequency_marker():
     return TUNED_MARKER[i]
 
 class EncoderArgs:
-    audio_codec = None         # 'ACC'
-    audio_bitrate = None       # '64000'
-    video_codec = None         # 'H.265'
-    video_size = None          # '1280x720'
-    video_bitrate = None       # '330'
-    url = None                 # 'udp://192.168.3.10:8282'
+    audio_codec = None          # 'ACC'
+    audio_bitrate = None        # '64000'
+    video_codec = None          # 'H.265'
+    video_size = None           # '1280x720'
+    video_bitrate = None        # '330'
+    url = None                  # 'udp://192.168.3.10:8282'
 
 def encoder_args():
     global curr_value
@@ -563,7 +603,7 @@ def encoder_args():
         url = f'udp://{PLUTO_ADDRESS}:8282'
     args = EncoderArgs()
     args.audio_codec = audio_codec
-    args.audio_bitrate = '64000'            # NOTE: not implemented
+    args.audio_bitrate = curr_value.audio_bitrate
     args.video_codec = video_codec
     args.video_size = '1280x720'            # NOTE: not implemented
     args.video_bitrate = curr_value.video_bitrate
@@ -610,7 +650,7 @@ def pluto_args():
     """
     # Eg: "rtmp://192.168.1.40:7272/,2409.75,DVBS2,QPSK,333,23,-2,nocalib,800,32,/,EA7KIR,"
 
-    s =  f'rtmp://{IP},{PORT},{frequency},{mode},{constellation},{symbol_rate},{fec},{gain},nocalib,800,32,/,{spare1},'
+    s =  f'rtmp://{IP},{PORT},{frequency},{mode},{constellation},{symbol_rate},{fec},{gain},nocalib,800,32,/,{callsign},'
 
     IP = '192.168.2.1'
     PORT = '7277' or '8282'

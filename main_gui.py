@@ -61,19 +61,17 @@ status_layout = [
         button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-', 8),
         button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-', 8),
         button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-', 8),
-        button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-', 8),
+        
     ]),
     sg.Column([
         button_selector('-VIDEO_BITRATE_D-', '-VIDEO_BITRATE_V-', '-VIDEO_BITRATE_U-', 8),
-        button_selector('-SPARE1_D-', '-SPARE1_V-', '-SPARE1_U-', 8),
+        button_selector('-AUDIO_BITRATE_D-', '-AUDIO_BITRATE_V-', '-AUDIO_BITRATE_U-', 8),
         button_selector('-SPARE2_D-', '-SPARE2_V-', '-SPARE2_U-', 8),
-        button_selector('-GAIN_D-', '-GAIN_V-', '-GAIN_U-', 8),
     ]),
     sg.Column([
-        text_data('Preamp Temp', '-PREAMP_TEMP-'),
-        text_data('PA Current', '-PA_CURRENT-'),
-        text_data('PA Temp', '-PA_TEMP-'),
-        text_data('Fans Running', '-FANS-'),
+        button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-', 8),
+        button_selector('-GAIN_D-', '-GAIN_V-', '-GAIN_U-', 8),
+        button_selector('-SPARE3_D-', '-SPARE3_V-', '-SPARE3_U-', 8),
     ]),
     sg.Column([
         [sg.Button(' TUNE ', key='-TUNE-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR)],
@@ -125,8 +123,9 @@ def main_gui(spectrum_pipe, server_pipe):
     window['-CONSTELLATION_V-'].update(cs.curr_value.constellation)
     window['-FEC_V-'].update(cs.curr_value.fec)
     window['-VIDEO_BITRATE_V-'].update(cs.curr_value.video_bitrate)
-    window['-SPARE1_V-'].update(cs.curr_value.spare1)
+    window['-AUDIO_BITRATE_V-'].update(cs.curr_value.audio_bitrate)
     window['-SPARE2_V-'].update(cs.curr_value.spare2)
+    window['-SPARE3_V-'].update(cs.curr_value.spare3)
     window['-GAIN_V-'].update(cs.curr_value.gain)
     window.refresh()
 
@@ -241,18 +240,18 @@ def main_gui(spectrum_pipe, server_pipe):
                     window['-TUNE-'].update(button_color=cs.tune_button_color)
                     window['-PTT-'].update(button_color=cs.ptt_button_color)
                     window['-VIDEO_BITRATE_V-'].update(cs.curr_value.video_bitrate)
-            case '-SPARE1_D-':
-                if cs.dec_spare1():
+            case '-AUDIO_BITRATE_D-':
+                if cs.dec_audio_bitrate():
                     cs.cancel_tune()
                     window['-TUNE-'].update(button_color=cs.tune_button_color)
                     window['-PTT-'].update(button_color=cs.ptt_button_color)
-                    window['-SPARE1_V-'].update(cs.curr_value.spare1)
-            case '-SPARE1_U-':
-                if cs.inc_spare1():
+                    window['-AUDIO_BITRATE_V-'].update(cs.curr_value.audio_bitrate)
+            case '-AUDIO_BITRATE_U-':
+                if cs.inc_audio_bitrate():
                     cs.cancel_tune()
                     window['-TUNE-'].update(button_color=cs.tune_button_color)
                     window['-PTT-'].update(button_color=cs.ptt_button_color)
-                    window['-SPARE1_V-'].update(cs.curr_value.spare1)
+                    window['-AUDIO_BITRATE_V-'].update(cs.curr_value.audio_bitrate)
             case '-SPARE2_D-':
                 if cs.dec_spare2():
                     cs.cancel_tune()
@@ -265,6 +264,18 @@ def main_gui(spectrum_pipe, server_pipe):
                     window['-TUNE-'].update(button_color=cs.tune_button_color)
                     window['-PTT-'].update(button_color=cs.ptt_button_color)
                     window['-SPARE2_V-'].update(cs.curr_value.spare2)
+            case '-SPARE3_D-':
+                if cs.dec_spare3():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-SPARE3_V-'].update(cs.curr_value.spare3)
+            case '-SPARE3_U-':
+                if cs.inc_spare3():
+                    cs.cancel_tune()
+                    window['-TUNE-'].update(button_color=cs.tune_button_color)
+                    window['-PTT-'].update(button_color=cs.ptt_button_color)
+                    window['-SPARE3_V-'].update(cs.curr_value.spare3)
             case '-GAIN_D-':
                 if cs.dec_gain():
                     cs.cancel_tune()
