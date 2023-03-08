@@ -57,26 +57,25 @@ tune_layout = [
 ]
 
 status_layout = [
-    sg.Column([ 
-        button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-', 8),
+    sg.Column([  # encoder
         button_selector('-CODECS_D-', '-CODECS_V-', '-CODECS_U-', 8),
-        button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-', 8),
-        
-    ]),
-    sg.Column([
         button_selector('-VIDEO_BITRATE_D-', '-VIDEO_BITRATE_V-', '-VIDEO_BITRATE_U-', 8),
         button_selector('-AUDIO_BITRATE_D-', '-AUDIO_BITRATE_V-', '-AUDIO_BITRATE_U-', 8),
-        button_selector('-SPARE2_D-', '-SPARE2_V-', '-SPARE2_U-', 8),
+    ]),
+    sg.Column([ # pluto
+        button_selector('-MODE_D-', '-MODE_V-', '-MODE_U-', 6),
+        button_selector('-CONSTELLATION_D-', '-CONSTELLATION_V-', '-CONSTELLATION_U-', 6),
+        button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-', 6),
     ]),
     sg.Column([
-        button_selector('-FEC_D-', '-FEC_V-', '-FEC_U-', 8),
-        button_selector('-GAIN_D-', '-GAIN_V-', '-GAIN_U-', 8),
-        button_selector('-SPARE3_D-', '-SPARE3_V-', '-SPARE3_U-', 8),
+        button_selector('-SPARE2_D-', '-SPARE2_V-', '-SPARE2_U-', 6),
+        button_selector('-SPARE3_D-', '-SPARE3_V-', '-SPARE3_U-', 6),
+        button_selector('-GAIN_D-', '-GAIN_V-', '-GAIN_U-', 6),
     ]),
-    sg.Column([
+    sg.Column([ # pluto
         [sg.Button(' TUNE ', key='-TUNE-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR)],
         [sg.Text(' ')],
-        [sg.Button(' PTT ', key='-PTT-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR)],
+        [sg.Button(' P T T ', key='-PTT-', border_width=0, button_color=NORMAL_BUTTON_COLOR, mouseover_colors=NORMAL_BUTTON_COLOR)],
     ]),
 ]
 
@@ -110,7 +109,8 @@ def server_thread(window, pipe):
 """ MAIN ------------------------------------------ """
 
 def main_gui(spectrum_pipe, server_pipe):
-    window = sg.Window('', layout, size=(800, 480), font=(None,11), background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
+    window = sg.Window('', layout, size=(800, 480), font=(None,11), no_titlebar=True, #force_toplevel=True,
+                       background_color=SCREEN_COLOR, use_default_focus=False, finalize=True)
     window.set_cursor('none')
     graph = window['graph']
     window['-TUNE-'].update(button_color=cs.tune_button_color)
