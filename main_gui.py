@@ -92,7 +92,7 @@ def spectrum_thread(window, pipe):
     while True:
         while pipe.poll():
             _ = pipe.recv()
-            sleep(0.166)
+            #sleep(0.166)
             #print('dump spectrum data', flush= True)
         spectrum_data = pipe.recv()
         window.write_event_value('-SPECTRUM_THREAD-', (threading.current_thread().name, spectrum_data))
@@ -100,8 +100,9 @@ def spectrum_thread(window, pipe):
 def server_thread(window, pipe):
     while True:
         while pipe.poll():
+            print(pipe.poll())
             _ = pipe.recv()
-            sleep(0.5)
+            #sleep(0.5)
             #print('dump server data', flush= True)
         server_data = pipe.recv()
         window.write_event_value('-SERVER_THREAD-', (threading.current_thread().name, server_data))

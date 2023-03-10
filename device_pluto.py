@@ -69,7 +69,12 @@ def setup_pluto(args):
     f.write(settings)
     f.close()
 
-    result = subprocess.run(['/usr/bin/sshpass', '-panalog', '/usr/bin/scp', '/home/pi/settings.txt', 'root@pluto.local:/www/'])
+    #args = ['/usr/bin/sshpass', '-panalog', '/usr/bin/scp', '/home/pi/settings.txt', 'root@pluto.local:/www/']
+    #result = subprocess.run(args)
+
+    cmd_str = '/usr/bin/sshpass -panalog /usr/bin/scp /home/pi/settings.txt root@pluto.local:/www/ > /dev/null 2>&1'
+    result = subprocess.run(cmd_str, shell=True)
+    
     if result.returncode != 0:
         print('ERROR updating pluto settings.txt', flush=True)
     #else:
