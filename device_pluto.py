@@ -48,8 +48,6 @@ sshpass -panalog scp /home/pi/settings.txt root@192.168.2.1:/www/  # not working
 
 def setup_pluto(args):
     # stop_pluto()
-    tmp_h265box = 'undefined'
-    tmp_remux = '1'
     settings = 'callsign {}\nfreq {}\nmode {}\nmod {}\nsr {}\nfec {}\npilots {}\nframe {}\npower {}\nrolloff {}\npcrpts {}\npatperiod {}\nh265box {}\nremux {}\n\n'.format(
         args.provider,
         args.frequency,
@@ -63,8 +61,8 @@ def setup_pluto(args):
         args.roll_off,
         args.pcr_pts,
         args.pat_period,
-        tmp_h265box,
-        tmp_remux)
+        args.h265box,
+        args.remux)
     f = open("/home/pi/settings.txt", "w")
     f.write(settings)
     f.close()
