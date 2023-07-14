@@ -23,7 +23,8 @@ echo "-- Updating eeprom firmware"
 echo "-------------------------------"
 echo
 
-sudo rpi-eeprom-update -a
+#sudo rpi-eeprom-update -a
+sudo rpi-ipdate
 
 echo
 echo "-------------------------------"

@@ -37,7 +37,19 @@ echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
 
 echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n eval "$(pyenv init --path)"\nfi' >> ~/.bashrc
 
-#exec $SHELL
+exec $SHELL
+
+echo
+echo "-------------------------------"
+echo "-- Configuring the Network"
+echo "-------------------------------"
+echo
+
+
+echo "TODO"
+
+
+
 
 echo
 echo "-------------------------------"
