@@ -4,7 +4,15 @@ cd
 
 echo
 echo "-------------------------------"
-echo "-- Install Pluto UDEV Rules"
+echo "-- Install sshpass"
+echo "-------------------------------"
+echo
+
+sudo apt install sshpass
+
+echo
+echo "-------------------------------"
+echo "-- Install Pluto Udev Rules"
 echo "-------------------------------"
 echo
 

@@ -32,16 +32,12 @@ cd
 git clone https://github.com/ea7kir/TxTouch.git
 ```
 
-Change permissions for the 3 install scrpits.
+Change permissions for all the install scrpits.
 
 ```
 chmod +x TxTouch/_Resources/install_*
 ```
 
-Exeute the 3 install scrpits in order.
+Exeute each script in numerical order.
 
-```
-./TxTouch/_Resources/install_1.sh
-./TxTouch/_Resources/install_2.sh
-./TxTouch/_Resources/install_3.sh
-```
+
