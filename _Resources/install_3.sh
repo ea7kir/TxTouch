@@ -7,21 +7,21 @@ echo "Installing TxTouch Part 3"
 
 echo
 echo "-------------------------------"
-echo "-- Installing Python 3.11.2"
+echo "-- Installing Python 3.11.4"
 echo "--"
 echo "-- this will take some time..."
 echo "-------------------------------"
 echo
 
-pyenv install 3.11.2
+pyenv install 3.11.4
 
 echo
 echo "-------------------------------"
-echo "-- Setting env to Python 3.11.2"
+echo "-- Setting env to Python 3.11.4"
 echo "-------------------------------"
 echo
 
-pyenv global 3.11.2
+pyenv global 3.11.4
 pyenv versions
 
 echo
