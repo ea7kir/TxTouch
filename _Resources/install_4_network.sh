@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# to copy this file from Mac to Rpi, type
-# scp install_network.sh pi@txserver.local:.
-
-echo "Installing TxTouch Part 5"
+cd
 
 echo
 echo "-------------------------------"
@@ -112,5 +109,13 @@ echo "-- NETWORK IS CONFIGURED"
 echo "-------------------------------"
 echo
 
+echo
+echo "-------------------------------"
+echo "-- Sleep 5 seconds"
+echo "--"
+echo "-- Then run install_6"
+echo "-------------------------------"
+echo
 
+sleep 5
 

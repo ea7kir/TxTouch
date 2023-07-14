@@ -1,10 +1,6 @@
 #!/bin/bash
 
-# to copy this file from Mac to Rpi, type
-# scp install_1.sh pi@rxtouch.local:.
-# and chmod +x install_1.sh
-
-echo "Installing TxTouch Part 1"
+cd
 
 echo
 echo "-------------------------------"
@@ -32,14 +28,13 @@ echo "-- Updating eeprom firmware"
 echo "-------------------------------"
 echo
 
-#sudo rpi-eeprom-update -a
 sudo rpi-update
 
 echo
 echo "-------------------------------"
 echo "-- Rebooting in 5 seconds"
 echo "--"
-echo "-- Then run install_2.sh"
+echo "-- Then run install_2"
 echo "-------------------------------"
 echo
 

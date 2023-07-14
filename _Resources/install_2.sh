@@ -1,11 +1,6 @@
 #!/bin/bash
 
-# to copy this file from Mac to Rpi, type
-# scp install_2.sh pi@txserver.local:.
-# and chmod +x install_2.sh
-
 cd
-echo "Installing TxToch Part 2"
 
 echo
 echo "-------------------------------"
@@ -53,7 +48,7 @@ echo
 echo "-------------------------------"
 echo "-- Rebooting in 5 seconds"
 echo "--"
-echo "-- Then run install_3.sh"
+echo "-- Then run install_3"
 echo "-------------------------------"
 echo
 

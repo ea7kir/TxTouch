@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# to copy this file from Mac to Rpi, type
-# scp install_3.sh pi@txserver.local/install_3.sh
-
-echo "Installing TxTouch Part 3"
+cd
 
 echo
 echo "-------------------------------"
@@ -50,26 +47,14 @@ echo
 
 pip install pysimplegui pigpio websockets PyYAML
 
-#echo
-#echo "-------------------------------"
-#echo "-- Install xinit"
-#echo "-------------------------------"
-#echo
-#
-#sudo apt install xinit
-#sudo apt autoremove
-
-echo "To run TxTouch from my Mac,"
-echo "edit /etc/X11/Xwrapper.config"
-echo "and change allowed_users = console to allowed_users = anybody"
-
 echo
 echo "-------------------------------"
-echo "-- Done"
+echo "-- Rebooting in 5 seconds"
+echo "--"
+echo "-- Then run install_4"
 echo "-------------------------------"
 echo
 
-echo "Clone TxTouch from within VSCODE"
-echo "using: https://github.com/ea7kir/TxTouch.git"
-echo
-echo "To run TxTouch, type: ./txtouch"
+sleep 5
+
+sudo reboot

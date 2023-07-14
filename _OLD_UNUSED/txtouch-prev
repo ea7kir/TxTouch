@@ -1,0 +1,7 @@
+#!/bin/bash
+cd /home/pi/TxTouch
+#export DISPLAY=:0
+# sleep to allow network to start
+#sleep 5
+startx /home/pi/.pyenv/shims/python main_gui.py
+exit 0
