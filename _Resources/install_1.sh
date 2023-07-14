@@ -19,6 +19,15 @@ sudo apt clean
 
 echo
 echo "-------------------------------"
+echo "-- running rfkill"
+echo "-------------------------------"
+echo
+
+rfkill block 0
+rfkill block 1
+
+echo
+echo "-------------------------------"
 echo "-- Updating eeprom firmware"
 echo "-------------------------------"
 echo
