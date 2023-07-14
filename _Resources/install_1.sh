@@ -24,7 +24,7 @@ echo "-------------------------------"
 echo
 
 #sudo rpi-eeprom-update -a
-sudo rpi-ipdate
+sudo rpi-update
 
 echo
 echo "-------------------------------"
